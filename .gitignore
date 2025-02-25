@@ -177,3 +177,11 @@ cython_debug/
 keys.py
 secrets.py
 
+# Django #
+*.log
+*.pot
+*.pyc
+__pycache__
+db.sqlite3
+media
+
