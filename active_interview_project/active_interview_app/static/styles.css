@@ -22,15 +22,26 @@ html, body {
 }
 
 .content {
-    margin-left: 250px;
+    /* margin-left: 250px; */
     padding: 20px;
-    min-height: calc(100vh - 50px); /* To ensure content takes full height minus footer */
+    min-height: calc(100vh - 75px); /* To ensure content takes full height minus footer */
 }
 
 .textbox {
 	background-color: var(--emerald);
+    align-self: flex-end;
+    text-align: center;
+    min-height: 75px;
+    /* width: 100%; */
+}
+
+.textbox p {
     text-align: left;
     width: 100%;
+}
+
+.nav-text {
+    color: var(--night);
 }
 
 footer {
