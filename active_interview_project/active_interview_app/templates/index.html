@@ -13,7 +13,7 @@
 </head>
 
 <body>
-    <div class="sidebar">
+    {% comment %} <div class="sidebar">
         <img src="{% static 'interview.jpg' %}" width="250">
 
         <p>Chat</p>
@@ -26,16 +26,35 @@
         <p>effective feedback. Anyone will be able to perform a mock interview so they can have some form of practice</p>
         <p>they will also need to understand what they did well on, and what they can improve on once they have completed the interview.</p>
         </strong>
-    </div>
 
+    </div>
+	<div class="textbox">
+		<p>Please Enter text:</p>
+	</div> {% endcomment %}
+
+    <div class="container-fluid">
+        <div class="row flex-nowrap">
+            <div class="sidebar col-auto col-md-3 col-xl-2 px-sm-2 px-0">
+                <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 min-vh-100">
+                    <img src="{% static 'interview.jpg' %}" style="width:100%">
+                    <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
+                        <li class="nav-item">
+                            <a>
+                                <span>Chat</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 
-<footer class="bg-body-tertiary text-center text-lg-start">
+{% comment %} <footer class="bg-body-tertiary text-center text-lg-start">
   <!-- Copyright -->
-  <div class="text-center p-3" style="background-color: rgb(206, 49, 49);">
-    <p>Please Enter text:            Enable Mic</p>
-
-  </div>
+   <p class="footer-text">
+        Copyright
+   </p>
   <!-- Copyright -->
-</footer>
+</footer> {% endcomment %}
 </html>
