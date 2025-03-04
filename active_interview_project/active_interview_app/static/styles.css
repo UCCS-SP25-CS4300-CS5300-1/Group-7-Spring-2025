@@ -1,0 +1,37 @@
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+.sidebar {
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 250px;
+    background-color: #7d8bdb;
+    padding-top: 20px;
+}
+
+.sidebar p {
+    color: #fff;
+    padding: 10px 15px;
+    text-decoration: none;
+    display: block;
+}
+
+.content {
+    margin-left: 250px;
+    padding: 20px;
+    min-height: calc(100vh - 50px); /* To ensure content takes full height minus footer */
+}
+
+footer {
+    background-color: #252222;
+    padding: 10px;
+    text-align: right;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+    margin-top: auto; /* Ensure footer stays at the bottom of content */
+}
