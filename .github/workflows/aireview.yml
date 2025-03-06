@@ -1,0 +1,7 @@
+name: AI Code Review
+
+on: push
+
+jobs:
+  aireview:
+    runs-on: ubuntu-latest
