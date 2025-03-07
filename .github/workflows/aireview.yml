@@ -34,6 +34,6 @@ jobs:
       
       - name: Run AI Code Review
         run: |
-          python scripts/ai-review.py
+          python scripts/ai-review.py ${{ runner.temp }}/changes.diff
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
