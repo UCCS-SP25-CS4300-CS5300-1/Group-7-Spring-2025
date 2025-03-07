@@ -80,4 +80,8 @@ jobs:
 
       - name: Setup Requirements
         run: pip install -r requirements.txt
+
+      - name: Run djlint
+        run: |
+          djlint active_interview_project/active_interview_app/templates/ --lint
         
