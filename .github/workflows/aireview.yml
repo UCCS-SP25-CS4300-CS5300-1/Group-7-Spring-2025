@@ -1,4 +1,4 @@
-name: AI Code Review
+name: Continuous Integration Workflow
 
 on:
   push:
@@ -10,6 +10,8 @@ on:
 
 jobs:
   aireview:
+    name: AI Code Review
+    
     runs-on: ubuntu-latest
 
     steps:
