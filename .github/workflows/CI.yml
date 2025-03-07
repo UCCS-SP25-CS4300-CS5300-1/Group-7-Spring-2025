@@ -81,7 +81,10 @@ jobs:
       - name: Setup Requirements
         run: pip install -r requirements.txt
 
-      - name: Run djlint
+      - name: Lint Templates
         run: |
           djlint active_interview_project/active_interview_app/templates/ --lint
-        
+
+      - name: Lint Python
+        run: |
+          flake8 active_interview_project/
