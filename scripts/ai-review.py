@@ -4,30 +4,64 @@
 # 03/06/2025
 
 import sys
+import textwrap
 
 from openai import OpenAI
 
-if __name__ == "__main__":
-    client = OpenAI()
 
-    completion = client.chat.completions.create(
-        model="gpt-4o-mini",
-        messages=[
-            {"role": "system", "content": "You are a helpful assistant."},
-            {
-                "role": "user",
-                "content": "Write a haiku about recursion in programming."
-            }
-        ]
-    )
+# Startup open ai client
+client = OpenAI()
 
-    print(completion.choices[0].message.content)
+# Get the diff from command line argument 1
+diff = ""
+with open(sys.argv[1], 'r') as diff_file:
+  diff = diff_file.read()
+  # print(diff)
 
-    # # print all args excluding script name
-    # for arg in sys.argv[1:]:
-    #     print(arg)
+# Provide project context here
+project_context = f"""
+These code changes are for a django project.  The app is an active interview service
+which uses the chatgpt API to create a dynamic interview chat for job-seekers.
+""".strip()
 
-    with open(sys.argv[1], 'r') as diff_file:
-      file_content_string = diff_file.read()
-      print(file_content_string)
+# Provide the prompt here
+prompt = f"""
+At the end of your message, state - in plainly formatted text - either FAIL if
+you found any significant issues or SUCCESS if the code is acceptable.
+
+{project_context}
+
+Review the following code changes for best practices, security vulnerabilities,
+and potential bugs and provide feedback.  Please include a summary section.
+
+```
+{diff}
+```
+""".strip()
+
+# print(prompt)
+
+# Run the prompt
+completion = client.chat.completions.create(
+    model="gpt-4o-mini",
+    messages=[
+        {
+            "role": "system", 
+            "content": "You are a helpful assistant that provides information in Markdown format."
+        },
+        {
+            "role": "user",
+            "content": prompt
+        }
+    ]
+)
+
+# Print the content
+print(completion.choices[0].message.content)
+
+# # print all args excluding script name
+# for arg in sys.argv[1:]:
+#     print(arg)
+
+
 
