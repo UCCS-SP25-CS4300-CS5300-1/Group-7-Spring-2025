@@ -84,9 +84,11 @@ jobs:
       - name: Lint Templates
         if: always()
         run: |
-          djlint active_interview_project/active_interview_app/templates/ --lint > $GITHUB_STEP_SUMMARY
+          echo '### Template Lint Ouput' >> $GITHUB_STEP_SUMMARY;
+          djlint active_interview_project/active_interview_app/templates/ --lint >> $GITHUB_STEP_SUMMARY
 
       - name: Lint Python
         if: always()
         run: |
-          flake8 active_interview_project/ > $GITHUB_STEP_SUMMARY
+          echo '### Python Lint Ouput' >> $GITHUB_STEP_SUMMARY;
+          flake8 active_interview_project/ >> $GITHUB_STEP_SUMMARY
