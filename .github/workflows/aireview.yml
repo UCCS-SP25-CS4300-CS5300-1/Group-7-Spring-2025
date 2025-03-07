@@ -39,6 +39,7 @@ jobs:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
 
       - name: Upload AI Code Review Report
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: ai-code-review-report
