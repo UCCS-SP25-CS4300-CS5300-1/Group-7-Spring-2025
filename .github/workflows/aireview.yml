@@ -45,3 +45,7 @@ jobs:
           name: ai-code-review-report
           path: review-*.md
           retention-days: 14
+
+      - name: Adding review markdown to action
+        if: always()
+        run: cat review-*.md >> $GITHUB_STEP_SUMMARY
