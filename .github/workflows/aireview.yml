@@ -37,3 +37,10 @@ jobs:
           python scripts/ai-review.py ${{ runner.temp }}/changes.diff
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+
+      - name: Upload AI Code Review Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: ai-code-review-report
+          path: review-*.md
+          retention-days: 14
