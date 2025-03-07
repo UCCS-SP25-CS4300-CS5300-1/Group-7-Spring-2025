@@ -3,19 +3,27 @@
 # CS4300.001
 # 03/06/2025
 
+import sys
+
 from openai import OpenAI
-client = OpenAI()
 
-completion = client.chat.completions.create(
-    model="gpt-4o-mini",
-    messages=[
-        {"role": "system", "content": "You are a helpful assistant."},
-        {
-            "role": "user",
-            "content": "Write a haiku about recursion in programming."
-        }
-    ]
-)
+if __name__ == "__main__":
+    client = OpenAI()
 
-print(completion.choices[0].message.content)
+    completion = client.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=[
+            {"role": "system", "content": "You are a helpful assistant."},
+            {
+                "role": "user",
+                "content": "Write a haiku about recursion in programming."
+            }
+        ]
+    )
+
+    print(completion.choices[0].message.content)
+
+    # print all args excluding script name
+    for arg in sys.argv[1:]:
+        print(arg)
 
