@@ -14,3 +14,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+      
+      - name: Run AI Code Review
+        run: |
+          python scripts/review.py
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
