@@ -26,8 +26,8 @@ which uses the chatgpt API to create a dynamic interview chat for job-seekers.
 
 # Provide the prompt here
 prompt = f"""
-At the end of your message, state - in plainly formatted text - either FAIL if
-you found any significant issues or SUCCESS if the code is acceptable.
+At the end of your message, state either FAIL if you found any significant
+issues or SUCCESS if the code is acceptable.
 
 {project_context}
 
@@ -55,13 +55,20 @@ completion = client.chat.completions.create(
         }
     ]
 )
+response = completion.choices[0].message.content
 
-# Print the content
-print(completion.choices[0].message.content)
+# Print the response
+print(response)
 
-# # print all args excluding script name
-# for arg in sys.argv[1:]:
-#     print(arg)
+
+# Get last word in the response
+raw_result = response.strip().split()[-1] # get last word
+plain_result = raw_result.replace("*", "") # remove italics and bold from result
+
+if plain_result == "FAIL":
+    sys.exit(1) # FAIL
+else:
+    sys.exit(0) # SUCCESS
 
 
 
