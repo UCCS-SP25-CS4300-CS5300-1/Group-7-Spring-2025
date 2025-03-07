@@ -23,7 +23,11 @@ if __name__ == "__main__":
 
     print(completion.choices[0].message.content)
 
-    # print all args excluding script name
-    for arg in sys.argv[1:]:
-        print(arg)
+    # # print all args excluding script name
+    # for arg in sys.argv[1:]:
+    #     print(arg)
+
+    with open(sys.argv[1], 'r') as diff_file:
+      file_content_string = diff_file.read()
+      print(file_content_string)
 
