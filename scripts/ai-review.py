@@ -3,10 +3,16 @@
 # CS4300.001
 # 03/06/2025
 
+from datetime import datetime
 import sys
 import textwrap
+from zoneinfo import ZoneInfo
 
 from openai import OpenAI
+
+
+TIMEZONE = "America/Denver"
+TIME_FORMAT = "%m-%d-%Y_%I%M%p"
 
 
 # Startup open ai client
@@ -17,6 +23,7 @@ diff = ""
 with open(sys.argv[1], 'r') as diff_file:
   diff = diff_file.read()
   # print(diff)
+  diff_file.close()
 
 # Provide project context here
 project_context = f"""
@@ -57,9 +64,15 @@ completion = client.chat.completions.create(
 )
 response = completion.choices[0].message.content
 
-# Print the response
+# Print the response and write markdown file
 print(response)
 
+local_time = datetime.now(ZoneInfo(TIMEZONE)).strftime(TIME_FORMAT)
+out_path = f"review-{local_time}.md"
+
+with open(out_path, 'w') as out_file: 
+    out_file.write(response)
+    out_file.close()
 
 # Get last word in the response
 raw_result = response.strip().split()[-1] # get last word
