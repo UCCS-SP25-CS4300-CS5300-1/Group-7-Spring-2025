@@ -12,6 +12,7 @@ django-bootstrap-v5==1.0.11
 djangorestframework==3.15.2
 djlint==1.36.4
 EditorConfig==0.17.0
+flake8==7.1.2
 h11==0.14.0
 httpcore==1.0.7
 httpx==0.28.1
@@ -19,10 +20,13 @@ idna==3.10
 jiter==0.8.2
 jsbeautifier==1.15.4
 json5==0.10.0
+mccabe==0.7.0
 openai==1.65.4
 pathspec==0.12.1
+pycodestyle==2.12.1
 pydantic==2.10.6
 pydantic_core==2.27.2
+pyflakes==3.2.0
 PyYAML==6.0.2
 regex==2024.11.6
 six==1.17.0
