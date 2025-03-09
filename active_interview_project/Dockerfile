@@ -1,13 +1,13 @@
-FROM python:3
+FROM python:3.9
 
 WORKDIR /app
 
 # Install requirements
-COPY web-requirements.txt ./
-RUN pip install -r web-requirements.txt --no-cache-dir
+COPY django-requirements.txt ./
+RUN pip install -r django-requirements.txt --no-cache-dir
 
-# Install app and run
+# Install app
 COPY . /app
-ENTRYPOINT ["python3"]
-EXPOSE 3000
-CMD ["manage.py", "runserver", "0.0.0.0:3000"]
+# ENTRYPOINT ["python3"]
+# EXPOSE 3000
+# CMD ["manage.py", "runserver", "0.0.0.0:3000"]

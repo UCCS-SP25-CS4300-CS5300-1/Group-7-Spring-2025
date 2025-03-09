@@ -1,0 +1,12 @@
+# version: "3.x"
+
+services:
+  django:
+    build: active_interview_project/.
+    container_name: django
+    command: python manage.py runserver 0.0.0.0:3000
+    volumes:
+      - .:/app
+    ports:
+      - "3000:3000"
+
