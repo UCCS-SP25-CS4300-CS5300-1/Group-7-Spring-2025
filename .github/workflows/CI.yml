@@ -35,8 +35,9 @@ jobs:
         run: |
           if [[ "${GITHUB_EVENT_NAME}" == "push" ]]; then
             if [[ "${{ github.event.before }}" == "0000000000000000000000000000000000000000" ]]; then
-              # New branch or first commit; compare against an empty tree to get all changes
-              git diff --no-index /dev/null "${{ github.event.after }}" > "${{ runner.temp }}/changes.diff"
+              # New branch; compare against the default branch
+              BASE_BRANCH="main" # Adjust if your default branch has a different name
+              git diff "origin/${BASE_BRANCH}" "${GITHUB_SHA}" > "${RUNNER_TEMP}/changes.diff"
             else
               git diff "${{ github.event.before }}" "${{ github.event.after }}" > "${{ runner.temp }}/changes.diff"
             fi
