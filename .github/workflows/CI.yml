@@ -102,6 +102,7 @@ jobs:
 
       - name: Check Coverage >= 80%
         run: |
+          chmod +x ./scripts/check-coverage.sh;
           ./scripts/check-coverage.sh coverage_out.txt
         
           
