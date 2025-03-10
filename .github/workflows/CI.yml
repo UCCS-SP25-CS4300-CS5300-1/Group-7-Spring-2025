@@ -101,7 +101,7 @@ jobs:
         run: |
           echo -e '# Coverage Report\n```' >> $GITHUB_STEP_SUMMARY;
           cat coverage_out.txt >> $GITHUB_STEP_SUMMARY;
-          echo -e '\n```\n';
+          echo -e '\n```' >> $GITHUB_STEP_SUMMARY;
           cat coverage_verdict.txt >> $GITHUB_STEP_SUMMARY;
           echo -e '\n# Test Output\n```' >> $GITHUB_STEP_SUMMARY;
           cat dj_test_out.txt >> $GITHUB_STEP_SUMMARY;
