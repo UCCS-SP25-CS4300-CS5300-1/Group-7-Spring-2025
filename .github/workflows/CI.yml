@@ -79,7 +79,11 @@ jobs:
 
       - name: Run Django Tests
         run: |
-          docker exec django coverage run manage.py test -v 2
+          docker exec django coverage run manage.py test -v 2 | tee dj_test_out.txt;
+          echo -e "# Coverage Report\n```" >> $GITHUB_STEP_SUMMARY;
+          docker exec django coverage report -m | tee -a $GITHUB_STEP_SUMMARY;
+          echo -e "\n```\n# Test Output\n```" >> $GITHUB_STEP_SUMMARY;
+          cat dj_test_out.txt >> $GITHUB_STEP_SUMMARY;
         
           
   cilinter:
