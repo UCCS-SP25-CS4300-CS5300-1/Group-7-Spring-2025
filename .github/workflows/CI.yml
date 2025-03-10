@@ -79,8 +79,8 @@ jobs:
           python-version: '3.13'
           # cache: 'pip'
 
-      - name: Setup Requirements
-        run: pip install -r requirements.txt
+      - name: Setup Linters
+        run: pip install flake8 djlint
         
       - name: Lint Python
         if: always()
