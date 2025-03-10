@@ -105,6 +105,10 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Start django container
+      - name: Start Django Container
         run: |
           docker compose up -d django
+
+      - name: Run Django Tests
+        run: |
+          docker exec -it django python3 manage.py test -v 2
