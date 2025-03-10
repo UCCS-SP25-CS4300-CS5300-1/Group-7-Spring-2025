@@ -133,6 +133,10 @@ jobs:
 
       - name: Setup Linters
         run: pip install flake8 djlint
+
+      # - name: Configure Shell
+      #   run: |
+      #     set -o pipefail # make the pipe exist status carry non-zero values
         
       - name: Lint Python
         if: always()
