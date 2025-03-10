@@ -77,6 +77,10 @@ jobs:
         run: |
           docker compose up -d
 
+      - name: Configure Shell
+        run: |
+          set -o pipefail # make the pipe exist status carry non-zero values
+
       - name: Run Django Tests
         if: always()
         run: |
