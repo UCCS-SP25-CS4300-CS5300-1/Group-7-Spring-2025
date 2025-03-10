@@ -21,8 +21,7 @@ jobs:
           fetch-depth: 0  # Infinite fetch depth
       
       - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
+        uses: actions/setup-python@v5 with:
           python-version: '3.13'
           # cache: 'pip'
           
@@ -84,6 +83,7 @@ jobs:
           docker exec django coverage report -m | tee -a $GITHUB_STEP_SUMMARY;
           echo -e "\n```\n# Test Output\n```" >> $GITHUB_STEP_SUMMARY;
           cat dj_test_out.txt >> $GITHUB_STEP_SUMMARY;
+          echo -e '\n```' >> $GITHUB_STEP_SUMMARY
         
           
   cilinter:
