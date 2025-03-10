@@ -26,7 +26,8 @@ SECRET_KEY = 'django-insecure-!qu0*#gq2vxvl4+ve+2!c^+y24aj%t5$wo-8daxq8s#r(-&%4h
 DEBUG = True
 
 ALLOWED_HOSTS = ['app-cs4300craiglillemon-5.devedu.io',
-                 'localhost', '127.0.0.1', 'http://localhost:3000', 'http://127.0.0.1:3000']
+                 'localhost', '127.0.0.1', 'localhost:3000', '127.0.0.1:3000',
+                 '172.17.0.2']
 
 # Application definition
 
