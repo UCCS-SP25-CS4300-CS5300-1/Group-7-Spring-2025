@@ -91,19 +91,21 @@ jobs:
         run: |
           docker exec django coverage report -m | tee coverage_out.txt;
 
+      - name: Check Coverage >= 80%
+        run: |
+          chmod +x ./scripts/check-coverage.sh;
+          ./scripts/check-coverage.sh coverage_out.txt | tee coverage_verdict.txt
+
       - name: Create Step Summary
         if: always()
         run: |
           echo -e '# Coverage Report\n```' >> $GITHUB_STEP_SUMMARY;
           cat coverage_out.txt >> $GITHUB_STEP_SUMMARY;
-          echo -e '\n```\n# Test Output\n```' >> $GITHUB_STEP_SUMMARY;
+          echo -e '\n```\n';
+          cat coverage_verdict >> $GITHUB_STEP_SUMMARY;
+          echo -e '# Test Output\n```' >> $GITHUB_STEP_SUMMARY;
           cat dj_test_out.txt >> $GITHUB_STEP_SUMMARY;
           echo -e '\n```' >> $GITHUB_STEP_SUMMARY
-
-      - name: Check Coverage >= 80%
-        run: |
-          chmod +x ./scripts/check-coverage.sh;
-          ./scripts/check-coverage.sh coverage_out.txt
         
           
   cilinter:
