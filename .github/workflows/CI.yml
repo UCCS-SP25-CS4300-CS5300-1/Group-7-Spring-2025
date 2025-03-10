@@ -107,8 +107,8 @@ jobs:
 
       - name: Start Django Container
         run: |
-          docker compose up -d django
+          docker compose up -d
 
       - name: Run Django Tests
         run: |
-          docker exec -it django python3 manage.py test -v 2
+          docker exec django python3 manage.py test -v 2
