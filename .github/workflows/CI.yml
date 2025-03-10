@@ -78,10 +78,20 @@ jobs:
           docker compose up -d
 
       - name: Run Django Tests
+        if: always()
         run: |
           docker exec django coverage run manage.py test -v 2 | tee dj_test_out.txt;
+
+      - name: Run Coverage Report
+        if: always()
+        run: |
+          docker exec django coverage report -m | tee coverage_out.txt;
+
+      - name: Create Step Summary
+        if: always()
+        run: |
           echo -e '# Coverage Report\n```' >> $GITHUB_STEP_SUMMARY;
-          docker exec django coverage report -m | tee -a $GITHUB_STEP_SUMMARY;
+          cat coverage_out.txt >> $GITHUB_STEP_SUMMARY;
           echo -e '\n```\n# Test Output\n```' >> $GITHUB_STEP_SUMMARY;
           cat dj_test_out.txt >> $GITHUB_STEP_SUMMARY;
           echo -e '\n```' >> $GITHUB_STEP_SUMMARY
