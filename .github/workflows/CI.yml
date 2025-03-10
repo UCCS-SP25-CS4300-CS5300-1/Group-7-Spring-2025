@@ -1,4 +1,4 @@
-name: Continuous Integrati`on Workflow
+name: Continuous Integration Workflow
 
 on:
   push:
@@ -99,6 +99,10 @@ jobs:
           echo -e '\n```\n# Test Output\n```' >> $GITHUB_STEP_SUMMARY;
           cat dj_test_out.txt >> $GITHUB_STEP_SUMMARY;
           echo -e '\n```' >> $GITHUB_STEP_SUMMARY
+
+      - name: Check Coverage >= 80%
+        run: |
+          ./scripts/check-coverage.sh coverage_out.txt
         
           
   cilinter:
