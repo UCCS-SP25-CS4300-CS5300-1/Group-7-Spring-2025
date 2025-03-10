@@ -89,7 +89,7 @@ jobs:
       - name: Run Coverage Report
         if: always()
         run: |
-          docker exec django coverage report -m | tee coverage_out.txt;
+          docker exec django coverage report -m | tee coverage_report.txt;
 
       - name: Check Coverage >= 80%
         run: |
@@ -100,13 +100,21 @@ jobs:
         if: always()
         run: |
           echo -e '# Coverage Report\n```' >> $GITHUB_STEP_SUMMARY;
-          cat coverage_out.txt >> $GITHUB_STEP_SUMMARY;
+          cat coverage_report.txt >> $GITHUB_STEP_SUMMARY;
           echo -e '\n```' >> $GITHUB_STEP_SUMMARY;
           cat coverage_verdict.txt >> $GITHUB_STEP_SUMMARY;
           echo -e '\n# Test Output\n```' >> $GITHUB_STEP_SUMMARY;
           cat dj_test_out.txt >> $GITHUB_STEP_SUMMARY;
           echo -e '\n```' >> $GITHUB_STEP_SUMMARY
-        
+
+      - name: Upload Coverage Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage_report.txt
+          retention-days: 14
+       
           
   cilinter:
     name: CI Django Linter
