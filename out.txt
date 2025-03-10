@@ -1,0 +1,24 @@
+Name                                          Stmts   Miss  Cover   Missing
+---------------------------------------------------------------------------
+active_interview_app/__init__.py                  0      0   100%
+active_interview_app/admin.py                     1      0   100%
+active_interview_app/apps.py                      4      0   100%
+active_interview_app/migrations/__init__.py       0      0   100%
+active_interview_app/models.py                    1      0   100%
+active_interview_app/tests/__init__.py            0      0   100%
+active_interview_app/tests/tests.py               1      0   100%
+active_interview_app/views.py                     4      1    75%   7
+---------------------------------------------------------------------------
+TOTAL                                            11      1    91%
+Name                                          Stmts   Miss  Cover   Missing
+---------------------------------------------------------------------------
+active_interview_app/__init__.py                  0      0   100%
+active_interview_app/admin.py                     1      0   100%
+active_interview_app/apps.py                      4      0   100%
+active_interview_app/migrations/__init__.py       0      0   100%
+active_interview_app/models.py                    1      0   100%
+active_interview_app/tests/__init__.py            0      0   100%
+active_interview_app/tests/tests.py               1      0   100%
+active_interview_app/views.py                     4      1    75%   7
+---------------------------------------------------------------------------
+TOTAL                                            11      1    91%
