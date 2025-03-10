@@ -80,11 +80,11 @@ jobs:
       - name: Run Django Tests
         run: |
           docker exec django coverage run manage.py test -v 2 | tee dj_test_out.txt;
-          echo -e '# Coverage Report\n\`\`\`' >> $GITHUB_STEP_SUMMARY;
+          echo -e '# Coverage Report\n```' >> $GITHUB_STEP_SUMMARY;
           docker exec django coverage report -m | tee -a $GITHUB_STEP_SUMMARY;
-          echo -e '\n\`\`\`\n# Test Output\n\`\`\`' >> $GITHUB_STEP_SUMMARY;
+          echo -e '\n```\n# Test Output\n```' >> $GITHUB_STEP_SUMMARY;
           cat dj_test_out.txt >> $GITHUB_STEP_SUMMARY;
-          echo -e '\n\`\`\`' >> $GITHUB_STEP_SUMMARY
+          echo -e '\n```' >> $GITHUB_STEP_SUMMARY
         
           
   cilinter:
@@ -108,14 +108,14 @@ jobs:
       - name: Lint Python
         if: always()
         run: |
-          echo -e '# Python Lint Ouput\n\`\`\`' >> $GITHUB_STEP_SUMMARY;
+          echo -e '# Python Lint Ouput\n```' >> $GITHUB_STEP_SUMMARY;
           flake8 active_interview_project/ | tee -a $GITHUB_STEP_SUMMARY;
-          echo -e '\n\`\`\`' >> $GITHUB_STEP_SUMMARY
+          echo -e '\n```' >> $GITHUB_STEP_SUMMARY
 
       - name: Lint Templates
         if: always()
         run: |
-          echo -e '# Template Lint Ouput\n\`\`\`' >> $GITHUB_STEP_SUMMARY;
+          echo -e '# Template Lint Ouput\n```' >> $GITHUB_STEP_SUMMARY;
           djlint active_interview_project/active_interview_app/templates/ --lint | tee -a $GITHUB_STEP_SUMMARY;
-          echo -e '\n\`\`\`' >> $GITHUB_STEP_SUMMARY
+          echo -e '\n```' >> $GITHUB_STEP_SUMMARY
 
