@@ -95,3 +95,16 @@ jobs:
           echo -e '# Template Lint Ouput\n```' >> $GITHUB_STEP_SUMMARY;
           djlint active_interview_project/active_interview_app/templates/ --lint >> $GITHUB_STEP_SUMMARY;
           echo -e '\n```' >> $GITHUB_STEP_SUMMARY
+
+  citester:
+    name: CI Testing
+
+    runs-on: ubuntu-latest
+
+    steps: 
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Start django container
+        run: |
+          docker compose up -d django
