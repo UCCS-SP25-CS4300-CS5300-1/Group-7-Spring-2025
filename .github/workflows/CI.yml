@@ -103,7 +103,7 @@ jobs:
           cat coverage_out.txt >> $GITHUB_STEP_SUMMARY;
           echo -e '\n```\n';
           cat coverage_verdict.txt >> $GITHUB_STEP_SUMMARY;
-          echo -e '# Test Output\n```' >> $GITHUB_STEP_SUMMARY;
+          echo -e '\n# Test Output\n```' >> $GITHUB_STEP_SUMMARY;
           cat dj_test_out.txt >> $GITHUB_STEP_SUMMARY;
           echo -e '\n```' >> $GITHUB_STEP_SUMMARY
         
