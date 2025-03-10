@@ -2,8 +2,8 @@ services:
   django:
     build: active_interview_project/.
     container_name: django
-    # volumes:
-    #  - .:/app
+    volumes:
+      - ./active_interview_project:/app
     ports:
       - "127.0.0.1:3000:3000"
     # command: python3 manage.py runserver 0.0.0.0:3000
