@@ -33,8 +33,8 @@ which uses the chatgpt API to create a dynamic interview chat for job-seekers.
 
 # Provide the prompt here
 prompt = f"""
-At the end of your message, state either FAIL if you found any significant
-issues or SUCCESS if the code is acceptable.
+At the end of your message, state either AI_REVIEW_FAIL if you found any significant
+issues or AI_REVIEW_SUCCESS if the code is acceptable.
 
 {project_context}
 
@@ -74,14 +74,14 @@ with open(out_path, 'w') as out_file:
     out_file.write(response)
     out_file.close()
 
-# Get last word in the response
-raw_result = response.strip().split()[-1] # get last word
-plain_result = raw_result.replace("*", "") # remove italics and bold from result
+# # Get last word in the response
+# raw_result = response.strip().split()[-1] # get last word
+# plain_result = raw_result.replace("*", "") # remove italics and bold from result
 
-if plain_result == "FAIL":
-    sys.exit(1) # FAIL
-else:
+if "AI_REVIEW_SUCCESS" in response:
     sys.exit(0) # SUCCESS
+else:
+    sys.exit(1) # FAIL
 
 
 
