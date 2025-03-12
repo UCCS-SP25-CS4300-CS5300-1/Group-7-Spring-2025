@@ -1,10 +1,10 @@
-FROM node:latest
+FROM node:23.9.0
 
 WORKDIR /app
 
 # Install requirements
 COPY package*.json /app
-RUN npm install
+RUN npm install --legacy-peer-deps
 
 # Install app
 COPY . /app
