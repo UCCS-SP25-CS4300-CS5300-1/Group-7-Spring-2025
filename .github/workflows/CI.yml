@@ -152,3 +152,9 @@ jobs:
           djlint active_interview_project/active_interview_app/templates/ --lint | tee -a $GITHUB_STEP_SUMMARY;
           echo -e '\n```' >> $GITHUB_STEP_SUMMARY
 
+      - name: Super-linter
+          uses: super-linter/super-linter@v7.3.0 # x-release-please-version
+          env:
+            # To report GitHub Actions status checks
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
