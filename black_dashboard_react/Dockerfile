@@ -3,6 +3,7 @@ FROM node:latest
 WORKDIR /app
 
 # Install requirements
+COPY package*.json /app
 RUN npm install
 
 # Install app
