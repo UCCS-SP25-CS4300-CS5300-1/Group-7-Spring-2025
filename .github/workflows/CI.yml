@@ -159,5 +159,12 @@ jobs:
         env:
           # To report GitHub Actions status checks
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VALIDATE_CSS: true
+          VALIDATE_DOCKERFILE_HADOLINT: true
+          VALIDATE_HTML: true
+          VALIDATE_JAVASCRIPT_ES: true
           VALIDATE_PYTHON_FLAKE8: true
+          VALIDATE_SHELL_SHFMT: true
+          VALIDATE_TYPESCRIPT_ES: true
+          VALIDATE_YAML: true
 
