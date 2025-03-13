@@ -8,8 +8,8 @@ frontend:
   path: black_dashboard_react
   publish: build
   scripts:
-    build:
-      - npm run build
+#     build:
+#       - npm run build
     deploy:
       - npm install --legacy-peer-deps
       - npm run build
