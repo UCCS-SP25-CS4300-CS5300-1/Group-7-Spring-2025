@@ -1,0 +1,6 @@
+<form action="{% url 'upload_file' %}" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <label for="file">Upload your resume (PDF or Word):</label>
+    {{ form.as_p }}
+    <button type="submit">Upload</button>
+</form>

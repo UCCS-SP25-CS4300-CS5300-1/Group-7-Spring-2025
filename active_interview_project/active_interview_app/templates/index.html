@@ -49,6 +49,19 @@
                     <div>
                         <h1>Welcome to the active interview CS4300 project</h1>
 
+
+                        <form action="{% url 'upload_file' %}" method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <label for="file">Upload your resume (PDF or Word):</label>
+                            <input type="file" name="file" id="file" required>
+                            <button type="submit">Upload</button>
+                        </form>
+                        
+                        {% if uploaded_file_url %}
+                            <p>File uploaded successfully: <a href="{{ uploaded_file_url }}">{{ uploaded_file_url }}</a></p>
+                        {% endif %}                        
+
+
                     </div>
                 </div>
                 <div class="textbox row flex-nowrap">
