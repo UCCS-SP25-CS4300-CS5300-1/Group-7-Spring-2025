@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - prod
+      - feature/cd
 
 jobs:
   deploy:

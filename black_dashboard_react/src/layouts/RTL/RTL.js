@@ -1,11 +1,11 @@
 /*!
 
 =========================================================
-* Black Dashboard React v1.2.2
+* Black Dashboard React v1.2.1
 =========================================================
 
 * Product Page: https://www.creative-tim.com/product/black-dashboard-react
-* Copyright 2023 Creative Tim (https://www.creative-tim.com)
+* Copyright 2022 Creative Tim (https://www.creative-tim.com)
 * Licensed under MIT (https://github.com/creativetimofficial/black-dashboard-react/blob/master/LICENSE.md)
 
 * Coded by Creative Tim
@@ -16,7 +16,7 @@
 
 */
 import React from "react";
-import { Route, Routes, useLocation } from "react-router-dom";
+import { Route, Switch, useLocation } from "react-router-dom";
 // javascript plugin used to create scrollbars on windows
 import PerfectScrollbar from "perfect-scrollbar";
 
@@ -44,7 +44,7 @@ function RTL(props) {
       document.documentElement.className += " perfect-scrollbar-on";
       document.documentElement.classList.remove("perfect-scrollbar-off");
       ps = new PerfectScrollbar(mainPanelRef.current, {
-        suppressScrollX: true,
+        suppressScrollX: true
       });
       let tables = document.querySelectorAll(".table-responsive");
       for (let i = 0; i < tables.length; i++) {
@@ -100,7 +100,11 @@ function RTL(props) {
     return routes.map((prop, key) => {
       if (prop.layout === "/rtl") {
         return (
-          <Route path={prop.path} element={prop.component} key={key} exact />
+          <Route
+            path={prop.layout + prop.path}
+            component={prop.component}
+            key={key}
+          />
         );
       } else {
         return null;
@@ -127,7 +131,7 @@ function RTL(props) {
                 logo={{
                   outterLink: "https://www.creative-tim.com/",
                   text: "الإبداعية تيم",
-                  imgSrc: logo,
+                  imgSrc: logo
                 }}
                 toggleSidebar={toggleSidebar}
               />
@@ -137,7 +141,7 @@ function RTL(props) {
                   toggleSidebar={toggleSidebar}
                   sidebarOpened={sidebarOpened}
                 />
-                <Routes>{getRoutes(routes)}</Routes>
+                <Switch>{getRoutes(routes)}</Switch>
                 {
                   // we don't want the Footer to be rendered on map page
                   location.pathname === "/admin/maps" ? null : <Footer fluid />

@@ -1,11 +1,11 @@
 /*!
 
 =========================================================
-* Black Dashboard React v1.2.2
+* Black Dashboard React v1.2.1
 =========================================================
 
 * Product Page: https://www.creative-tim.com/product/black-dashboard-react
-* Copyright 2023 Creative Tim (https://www.creative-tim.com)
+* Copyright 2022 Creative Tim (https://www.creative-tim.com)
 * Licensed under MIT (https://github.com/creativetimofficial/black-dashboard-react/blob/master/LICENSE.md)
 
 * Coded by Creative Tim
@@ -23,7 +23,7 @@
 let chart1_2_options = {
   maintainAspectRatio: false,
   legend: {
-    display: false,
+    display: false
   },
   tooltips: {
     backgroundColor: "#f5f5f5",
@@ -33,37 +33,41 @@ let chart1_2_options = {
     xPadding: 12,
     mode: "nearest",
     intersect: 0,
-    position: "nearest",
+    position: "nearest"
   },
   responsive: true,
   scales: {
-    yAxes: {
-      barPercentage: 1.6,
-      gridLines: {
-        drawBorder: false,
-        color: "rgba(29,140,248,0.0)",
-        zeroLineColor: "transparent",
-      },
-      ticks: {
-        suggestedMin: 60,
-        suggestedMax: 125,
-        padding: 20,
-        fontColor: "#9a9a9a",
-      },
-    },
-    xAxes: {
-      barPercentage: 1.6,
-      gridLines: {
-        drawBorder: false,
-        color: "rgba(29,140,248,0.1)",
-        zeroLineColor: "transparent",
-      },
-      ticks: {
-        padding: 20,
-        fontColor: "#9a9a9a",
-      },
-    },
-  },
+    yAxes: [
+      {
+        barPercentage: 1.6,
+        gridLines: {
+          drawBorder: false,
+          color: "rgba(29,140,248,0.0)",
+          zeroLineColor: "transparent"
+        },
+        ticks: {
+          suggestedMin: 60,
+          suggestedMax: 125,
+          padding: 20,
+          fontColor: "#9a9a9a"
+        }
+      }
+    ],
+    xAxes: [
+      {
+        barPercentage: 1.6,
+        gridLines: {
+          drawBorder: false,
+          color: "rgba(29,140,248,0.1)",
+          zeroLineColor: "transparent"
+        },
+        ticks: {
+          padding: 20,
+          fontColor: "#9a9a9a"
+        }
+      }
+    ]
+  }
 };
 
 // #########################################
@@ -92,7 +96,7 @@ let chartExample1 = {
         "SEP",
         "OCT",
         "NOV",
-        "DEC",
+        "DEC"
       ],
       datasets: [
         {
@@ -110,9 +114,9 @@ let chartExample1 = {
           pointHoverRadius: 4,
           pointHoverBorderWidth: 15,
           pointRadius: 4,
-          data: [100, 70, 90, 70, 85, 60, 75, 60, 90, 80, 110, 100],
-        },
-      ],
+          data: [100, 70, 90, 70, 85, 60, 75, 60, 90, 80, 110, 100]
+        }
+      ]
     };
   },
   data2: (canvas) => {
@@ -137,7 +141,7 @@ let chartExample1 = {
         "SEP",
         "OCT",
         "NOV",
-        "DEC",
+        "DEC"
       ],
       datasets: [
         {
@@ -155,9 +159,9 @@ let chartExample1 = {
           pointHoverRadius: 4,
           pointHoverBorderWidth: 15,
           pointRadius: 4,
-          data: [80, 120, 105, 110, 95, 105, 90, 100, 80, 95, 70, 120],
-        },
-      ],
+          data: [80, 120, 105, 110, 95, 105, 90, 100, 80, 95, 70, 120]
+        }
+      ]
     };
   },
   data3: (canvas) => {
@@ -182,7 +186,7 @@ let chartExample1 = {
         "SEP",
         "OCT",
         "NOV",
-        "DEC",
+        "DEC"
       ],
       datasets: [
         {
@@ -200,12 +204,12 @@ let chartExample1 = {
           pointHoverRadius: 4,
           pointHoverBorderWidth: 15,
           pointRadius: 4,
-          data: [60, 80, 65, 130, 80, 105, 90, 130, 70, 115, 60, 130],
-        },
-      ],
+          data: [60, 80, 65, 130, 80, 105, 90, 130, 70, 115, 60, 130]
+        }
+      ]
     };
   },
-  options: chart1_2_options,
+  options: chart1_2_options
 };
 
 // #########################################
@@ -239,12 +243,12 @@ let chartExample2 = {
           pointHoverRadius: 4,
           pointHoverBorderWidth: 15,
           pointRadius: 4,
-          data: [80, 100, 70, 80, 120, 80],
-        },
-      ],
+          data: [80, 100, 70, 80, 120, 80]
+        }
+      ]
     };
   },
-  options: chart1_2_options,
+  options: chart1_2_options
 };
 
 // #########################################
@@ -260,8 +264,16 @@ let chartExample3 = {
     gradientStroke.addColorStop(0.4, "rgba(72,72,176,0.0)");
     gradientStroke.addColorStop(0, "rgba(119,52,169,0)"); //purple colors
 
+    var labels = ["USA", "GER", "AUS","UK","RO","BR"]
+    // for(const prod of allProducts.elements){
+    //   if(!labels.includes(prod.brandName)){
+    //     labels.push(prod.brandName)
+    //   }
+    // }
+
+
     return {
-      labels: ["USA", "GER", "AUS", "UK", "RO", "BR"],
+      labels: labels,
       datasets: [
         {
           label: "Countries",
@@ -272,15 +284,15 @@ let chartExample3 = {
           borderWidth: 2,
           borderDash: [],
           borderDashOffset: 0.0,
-          data: [53, 20, 10, 80, 100, 45],
-        },
-      ],
+          data: [53, 20, 10, 80, 100, 45]
+        }
+      ]
     };
   },
   options: {
     maintainAspectRatio: false,
     legend: {
-      display: false,
+      display: false
     },
     tooltips: {
       backgroundColor: "#f5f5f5",
@@ -290,36 +302,40 @@ let chartExample3 = {
       xPadding: 12,
       mode: "nearest",
       intersect: 0,
-      position: "nearest",
+      position: "nearest"
     },
     responsive: true,
     scales: {
-      yAxes: {
-        gridLines: {
-          drawBorder: false,
-          color: "rgba(225,78,202,0.1)",
-          zeroLineColor: "transparent",
-        },
-        ticks: {
-          suggestedMin: 60,
-          suggestedMax: 120,
-          padding: 20,
-          fontColor: "#9e9e9e",
-        },
-      },
-      xAxes: {
-        gridLines: {
-          drawBorder: false,
-          color: "rgba(225,78,202,0.1)",
-          zeroLineColor: "transparent",
-        },
-        ticks: {
-          padding: 20,
-          fontColor: "#9e9e9e",
-        },
-      },
-    },
-  },
+      yAxes: [
+        {
+          gridLines: {
+            drawBorder: false,
+            color: "rgba(225,78,202,0.1)",
+            zeroLineColor: "transparent"
+          },
+          ticks: {
+            suggestedMin: 60,
+            suggestedMax: 120,
+            padding: 20,
+            fontColor: "#9e9e9e"
+          }
+        }
+      ],
+      xAxes: [
+        {
+          gridLines: {
+            drawBorder: false,
+            color: "rgba(225,78,202,0.1)",
+            zeroLineColor: "transparent"
+          },
+          ticks: {
+            padding: 20,
+            fontColor: "#9e9e9e"
+          }
+        }
+      ]
+    }
+  }
 };
 
 // #########################################
@@ -353,15 +369,15 @@ const chartExample4 = {
           pointHoverRadius: 4,
           pointHoverBorderWidth: 15,
           pointRadius: 4,
-          data: [90, 27, 60, 12, 80],
-        },
-      ],
+          data: [90, 27, 60, 12, 80]
+        }
+      ]
     };
   },
   options: {
     maintainAspectRatio: false,
     legend: {
-      display: false,
+      display: false
     },
 
     tooltips: {
@@ -372,43 +388,48 @@ const chartExample4 = {
       xPadding: 12,
       mode: "nearest",
       intersect: 0,
-      position: "nearest",
+      position: "nearest"
     },
     responsive: true,
     scales: {
-      yAxes: {
-        barPercentage: 1.6,
-        gridLines: {
-          drawBorder: false,
-          color: "rgba(29,140,248,0.0)",
-          zeroLineColor: "transparent",
-        },
-        ticks: {
-          suggestedMin: 50,
-          suggestedMax: 125,
-          padding: 20,
-          fontColor: "#9e9e9e",
-        },
-      },
-      xAxes: {
-        barPercentage: 1.6,
-        gridLines: {
-          drawBorder: false,
-          color: "rgba(0,242,195,0.1)",
-          zeroLineColor: "transparent",
-        },
-        ticks: {
-          padding: 20,
-          fontColor: "#9e9e9e",
-        },
-      },
-    },
-  },
+      yAxes: [
+        {
+          barPercentage: 1.6,
+          gridLines: {
+            drawBorder: false,
+            color: "rgba(29,140,248,0.0)",
+            zeroLineColor: "transparent"
+          },
+          ticks: {
+            suggestedMin: 50,
+            suggestedMax: 125,
+            padding: 20,
+            fontColor: "#9e9e9e"
+          }
+        }
+      ],
+
+      xAxes: [
+        {
+          barPercentage: 1.6,
+          gridLines: {
+            drawBorder: false,
+            color: "rgba(0,242,195,0.1)",
+            zeroLineColor: "transparent"
+          },
+          ticks: {
+            padding: 20,
+            fontColor: "#9e9e9e"
+          }
+        }
+      ]
+    }
+  }
 };
 
 module.exports = {
   chartExample1, // in src/views/Dashboard.js
   chartExample2, // in src/views/Dashboard.js
   chartExample3, // in src/views/Dashboard.js
-  chartExample4, // in src/views/Dashboard.js
+  chartExample4 // in src/views/Dashboard.js
 };

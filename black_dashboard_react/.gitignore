@@ -4,3 +4,4 @@ package-lock.json
 /build
 .vscode
 .eslintcache
+node_modules
