@@ -1,19 +1,21 @@
 name: Group-7-Spring-2025
-
 region: us-east-1
 
 yamlVersion: 2
 
 frontend:
   path: ./black_dashboard_react/
+  sdk:
+    language: js
   publish: build
-  package-manager: npm
   scripts:
-#     build:
-#       - npm run build
+    build: npm run build
     deploy:
+      - npm install @genezio-sdk/${{projectName}}@1.0.0-${{stage}}
       - npm install --legacy-peer-deps
-      - npm run build
+    start:
+      - npm install --legacy-peer-deps --silent
+      - npm run start --silent
   subdomain: group7spring2025
 
 # backend:
