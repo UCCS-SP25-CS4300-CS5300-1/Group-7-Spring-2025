@@ -11,7 +11,7 @@ frontend:
   scripts:
     build: npm run build
     deploy:
-      - npm install @genezio-sdk/${{projectName}}@1.0.0-${{stage}}
+      # - npm install @genezio-sdk/${{projectName}}@1.0.0-${{stage}}
       - npm install --legacy-peer-deps
     start:
       - npm install --legacy-peer-deps --silent
