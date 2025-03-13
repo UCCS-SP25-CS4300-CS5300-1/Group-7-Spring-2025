@@ -12,7 +12,8 @@ frontend:
       - npm run build
     deploy:
       - npm install --legacy-peer-deps
-  subdomain: active-interview-service
+      - npm run build
+  subdomain: group7spring2025
 
 # backend:
 #   # The root directory of the backend.
