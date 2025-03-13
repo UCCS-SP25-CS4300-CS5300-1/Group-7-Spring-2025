@@ -5,8 +5,9 @@ region: us-east-1
 yamlVersion: 2
 
 frontend:
-  path: black_dashboard_react
+  path: ./black_dashboard_react/
   publish: build
+  package-manager: npm
   scripts:
 #     build:
 #       - npm run build
