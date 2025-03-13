@@ -1,28 +1,27 @@
 {
   "name": "black-dashboard-react",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "private": true,
-  "homepage": "https://demos.creative-tim.com/",
+  "homepage": "https://demos.creative-tim.com/black-dashboard-react/#/admin/dashboard",
   "dependencies": {
-    "@fortawesome/fontawesome-free": "6.1.1",
-    "ajv": "^8.17.1",
-    "bootstrap": "4.5.3",
-    "chart.js": "3.4.1",
-    "classnames": "2.3.1",
+    "@fortawesome/fontawesome-free": "6.4.0",
+    "ajv": "^8.16.0",
+    "bootstrap": "4.6.2",
+    "chart.js": "3.9.1",
+    "classnames": "2.3.2",
     "perfect-scrollbar": "1.5.5",
     "prop-types": "15.8.1",
     "react": ">=16.8.0",
-    "react-chartjs-2": "3.0.4",
+    "react-chartjs-2": "3.3.0",
     "react-dom": ">=16.8.0",
     "react-notification-alert": "0.0.13",
-    "react-router-dom": "^5.2.0",
+    "react-router-dom": "6.11.1",
     "react-scripts": "5.0.1",
-    "reactstrap": "8.7.1",
-    "sass": "1.53.0"
+    "sass": "1.62.1"
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "cross-env CI=false cross-env PUBLIC_URL=/ react-scripts build && gulp licenses",
+    "build": "cross-env PUBLIC_URL=/ cross-env CI=false react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "install:clean": "rm -rf node_modules/ && rm -rf package-lock.json && npm install && npm start",
@@ -44,12 +43,13 @@
   ],
   "optionalDependencies": {
     "eslint-plugin-flowtype": "8.0.3",
-    "jquery": "3.6.0",
-    "typescript": "4.7.4"
+    "reactstrap": "8.10.1"
   },
   "devDependencies": {
-    "gulp": "4.0.2",
-    "gulp-append-prepend": "1.0.9",
-    "cross-env": "^7.0.3"
+    "cross-env": "^7.0.3",
+    "typescript": "5.0.4"
+  },
+  "overrides": {
+    "svgo": "3.0.2"
   }
 }

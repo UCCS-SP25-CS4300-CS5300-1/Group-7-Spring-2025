@@ -1,11 +1,11 @@
 /*!
 
 =========================================================
-* Black Dashboard React v1.2.1
+* Black Dashboard React v1.2.2
 =========================================================
 
 * Product Page: https://www.creative-tim.com/product/black-dashboard-react
-* Copyright 2022 Creative Tim (https://www.creative-tim.com)
+* Copyright 2023 Creative Tim (https://www.creative-tim.com)
 * Licensed under MIT (https://github.com/creativetimofficial/black-dashboard-react/blob/master/LICENSE.md)
 
 * Coded by Creative Tim
@@ -18,7 +18,6 @@
 import React from "react";
 // nodejs library that concatenates classes
 import classNames from "classnames";
-import { useHistory } from "react-router-dom";
 
 // reactstrap components
 import {
@@ -37,15 +36,13 @@ import {
   Container,
   Modal,
   NavbarToggler,
-  ModalHeader
+  ModalHeader,
 } from "reactstrap";
 
 function AdminNavbar(props) {
   const [collapseOpen, setcollapseOpen] = React.useState(false);
   const [modalSearch, setmodalSearch] = React.useState(false);
   const [color, setcolor] = React.useState("navbar-transparent");
-  const history = useHistory();
-  
   React.useEffect(() => {
     window.addEventListener("resize", updateColor);
     // Specify how to clean up after this effect:
@@ -74,18 +71,6 @@ function AdminNavbar(props) {
   const toggleModalSearch = () => {
     setmodalSearch(!modalSearch);
   };
-
-  // this function handles the logout button
-  const logout = () => {
-    if (
-      localStorage.getItem("apiToken") != null ||
-      localStorage.getItem("user") != null
-    ) {
-      localStorage.clear();
-      history.push("/auth/login");
-      return;
-    };
-  }
   return (
     <>
       <Navbar className={classNames("navbar-absolute", color)} expand="lg">
@@ -93,7 +78,7 @@ function AdminNavbar(props) {
           <div className="navbar-wrapper">
             <div
               className={classNames("navbar-toggle d-inline", {
-                toggled: props.sidebarOpened
+                toggled: props.sidebarOpened,
               })}
             >
               <NavbarToggler onClick={props.toggleSidebar}>
@@ -180,11 +165,7 @@ function AdminNavbar(props) {
                   </NavLink>
                   <DropdownItem divider tag="li" />
                   <NavLink tag="li">
-                    <DropdownItem className="nav-item">
-                      <Button  onClick={logout}>
-                        <span className="d-md-block">Logout</span>
-                      </Button>
-                    </DropdownItem>
+                    <DropdownItem className="nav-item">Log out</DropdownItem>
                   </NavLink>
                 </DropdownMenu>
               </UncontrolledDropdown>

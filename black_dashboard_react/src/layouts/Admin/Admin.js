@@ -1,11 +1,11 @@
 /*!
 
 =========================================================
-* Black Dashboard React v1.2.1
+* Black Dashboard React v1.2.2
 =========================================================
- 
+
 * Product Page: https://www.creative-tim.com/product/black-dashboard-react
-* Copyright 2022 Creative Tim (https://www.creative-tim.com)
+* Copyright 2023 Creative Tim (https://www.creative-tim.com)
 * Licensed under MIT (https://github.com/creativetimofficial/black-dashboard-react/blob/master/LICENSE.md)
 
 * Coded by Creative Tim
@@ -16,13 +16,7 @@
 
 */
 import React from "react";
-import {
-  Route,
-  Switch,
-  Redirect,
-  useLocation,
-  useHistory,
-} from "react-router-dom";
+import { Route, Routes, Navigate, useLocation } from "react-router-dom";
 // javascript plugin used to create scrollbars on windows
 import PerfectScrollbar from "perfect-scrollbar";
 
@@ -36,34 +30,15 @@ import routes from "routes.js";
 
 import logo from "assets/img/react-logo.png";
 import { BackgroundColorContext } from "contexts/BackgroundColorContext";
-import { User } from "@genezio-sdk/black-dashboard-genezio"
 
 var ps;
 
 function Admin(props) {
   const location = useLocation();
   const mainPanelRef = React.useRef(null);
-  const history = useHistory();
   const [sidebarOpened, setsidebarOpened] = React.useState(
     document.documentElement.className.indexOf("nav-open") !== -1
   );
-  React.useEffect(() => {
-    if (
-      localStorage.getItem("apiToken") === null ||
-      localStorage.getItem("user") === null
-    ) {
-      localStorage.clear();
-      history.push("/auth/login");
-    }
-    async function checkToken() {
-      const res = await User.getUserByToken(localStorage.getItem("apiToken"));
-      if (!res || !res.success) {
-        localStorage.clear();
-        history.push("/auth/login");
-      }
-    }
-    checkToken();
-  });
   React.useEffect(() => {
     if (navigator.platform.indexOf("Win") > -1) {
       document.documentElement.className += " perfect-scrollbar-on";
@@ -107,11 +82,7 @@ function Admin(props) {
     return routes.map((prop, key) => {
       if (prop.layout === "/admin") {
         return (
-          <Route
-            path={prop.layout + prop.path}
-            component={prop.component}
-            key={key}
-          />
+          <Route path={prop.path} element={prop.component} key={key} exact />
         );
       } else {
         return null;
@@ -146,10 +117,13 @@ function Admin(props) {
                 toggleSidebar={toggleSidebar}
                 sidebarOpened={sidebarOpened}
               />
-              <Switch>
+              <Routes>
                 {getRoutes(routes)}
-                <Redirect from="*" to="/auth/login" />
-              </Switch>
+                <Route
+                  path="/"
+                  element={<Navigate to="/admin/dashboard" replace />}
+                />
+              </Routes>
               {
                 // we don't want the Footer to be rendered on map page
                 location.pathname === "/admin/maps" ? null : <Footer fluid />
