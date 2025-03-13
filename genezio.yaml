@@ -1,0 +1,12 @@
+frontend:
+    path: black_dashboard_react
+    publish: build
+    scripts:
+        build:
+            - npm run build
+        deploy:
+            - npm install
+    subdomain: Group-7-Spring-2025
+name: Group-7-Spring-2025
+region: us-east-1
+yamlVersion: 2
