@@ -60,8 +60,7 @@ django:
       # The path to the function's code.
       path: ./active_interview_project
       # The entry point for the function.
-      entry: active_interview_project
-ysite/active_interview_project/wsgi.py
+      entry: active_interview_project/active_interview_project/wsgi.py
       # The handler for the function.
       handler: application
       # The type of the function.
