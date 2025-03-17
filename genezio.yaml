@@ -43,7 +43,7 @@ yamlVersion: 2
 # #       # The type of the function.
 # #       type: httpServer
 
-django:
+backend:
   # Point directly to the inner directory where wsgi.py lives.
   path: ./active_interview_project/active_interview_project
   language:
