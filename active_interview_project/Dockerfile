@@ -10,6 +10,9 @@ RUN pip install -r django-requirements.txt --no-cache-dir
 # Install app
 COPY . /app
 
+# Collect staticfiles
+RUN python manage.py collectstatic --noinput
+
 EXPOSE 8000
 
 # Start Gunicorn, binding to 0.0.0.0:8000 with 3 worker processes.
