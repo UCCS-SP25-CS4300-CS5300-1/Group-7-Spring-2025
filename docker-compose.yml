@@ -4,16 +4,16 @@ services:
     container_name: django
     volumes:
       - ./active_interview_project:/app
-    # ports:
-    #   - "8000:8000"
-    network_mode: "host"
+    ports:
+      - "8000:8000"
+    # network_mode: "host"
 
   react:
     build: black_dashboard_react/.
     container_name: react
     volumes:
       - ./black_dashboard_react:/app
-    # ports:
-    #   - "80:3000"
-    network_mode: "host"
+    ports:
+      - "3000:3000"
+    # network_mode: "host"
 
