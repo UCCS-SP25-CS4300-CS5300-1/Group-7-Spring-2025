@@ -29,7 +29,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['app-cs4300craiglillemon-5.devedu.io',
                  'localhost', '127.0.0.1', 'localhost:3000', '127.0.0.1:3000',
-                 '172.17.0.2', 'djano']
+                 '172.17.0.2', 'django']
 
 # Application definition
 
