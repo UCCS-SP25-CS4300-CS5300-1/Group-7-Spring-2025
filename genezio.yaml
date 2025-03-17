@@ -58,9 +58,10 @@ django:
     # The name (label) of the function.
     - name: django
       # The path to the function's code.
-      path: ./
+      path: ./active_interview_project
       # The entry point for the function.
-      entry: mysite/wsgi.py
+      entry: active_interview_project
+ysite/active_interview_project/wsgi.py
       # The handler for the function.
       handler: application
       # The type of the function.
