@@ -20,6 +20,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from active_interview_app import views
 
+
 urlpatterns = [
     path('', views.index, name='index'),
     path('', views.index, name = 'login'),
