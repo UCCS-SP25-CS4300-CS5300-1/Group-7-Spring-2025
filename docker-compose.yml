@@ -3,8 +3,37 @@ services:
     build: active_interview_project/.
     container_name: django
     volumes:
+      - static_volume:/app/staticfiles # shared staticfiles volume
       - ./active_interview_project:/app
     ports:
-      - "127.0.0.1:3000:3000"
-    # command: python3 manage.py runserver 0.0.0.0:3000
+      - "8000:8000"
+    expose:
+      - "8000"  # Exposed internally
+    command: gunicorn active_interview_project.wsgi:application --bind 0.0.0.0:8000 --workers 3
+    # network_mode: "host"
+
+#   react:
+#     build: black_dashboard_react/.
+#     container_name: react
+#     volumes:
+#       - ./black_dashboard_react:/app
+#     ports:
+#       - "3000:3000"
+#     # network_mode: "host"
+
+  nginx:
+    image: nginx:alpine
+    container_name: nginx
+    expose:
+      - "80"
+    ports:
+      - "80:80"
+    volumes:
+      - static_volume:/app/staticfiles # shared staticfiles volume
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - django
+
+volumes:
+  static_volume:
 
