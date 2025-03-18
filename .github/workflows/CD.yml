@@ -19,4 +19,4 @@ jobs:
           token: ${{ secrets.GENEZIO_TOKEN }}
       - name: Deploy Script
         working-directory: ./
-        run: genezio deploy
+        run: genezio deploy --stage prod

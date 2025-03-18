@@ -1,4 +1,4 @@
-name: Group-7-Spring-2025
+name: active-interview-service
 region: us-east-1
 
 yamlVersion: 2
@@ -6,8 +6,7 @@ yamlVersion: 2
 # frontend:
 #   path: ./black_dashboard_react/
 #   sdk:
-#     language: js
-#   publish: build
+#     language: js #   publish: build
 #   scripts:
 #     build: npm run build
 #     deploy:
@@ -44,24 +43,17 @@ yamlVersion: 2
 # #       # The type of the function.
 # #       type: httpServer
 
-django:
-  # The root directory of the backend.
-  path: ./active_interview_project
-  # Information about the backend's programming language.
+backend:
+  # Point directly to the inner directory where wsgi.py lives.
+  path: ./active_interview_project/active_interview_project
   language:
-    # The name of the programming language.
     name: python
-    # The package manager used by the backend.
     packageManager: pip
-  # Information about the backend's functions.
   functions:
-    # The name (label) of the function.
     - name: django
-      # The path to the function's code.
+      # Using the inner folder as the root for the function.
       path: ./
-      # The entry point for the function.
-      entry: mysite/wsgi.py
-      # The handler for the function.
+      # Now the entry is relative to the inner folder.
+      entry: wsgi.py
       handler: application
-      # The type of the function.
       type: httpServer
