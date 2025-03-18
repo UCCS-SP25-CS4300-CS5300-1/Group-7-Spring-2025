@@ -50,7 +50,7 @@ and potential bugs and provide feedback.  Please include a summary section.
 
 # Run the prompt
 completion = client.chat.completions.create(
-    model="gpt-4o-mini",
+    model="o3-mini",
     messages=[
         {
             "role": "system", 
