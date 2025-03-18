@@ -48,7 +48,7 @@
                 <div class="content col py-3">
                     <div>
                         <h1>Welcome to the active interview CS4300 project</h1>
-                        <a class="btn btn-primary" href="{% url 'loggedin'%}">Yo</a>
+                       {% comment %}  <a class="btn btn-primary" href="{% url 'loggedin'%}">Yo</a>
                         loggedin
                         {% if user.is_authenticated %}
             <!---
@@ -63,7 +63,7 @@
                 <a class="nav-link" href="{% url 'login' %}?next={{ request.path }}">Login</a>
 
                 
-            {% endif %}
+            {% endif %}{% endcomment %} 
                     </div>
                 </div>
                 <div class="textbox row flex-nowrap">

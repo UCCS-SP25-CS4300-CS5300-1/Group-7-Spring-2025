@@ -5,8 +5,8 @@ services:
     volumes:
       - static_volume:/app/staticfiles # shared staticfiles volume
       - ./active_interview_project:/app
-    ports:
-      - "8000:8000"
+      #    ports:
+      #      - "8000:8000"
     expose:
       - "8000"  # Exposed internally
     command: gunicorn active_interview_project.wsgi:application --bind 0.0.0.0:8000 --workers 3
