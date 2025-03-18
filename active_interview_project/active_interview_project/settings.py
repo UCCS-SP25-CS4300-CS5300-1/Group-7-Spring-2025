@@ -27,9 +27,9 @@ SECRET_KEY = 'django-insecure-!qu0*#gq2vxvl4+ve+2!c^+y24aj%t5$wo-8daxq8s#r(-&%4h
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['app-cs4300craiglillemon-5.devedu.io',
+ALLOWED_HOSTS = ['app.activeinterviewservice.me',
                  'localhost', '127.0.0.1', 'localhost:3000', '127.0.0.1:3000',
-                 '172.17.0.2', 'django', 'app.activeinterviewservice.me']
+                 '172.17.0.2', 'django']
 
 # Application definition
 
