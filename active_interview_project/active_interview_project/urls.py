@@ -19,6 +19,7 @@ from django.urls import path, include
 from django.contrib.auth.models import User
 from active_interview_app import views
 
+
 urlpatterns = [
     path('', views.index, name='index'),
     path('', views.index, name = 'login'),
