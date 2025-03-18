@@ -4,10 +4,14 @@ from django.contrib.auth.models import User
 from .forms import *
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 def index(request):
     return render(request, 'index.html')
+@login_required
+def loggedin(request):
+    return render(request, 'loggedinindex.html')
 def register(request):
     form = CreateUserForm(request.POST)
     if form.is_valid():
