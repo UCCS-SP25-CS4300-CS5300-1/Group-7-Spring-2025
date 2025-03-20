@@ -3,7 +3,7 @@ on:
   push:
     branches:
       - prod
-      - feature/cd
+#       - feature/cd
 #   pull_request:
 #     branches:
 #       - prod
