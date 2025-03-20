@@ -74,14 +74,14 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Start Containers
-        run: |
-          docker compose up -d --build
-
       - name: Configure Environment
         run: |
           set -o pipefail # make the pipe exist status carry non-zero values;
-          echo 'DEBUG=false' > Group-7-Spring-2025/.env
+          echo 'DEBUG=false' > .env
+
+      - name: Start Containers
+        run: |
+          docker compose up -d --build
 
       - name: Run Django Tests
         if: always()
