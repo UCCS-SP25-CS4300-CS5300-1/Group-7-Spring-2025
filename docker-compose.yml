@@ -1,6 +1,8 @@
 services:
   backend:
     build: active_interview_backend/.
+    env_file:
+      - .env`
     container_name: django
     volumes:
       - static_volume:/app/staticfiles # shared staticfiles volume
