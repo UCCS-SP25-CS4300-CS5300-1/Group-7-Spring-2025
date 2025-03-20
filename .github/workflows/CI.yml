@@ -81,7 +81,7 @@ jobs:
       - name: Configure Environment
         run: |
           set -o pipefail # make the pipe exist status carry non-zero values;
-          echo 'DEBUG=false' > .env
+          echo 'DEBUG=false' > Group-7-Spring-2025/.env
 
       - name: Run Django Tests
         if: always()
