@@ -15,13 +15,13 @@ jobs:
       - name: Configure SSH
         run: |
           mkdir -p ~/.ssh/
-          echo "$SSH_KEY" > ~/.ssh/do.key
-          chmod 600 ~/.ssh/do.key
+          echo "$SSH_KEY" > ~/.ssh/digital_ocean.key
+          chmod 600 ~/.ssh/digital_ocean.key
           cat >>~/.ssh/config <<END
-          Host do
+          Host digital_ocean
             HostName $SSH_HOST
             User $SSH_USER
-            IdentityFile ~/.ssh/do.key
+            IdentityFile ~/.ssh/digital_ocean.key
             StrictHostKeyChecking no
           END
         env:
@@ -29,16 +29,16 @@ jobs:
           SSH_KEY: ${{ secrets.DO_SSH_KEY }}
           SSH_HOST: ${{ secrets.DO_SSH_HOST }}
 
-      - name: Test connection
-        run: ssh -i ~/.ssh/do.key -o StrictHostKeyChecking=no do 'echo "Connected"'
+     #  - name: Test connection
+     #    run: ssh -i ~/.ssh/do.key -o StrictHostKeyChecking=no do 'echo "Connected"'
 
       - name: Stop the server
-        run: ssh do 'cd ~/Group-7-Spring-2025; docker-compose down'
+        run: ssh digital_ocean 'cd ~/Group-7-Spring-2025; docker-compose down'
 
       - name: Check out the source
-        run: ssh do 'cd ~/Group-7-Spring-2025 && git fetch && git reset --hard origin/prod'
+        run: ssh digital_ocean 'cd ~/Group-7-Spring-2025 && git fetch && git reset --hard origin/prod'
 
       - name: Start the server
         if: ${{ always() }}
-        run: ssh do 'cd ~/Group-7-Spring-2025; docker-compose up -d --build'
+        run: ssh digital_ocean 'cd ~/Group-7-Spring-2025; docker-compose up -d --build'
 
