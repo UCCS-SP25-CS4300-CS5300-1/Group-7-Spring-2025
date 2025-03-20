@@ -4,10 +4,10 @@ on:
     branches:
       - prod
       - feature/cd
-  pull_request:
-    branches:
-      - prod
-      - feature/cd
+#   pull_request:
+#     branches:
+#       - prod
+#       - feature/cd
 
 jobs:
   deploy:
