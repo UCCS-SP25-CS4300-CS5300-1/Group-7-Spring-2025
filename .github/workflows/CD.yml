@@ -24,19 +24,21 @@ jobs:
             IdentityFile ~/.ssh/do.key
             StrictHostKeyChecking no
           END
-          cat ~/.ssh/config
         env:
           SSH_USER: ${{ secrets.DO_SSH_USER }}
           SSH_KEY: ${{ secrets.DO_SSH_KEY }}
           SSH_HOST: ${{ secrets.DO_SSH_HOST }}
 
+      - name: Test connection
+        run: ssh -i ~/.ssh/do.key -o StrictHostKeyChecking=no do 'echo "Connected"'
+
       - name: Stop the server
-        run: ssh do 'cd /root/Group-7-Spring-2025; docker-compose down'
+        run: ssh do 'cd ~/Group-7-Spring-2025; docker-compose down'
 
       - name: Check out the source
-        run: ssh do 'cd /root/Group-7-Spring-2025 && git fetch && git reset --hard origin/prod'
+        run: ssh do 'cd ~/Group-7-Spring-2025 && git fetch && git reset --hard origin/prod'
 
       - name: Start the server
         if: ${{ always() }}
-        run: ssh do 'cd /root/Group-7-Spring-2025; docker-compose up -d --build'
+        run: ssh do 'cd ~/Group-7-Spring-2025; docker-compose up -d --build'
 
