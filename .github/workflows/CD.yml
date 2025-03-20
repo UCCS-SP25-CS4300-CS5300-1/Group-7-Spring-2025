@@ -29,8 +29,8 @@ jobs:
           SSH_KEY: ${{ secrets.DO_SSH_KEY }}
           SSH_HOST: ${{ secrets.DO_SSH_HOST }}
 
-     #  - name: Test connection
-     #    run: ssh -i ~/.ssh/do.key -o StrictHostKeyChecking=no do 'echo "Connected"'
+      - name: Test connection
+        run: ssh ${{ secrets.DO_SSH_USER }}@${{ secrets.DIGITALOCEAN_IP }} 'echo "Connected"'
 
       - name: Stop the server
         run: ssh digital_ocean 'cd ~/Group-7-Spring-2025; docker-compose down'
