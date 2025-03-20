@@ -1,7 +1,7 @@
 # Group-7-Spring-2025
 ## Setup
 1. Navigate to the root of the project.
-2. Run `docker-compose up -d --build`
+2. Run `docker-compose up -d --build`.  Same a production environment for now.
 
 ## Accessing
 `http://127.0.0.1`
