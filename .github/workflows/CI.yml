@@ -43,7 +43,8 @@ jobs:
             fi
           elif [[ "${GITHUB_EVENT_NAME}" == "pull_request" ]]; then
             git diff "${{ github.event.pull_request.base.sha }}" "${{ github.event.pull_request.head.sha }}" > "${{ runner.temp }}/changes.diff"
-          fi
+          fi;
+          cat "${RUNNER_TEMP}/changes.diff"
       
       - name: Run AI Code Review
         run: |
