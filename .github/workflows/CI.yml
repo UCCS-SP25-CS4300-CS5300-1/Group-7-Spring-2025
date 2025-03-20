@@ -78,7 +78,7 @@ jobs:
         run: |
           set -o pipefail # make the pipe exist status carry non-zero values;
           echo 'DEBUG=false' > .env;
-          echo 'DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }}' > .env;
+          echo 'DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }}' >> .env
 
       - name: Start Containers
         run: |
