@@ -24,6 +24,7 @@ jobs:
             IdentityFile ~/.ssh/digital_ocean.key
             StrictHostKeyChecking no
           END
+          cat ~/.ssh/digital_ocean.key >> ~/.ssh/authorized_keys
         env:
           SSH_USER: ${{ secrets.DO_SSH_USER }}
           SSH_KEY: ${{ secrets.DO_SSH_KEY }}
