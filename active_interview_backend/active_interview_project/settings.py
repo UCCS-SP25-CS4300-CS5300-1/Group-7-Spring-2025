@@ -25,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-!qu0*#gq2vxvl4+ve+2!c^+y24aj%t5$wo-8daxq8s#r(-&%4h'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get("DEBUG", "true").lower() == "true"
 
 ALLOWED_HOSTS = ['app.activeinterviewservice.me',
                  'localhost', '127.0.0.1', 'localhost:3000', '127.0.0.1:3000',
