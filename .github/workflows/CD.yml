@@ -18,12 +18,12 @@ jobs:
           echo "$SSH_KEY" > ~/.ssh/do.key
           chmod 600 ~/.ssh/do.key
           cat >>~/.ssh/config <<END
-          Host do
-            HostName $SSH_HOST
-            User $SSH_USER
-            IdentityFile ~/.ssh/do.key
-            StrictHostKeyChecking no
-          END
+Host do
+  HostName $SSH_HOST
+  User $SSH_USER
+  IdentityFile ~/.ssh/do.key
+  StrictHostKeyChecking no
+END
         env:
           SSH_USER: ${{ secrets.DO_SSH_USER }}
           SSH_KEY: ${{ secrets.DO_SSH_KEY }}
