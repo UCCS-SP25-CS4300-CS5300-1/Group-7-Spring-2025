@@ -22,10 +22,10 @@ from active_interview_app import views
 
 urlpatterns = [
     path('', views.index, name='index'),
-    path('', views.index, name = 'login'),
-    path('testlogged/', views.loggedin, name ='loggedin'),
-     path('accounts/', include('django.contrib.auth.urls')),
-    path('accounts/register', views.register, name = 'register_page'),
+    path('', views.index, name='login'),
+    path('testlogged/', views.loggedin, name='loggedin'),
+    path('accounts/', include('django.contrib.auth.urls')),
+    path('accounts/register', views.register, name='register_page'),
     path('accounts/logout/', views.logout_view, name='logout'),
     path('admin/', admin.site.urls),
 ]

@@ -73,9 +73,9 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Start Django Container
+      - name: Start Containers
         run: |
-          docker compose up -d
+          docker compose up -d --build
 
       - name: Configure Shell
         run: |

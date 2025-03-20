@@ -10,8 +10,10 @@ RUN pip install -r django-requirements.txt --no-cache-dir
 # Install app
 COPY . /app
 
-# Collect staticfiles
+# Setup django
 RUN python manage.py collectstatic --noinput
+RUN python manage.py makemigrations
+RUN python manage.py migrate
 
 EXPOSE 8000
 

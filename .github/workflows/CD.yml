@@ -4,19 +4,42 @@ on:
     branches:
       - prod
       - feature/cd
+  pull_request:
+    branches:
+      - prod
+      - feature/cd
 
 jobs:
   deploy:
-    name: Deploy
-  
+    name: "Deploy to Digital Ocean"
     runs-on: ubuntu-latest
-    
+    # if: github.event_name == 'push' && github.ref == 'refs/heads/prod' 
+    # needs: test
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-      - uses: Genez-io/genezio-github-action@v3
-        with:
-          token: ${{ secrets.GENEZIO_TOKEN }}
-      - name: Deploy Script
-        working-directory: ./
-        run: genezio deploy --stage prod
+      - name: Configure SSH
+        run: |
+          mkdir -p ~/.ssh/
+          echo "$SSH_KEY" > ~/.ssh/digital_ocean.key
+          chmod 600 ~/.ssh/digital_ocean.key
+          cat >>~/.ssh/config <<END
+          Host digital_ocean
+            HostName $SSH_HOST
+            User $SSH_USER
+            IdentityFile ~/.ssh/digital_ocean.key
+            StrictHostKeyChecking no
+          END
+        env:
+          SSH_USER: ${{ secrets.DO_SSH_USER }}
+          SSH_KEY: ${{ secrets.DO_SSH_KEY }}
+          SSH_HOST: ${{ secrets.DO_SSH_HOST }}
+
+      - name: Stop the server
+        run: ssh digital_ocean 'cd ~/Group-7-Spring-2025; docker-compose down'
+
+      - name: Check out the source
+        run: ssh digital_ocean 'cd ~/Group-7-Spring-2025 && git fetch && git reset --hard origin/prod'
+
+      - name: Start the server
+        if: ${{ always() }}
+        run: ssh digital_ocean 'cd ~/Group-7-Spring-2025; docker-compose up -d --build'
+
