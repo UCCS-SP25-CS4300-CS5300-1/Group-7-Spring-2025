@@ -7,16 +7,35 @@ on:
 
 jobs:
   deploy:
-    name: Deploy
-  
+    name: "Deploy to Digital Ocean"
     runs-on: ubuntu-latest
-    
+    if: github.event_name == 'push' && github.ref == 'refs/heads/prod' 
+    # needs: test
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-      - uses: Genez-io/genezio-github-action@v3
-        with:
-          token: ${{ secrets.GENEZIO_TOKEN }}
-      - name: Deploy Script
-        working-directory: ./
-        run: genezio deploy --stage prod
+      - name: Configure SSH
+        run: |
+          mkdir -p ~/.ssh/
+          echo "$SSH_KEY" > ~/.ssh/do.key
+          chmod 600 ~/.ssh/do.key
+          cat >>~/.ssh/config <<END
+          Host do
+            HostName $SSH_HOST
+            User $SSH_USER
+            IdentityFile ~/.ssh/do.key
+            StrictHostKeyChecking no
+          END
+        env:
+          SSH_USER: ${{ secrets.DO_SSH_USER }}
+          SSH_KEY: ${{ secrets.DO_SSH_KEY }}
+          SSH_HOST: ${{ secrets.DO_SSH_HOST }}
+
+      - name: Stop the server
+        run: ssh do 'cd /root/Group-7-Spring-2025; docker-compose down'
+
+      - name: Check out the source
+        run: ssh do 'cd /root/Group-7-Spring-2025 && git fetch && git reset --hard origin/prod'
+
+      - name: Start the server
+        if: ${{ always() }}
+        run: ssh do 'cd /root/Group-7-Spring-2025; docker-compose up -d --build'
+
