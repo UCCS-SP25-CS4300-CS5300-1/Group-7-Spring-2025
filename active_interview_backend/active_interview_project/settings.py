@@ -25,12 +25,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 # SECRET_KEY = 'django-insecure-!qu0*#gq2vxvl4+ve+2!c^+y24aj%t5$wo-8daxq8s#r(-&%4h' # OLD AND COMPROMISED
 SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", 
-        get_random_secret_key() if os.environ.get("DEBUG", "false").lower() == "true"
+                            get_random_secret_key() if os.environ.get("PROD", "true").lower() == "false"
                                 else None)
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get("DEBUG", "false").lower() == "true"
+DEBUG = os.environ.get("PROD", "true").lower() == "false"
 
 ALLOWED_HOSTS = ['app.activeinterviewservice.me',
                  'localhost', '127.0.0.1', 'localhost:3000', '127.0.0.1:3000',

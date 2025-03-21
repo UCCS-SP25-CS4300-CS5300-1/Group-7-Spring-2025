@@ -1,7 +1,7 @@
 # Group-7-Spring-2025
 ## Setup
 1. Navigate to the root of the project.
-2. Run `echo 'DEBUG=true' > .env`
+2. Run `echo 'PROD=false' > .env`
 
 ## Startup
 1. Navigate to the root of the project.
