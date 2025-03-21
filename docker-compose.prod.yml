@@ -32,7 +32,7 @@ services:
       - "80:80"
     volumes:
       - static_volume:/app/staticfiles # shared staticfiles volume
-      - ./nginx.local.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx.prod.conf:/etc/nginx/nginx.conf:ro
     depends_on:
       - backend
 
