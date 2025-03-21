@@ -10,6 +10,7 @@ cssbeautifier==1.15.4
 distro==1.9.0
 Django==4.2.19
 django-bootstrap-v5==1.0.11
+django-filter==25.1
 djangorestframework==3.15.2
 EditorConfig==0.17.0
 gunicorn==23.0.0
@@ -20,6 +21,7 @@ idna==3.10
 jiter==0.8.2
 jsbeautifier==1.15.4
 json5==0.10.0
+Markdown==3.7
 mccabe==0.7.0
 openai==1.65.4
 packaging==24.2
