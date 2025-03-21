@@ -28,7 +28,7 @@ with open(sys.argv[1], 'r') as diff_file:
 # Provide project context here
 project_context = f"""
 These code changes are for a web app with a React front end and Django back end.
-The app is deployed with docker-copose and nginx on DigitalOcean. The app is an
+The app is deployed with docker-compose and nginx on DigitalOcean. The app is an
 active interview service which uses the chatgpt API to create a dynamic 
 interview chat for job-seekers.
 """.strip()
