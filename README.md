@@ -1,7 +1,14 @@
 # Group-7-Spring-2025
 ## Setup
 1. Navigate to the root of the project.
-2. Run `echo 'PROD=false' > .env`
+2. Make a venv: `python3 -m venv myenv`
+3. Load the venv: `source myenv/bin/activate`
+4. Install the requirements: `pip install -r base-requirements.txt`
+5. Generate a secret django key: `python -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"`
+6. Edit open a `.env` file in the root of your project and fill it out like so:
+```
+DJANGO_SECRET_KEY=<your secret key>
+```
 
 ## Startup
 1. Navigate to the root of the project.
@@ -12,10 +19,11 @@
 
 ## Cleaning
 Every once in a while, your local environment may break because of a refactor, but the code works just fine in production.  Here is a way to clean your local environment on linux/mac:
-1. `docker-compose down --volumes --remove-orphans`
-2. `docker system prune --all --volumes`
-3. `sudo systemctl restart docker`
-4. `git clean -fdx -e .env -e active_interview_backend/db`
+1. Navigate to the root of the project.
+2. `docker-compose down --volumes --remove-orphans`
+3. `docker system prune --all --volumes`
+4. `sudo systemctl restart docker`
+5. `git clean -fdx -e .env -e active_interview_backend/db`
 
 ## AI Use
 1. The git diff script in CI.yml was iteratively designed with the help of chatgpt.

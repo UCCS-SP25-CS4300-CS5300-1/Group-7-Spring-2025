@@ -1,6 +1,8 @@
 services:
   backend:
     build: active_interview_backend/.
+    environment:
+      - PROD=true
     env_file:
       - .env
     container_name: django
@@ -31,9 +33,11 @@ services:
       - "80"
     ports:
       - "80:80"
+      - "443:443"
     volumes:
       - static_volume:/app/staticfiles # shared staticfiles volume
-      - ./nginx.local.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx.prod.conf:/etc/nginx/nginx.conf:ro
+      - /etc/letsencrypt:/etc/letsencrypt:ro # shared the certs from host
     depends_on:
       - backend
 
