@@ -34,10 +34,10 @@ jobs:
           SSH_HOST: ${{ secrets.DO_SSH_HOST }}
 
       - name: Stop the server
-        run: ssh digital_ocean 'cd ~/Group-7-Spring-2025; docker-compose down'
+        run: ssh digital_ocean 'cd ~/Group-7-Spring-2025; docker-compose down --remove-orphans; docker system prune --all --volumes'
 
       - name: Check out the source
-        run: ssh digital_ocean 'cd ~/Group-7-Spring-2025 && git fetch && git reset --hard origin/prod'
+        run: ssh digital_ocean 'cd ~/Group-7-Spring-2025 && git fetch && git reset --hard origin/prod && git clean -fdx -e .env'
 
       - name: Start the server
         if: ${{ always() }}
