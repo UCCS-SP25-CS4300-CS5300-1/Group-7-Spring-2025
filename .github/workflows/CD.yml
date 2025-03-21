@@ -44,5 +44,5 @@ jobs:
 
       - name: Start the server
         if: ${{ always() }}
-        run: ssh digital_ocean 'cd ~/Group-7-Spring-2025; docker-compose up -d --build'
+        run: ssh digital_ocean 'cd ~/Group-7-Spring-2025; docker-compose -f docker-compose.prod.yml up -d --build'
 
