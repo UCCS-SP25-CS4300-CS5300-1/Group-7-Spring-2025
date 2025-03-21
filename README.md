@@ -11,10 +11,11 @@
 `http://127.0.0.1`
 
 ## Cleaning
-Every once in a while, your local environment may break because of a refactor, but the code works just fine in production.  Here is a way to clean your local environment that may reset your database:
+Every once in a while, your local environment may break because of a refactor, but the code works just fine in production.  Here is a way to clean your local environment on linux/mac:
 1. `docker-compose down --volumes --remove-orphans`
 2. `docker system prune --all --volumes`
-3. `git clean -fdx -e .env`
+3. `sudo systemctl restart docker`
+4. `git clean -fdx -e .env -e active_interview_backend/db`
 
 ## AI Use
 1. The git diff script in CI.yml was iteratively designed with the help of chatgpt.
