@@ -7,6 +7,7 @@ services:
     volumes:
       - static_volume:/app/staticfiles # shared staticfiles volume
       - ./active_interview_backend:/app
+      - db_data:/app/db
       #    ports:
       #      - "8000:8000"
     expose:
@@ -38,4 +39,5 @@ services:
 
 volumes:
   static_volume:
+  db_data:
 
