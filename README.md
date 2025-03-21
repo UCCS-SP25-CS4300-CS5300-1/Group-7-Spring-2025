@@ -27,6 +27,8 @@ Every once in a while, your local environment may break because of a refactor, b
 
 ## Restarting Cleanly
 I have created an linux/mac script that should make cleanly restarting local deployments in a way that avoids bugs much easier.  If you run windows, look at scripts/clean-restart.sh and do the equivalent commands for windows.
+> [!CAUTION]
+> Make sure to commit your code before using this.  The script can and will wipe all non-committed code, so you will lose work if you forget.
 1. Navigate to the root of the project.
 2. `sudo ./scripts/clean-restart.sh`
 

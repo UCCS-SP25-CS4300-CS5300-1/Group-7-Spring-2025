@@ -18,9 +18,17 @@ urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),
     path('accounts/register', views.register, name='register_page'),
     path('accounts/logout/', views.logout_view, name='logout'),
+
+    # api urls
+    path('api/', include(router.urls)),
 ]
 
-# add these urls for non-production environments
-if os.environ.get("PROD", "true").lower() == "false":
-    urlpatterns.append(path('api/', include(router.urls)))
+if os.environ.get("PROD", "true").lower() == "true":
+    # add these urls for production environments only
+    # urlpatterns.append(path('api/', include(router.urls)))
+    pass
+else:
+    # add these urls for non-production environments only
+    # urlpatterns.append(path('api/', include(router.urls)))
+    pass
     
