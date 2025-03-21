@@ -36,7 +36,7 @@ services:
     volumes:
       - static_volume:/app/staticfiles # shared staticfiles volume
       - ./nginx.prod.conf:/etc/nginx/nginx.conf:ro
-      - /etc/letsencrypt/live/app.activeinterviewservice.me:/etc/letsencrypt/live/app.activeinterviewservice.me:ro # shared the certs from host
+      - /etc/letsencrypt:/etc/letsencrypt:ro # shared the certs from host
     depends_on:
       - backend
 
