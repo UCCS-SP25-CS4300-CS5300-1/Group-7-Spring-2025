@@ -35,6 +35,7 @@ DEBUG = os.environ.get("PROD", "true").lower() == "false"
 ALLOWED_HOSTS = ['app.activeinterviewservice.me',
                  'localhost', '127.0.0.1', 'localhost:3000', '127.0.0.1:3000',
                  '172.17.0.2', 'django']
+CSRF_TRUSTED_ORIGINS = ['https://app.activeinterviewservice.me']
 
 # Application definition
 

@@ -1,6 +1,8 @@
 services:
   backend:
     build: active_interview_backend/.
+    environment:
+      - PROD=false
     env_file:
       - .env
     container_name: django
