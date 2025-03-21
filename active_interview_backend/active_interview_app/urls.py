@@ -4,7 +4,7 @@ from django.urls import path, include
 from django.contrib.auth.models import User
 from rest_framework import routers
 
-from active_interview_app import views
+from . import views
 
 
 # Create router and register views
