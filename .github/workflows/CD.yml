@@ -37,7 +37,7 @@ jobs:
         run: ssh digital_ocean 'cd ~/Group-7-Spring-2025; docker-compose down --remove-orphans'
 
       - name: Clean the environment
-        run: ssh digital_ocean 'cd ~/Group-7-Spring-2025; docker system prune --all --volumes -f; sudo systemctl restart docker'
+        run: ssh digital_ocean 'cd ~/Group-7-Spring-2025; docker system prune --all --volumes -f; systemctl restart docker'
 
       - name: Check out the source
         run: ssh digital_ocean 'cd ~/Group-7-Spring-2025 && git fetch && git reset --hard origin/prod && git clean -fdx -e .env -e active_interview_backend/db'
