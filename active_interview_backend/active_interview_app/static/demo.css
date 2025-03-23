@@ -1,5 +1,13 @@
+:root {
+	--deep-ocean: #070737;
+    --shallows: #64C0F5;
+    --rapids: #6492F5;
+    --reef: #073638;
+}
+
 html, body {
     height: 100%;
+    background-color: var(--deep-ocean);
     /* overflow: hidden;  */
 }
 .overflow-y-auto {
@@ -11,6 +19,7 @@ html, body {
     width: 100%;
     display: flex;
     flex-direction: column;
+    background-color: var(--deep-ocean);
 }
 .inner-chat-container {
     max-width: 700px;
@@ -19,9 +28,13 @@ html, body {
     display: flex;
     min-height: 0;
     flex-direction: column;
+    background-color: var(--deep-ocean);
 }
 .bubbles-container {
     overflow: hidden;
+}
+.navbar {
+    background-color: var(--reef);
 }
 /* .chatbox {
     width: 100%;
@@ -45,4 +58,7 @@ html, body {
 .bot-text-bubble {
     max-width: 500px;
     width: auto;
+}
+h3 {
+    color: white;
 }
