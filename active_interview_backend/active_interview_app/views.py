@@ -1,3 +1,5 @@
+import os
+
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -14,7 +16,7 @@ def index(request):
     return render(request, 'index.html')
 
 def demo(request):
-    return render(request, 'demo.html')
+    return render(request, os.path.join('demo', 'demo.html'))
 
 
 @login_required
