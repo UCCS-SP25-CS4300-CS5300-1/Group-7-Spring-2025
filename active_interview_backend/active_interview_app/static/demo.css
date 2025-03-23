@@ -59,6 +59,6 @@ html, body {
     max-width: 500px;
     width: auto;
 }
-h3 {
-    color: white;
+.whiteTextOverride {
+    color: white !important;
 }
