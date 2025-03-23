@@ -15,6 +15,9 @@
       height: 100%;
       overflow: hidden; /* Prevent page scrollbar */
     }
+    .overflow-y-auto {
+      padding-right: 1rem; /* adjust as needed */
+    } 
     .chat-container {
       max-width: 700px;
       margin: 0 auto; /* Center horizontally */
@@ -22,23 +25,31 @@
       display: flex;
       flex-direction: column;
     }
+    .bubbles-container {
+      overflow: hidden;
+    }
+    .chatbox {
+      width: 100%;
+      min-height: 40px;
+    }
     .user-text-container {
       display: flex;
       justify-content: flex-end;
-      margin-bottom: 1rem;
+      margin: 0.5rem;
+      /* margin-right: 20.0rem; */
     }
     .bot-text-container {
       display: flex;
       justify-content: flex-start;
-      margin-bottom: 1rem;
+      margin: 0.5rem;
     }
     .user-text-bubble {
       max-width: 500px;
-      width: 100%;
+      width: auto;
     }
     .bot-text-bubble {
       max-width: 500px;
-      width: 100%;
+      width: auto;
     }
   </style>
 </head>
@@ -117,13 +128,16 @@
           </div>
         </div>
       </div>
-      <div class="col-md-9 col-lg-10 h-100">
+      <div class="col-md-9 col-lg-10 h-100 px-0">
+        <nav class="navbar">
+          <!-- Navbar content -->
+        </nav>
         <div class="chat-container h-100 d-flex flex-column">
           <button class="btn btn-primary d-block d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasSidebar">
             Toggle offcanvas
           </button>
           <h3>Chat 10</h3>
-          <div class="flex-grow-1 overflow-y-auto overflow-x-hidden">
+          <div class="overflow-y-auto overflow-x-hidden">
             <div class="row" style="flex-direction: column;">
               <div class="col user-text-container">
                 <div class="card user-text-bubble">
@@ -135,21 +149,15 @@
               <div class="col bot-text-container">
                 <div class="card bot-text-bubble">
                   <div class="card-body">
-                    <p class="card-text">There he is, said the youth, coming after you, if you will only wait.</p>
-                  </div>
-                </div>
-              </div>
-              <div class="col user-text-container">
-                <div class="card user-text-bubble">
-                  <div class="card-body">
-                    <p class="card-text">Certainly we will, said Glaucon; and in a few minutes Polemarchus appeared, and with him Adeimantus, Glaucon’s brother, Niceratus the son of Nicias, and several others who had been at the procession.</p>
-                  </div>
-                </div>
-              </div>
-              <div class="col bot-text-container">
-                <div class="card bot-text-bubble">
-                  <div class="card-body">
-                    <p class="card-text">Polemarchus said to me: I perceive, Socrates, that you and your companion are already on your way to the city.</p>
+                    <p class="card-text">
+                      There he is, said the youth, coming after you, if you will only wait.
+                      <br>
+                      <br>
+                      Certainly we will, said Glaucon; and in a few minutes Polemarchus appeared, and with him Adeimantus, Glaucon’s brother, Niceratus the son of Nicias, and several others who had been at the procession.
+                      <br>
+                      <br>
+                      Polemarchus said to me: I perceive, Socrates, that you and your companion are already on your way to the city.
+                    </p>
                   </div>
                 </div>
               </div>
@@ -191,33 +199,31 @@
               <div class="col bot-text-container">
                 <div class="card bot-text-bubble">
                   <div class="card-body">
-                    <p class="card-text">But can you persuade us, if we refuse to listen to you? he said.</p>
+                    <p class="card-text">
+                      But can you persuade us, if we refuse to listen to you? he said.
+                      <br>
+                      <br>
+                      Certainly not, replied Glaucon.
+                    </p>
                   </div>
                 </div>
               </div>
               <div class="col user-text-container">
                 <div class="card user-text-bubble">
-                  <div class="card-body">
-                    <p class="card-text">Certainly not, replied Glaucon.</p>
-                  </div>
-                </div>
-              </div>
-              <div class="col bot-text-container">
-                <div class="card bot-text-bubble">
                   <div class="card-body">
                     <p class="card-text">Then we are not going to listen; of that you may be assured.</p>
                   </div>
                 </div>
               </div>
-              <div class="col user-text-container">
-                <div class="card user-text-bubble">
+              <div class="col bot-text-container">
+                <div class="card bot-text-bubble">
                   <div class="card-body">
                     <p class="card-text">Adeimantus added: Has no one told you of the torch-race on horseback in honour of the goddess which will take place in the evening?</p>
                   </div>
                 </div>
               </div>
-              <div class="col bot-text-container">
-                <div class="card bot-text-bubble">
+              <div class="col user-text-container">
+                <div class="card user-text-bubble">
                   <div class="card-body">
                     <p class="card-text">With horses! I replied: That is a novelty. Will horsemen carry torches and pass them one to another during the race?</p>
                   </div>
@@ -227,8 +233,9 @@
           </div>
           <div class="card my-3">
             <div class="card-body">
-              <h5 class="card-title">Chatbox</h5>
-              <p class="card-text">Enter text here</p>
+              <div class="chatbox">
+                <textarea id="chatInput" placeholder="Enter text here"></textarea>
+              </div>
             </div>
           </div>
         </div>
