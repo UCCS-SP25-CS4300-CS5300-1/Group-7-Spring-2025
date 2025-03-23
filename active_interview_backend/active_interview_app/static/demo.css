@@ -3,6 +3,7 @@
     --shallows: #4482A6;
     --abyss: #020305;
     --reef: #031414;
+    --marianna: #101026;
 }
 
 html, body {
@@ -72,5 +73,5 @@ html, body {
 }
 .chat-card {
     color: white;
-    background-color: var(--abyss) !important;
+    background-color: var(--marianna) !important;
 }
