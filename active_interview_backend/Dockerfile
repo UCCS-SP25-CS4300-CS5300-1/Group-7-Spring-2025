@@ -20,4 +20,4 @@ RUN chmod +x ./start.sh
 EXPOSE 8000
 
 # Run startup script
-CMD ["bash", "./start.sh"]
+# CMD ["bash", "./start.sh"]
