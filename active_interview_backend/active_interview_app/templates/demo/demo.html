@@ -71,36 +71,7 @@
       </div>
       <div class="col-md-9 col-lg-10 h-100 px-0">
         <div class="chat-container h-100 d-flex flex-column">
-          <nav class="navbar navbar-expand-md bg-body-tertiary px-3">
-            <!-- Navbar content -->
-            <a class="navbar-brand" href="#">Navbar</a>
-            <div class="d-flex ms-auto">
-              <button class="btn btn-default mx-3 d-block d-md-none border border-dark-subtle" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasSidebar">
-                Chats
-              </button>
-              <button class="navbar-toggler border border-dark-subtle" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-              </button>
-            </div>
-            <div class="collapse navbar-collapse" id="navbarNav">
-              <ul class="navbar-nav">
-                <li class="nav-item active">
-                  <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="#">Features</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="#">Pricing</a>
-                </li>
-              </ul>
-              <ul class="navbar-nav ms-auto">
-                <li class="nav-item">
-                  <a class="nav-link" href="#">Profile</a>
-                </li>
-              </ul>
-            </div>
-          </nav>
+          {% include "demo/navbar.html" %}
           <div class="inner-chat-container flex-grow-1 d-flex flex-column">
             <h3 class="px-3 pt-3">Chat 10</h3>
             <div class="overflow-y-auto overflow-x-hidden">
