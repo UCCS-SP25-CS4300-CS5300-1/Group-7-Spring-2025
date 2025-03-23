@@ -15,6 +15,8 @@ COPY . /app
 # RUN python manage.py makemigrations
 # RUN python manage.py migrate
 
+RUN chmod +x ./start.sh
+
 EXPOSE 8000
 
 # Run startup script
