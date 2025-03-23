@@ -11,11 +11,11 @@ RUN pip install -r requirements.txt --no-cache-dir
 COPY . /app
 
 # Setup django
-RUN python manage.py collectstatic --noinput
-RUN python manage.py makemigrations
-RUN python manage.py migrate
+# RUN python manage.py collectstatic --noinput
+# RUN python manage.py makemigrations
+# RUN python manage.py migrate
 
 EXPOSE 8000
 
-# Start Gunicorn, binding to 0.0.0.0:8000 with 3 worker processes.
-CMD ["gunicorn", "active_interview_project.wsgi:application", "--bind", "0.0.0.0:8000", "--workers", "3"]
+# Run startup script
+CMD ["./start.sh"]
