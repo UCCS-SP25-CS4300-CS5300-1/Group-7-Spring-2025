@@ -55,7 +55,7 @@ html, body {
     max-width: 500px;
     width: auto;
     color: white;
-    background-color: var(--shallows);
+    background-color: var(--shallows) !important;
 }
 .bot-text-bubble {
     max-width: 500px;
