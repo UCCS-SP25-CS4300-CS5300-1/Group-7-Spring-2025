@@ -1,7 +1,7 @@
 :root {
-	--deep-ocean: #070737;
+	--depths: #070737;
     --shallows: #4482A6;
-    --rapids: #162036;
+    --abyss: #020305;
     --reef: #031414;
 }
 
@@ -34,7 +34,7 @@ html, body {
     overflow: hidden;
 }
 .navbar {
-    background-color: var(--reef);
+    background-color: var(--abyss);
 }
 /* .chatbox {
     width: 100%;
