@@ -15,102 +15,178 @@
       height: 100%;
       overflow: hidden; /* Prevent page scrollbar */
     }
+    .chat-container {
+      max-width: 700px;
+      margin: 0 auto; /* Center horizontally */
+      width: 100%;
+    }
   </style>
 </head>
 
 
-<body class="d-flex flex-column min-vh-100">
-  <div class="container-fluid flex-grow-1">
-    <div class="row min-vh-100">
-      <div class="col-md-3 col-lg-2 d-none d-md-flex border-end">
+<body class="d-flex flex-column">
+  <div class="container-fluid h-100">
+    <div class="row h-100">
+      <div class="col-md-3 col-lg-2 d-none d-md-flex border-end px-0">
+        <!-- Sidebar -->
         <div class="d-flex flex-column flex-grow-1">
-          <div class="row">
-            Sidebar
-          </div>
-          <div class="overflow-auto flex-grow-1">
-            <div class="card mt-3">
+          <div class="overflow-auto vh-100 px-3 w-100">
+            <div class="p-3">
+              Sidebar
+            </div>
+            <div class="card mb-3">
               <div class="card-body">
                 <h5 class="card-title">Chat 10</h5>
                 <p class="card-text">Lorem Ipsum</p>
               </div>
             </div>
-            <div class="card mt-3">
+            <div class="card mb-3">
               <div class="card-body">
                 <h5 class="card-title">Chat 9</h5>
                 <p class="card-text">Lorem Ipsum</p>
               </div>
             </div>
-            <div class="card mt-3">
+            <div class="card mb-3">
               <div class="card-body">
                 <h5 class="card-title">Chat 8</h5>
                 <p class="card-text">Lorem Ipsum</p>
               </div>
             </div>
-            <div class="card mt-3">
+            <div class="card mb-3">
               <div class="card-body">
                 <h5 class="card-title">Chat 7</h5>
                 <p class="card-text">Lorem Ipsum</p>
               </div>
             </div>
-            <div class="card mt-3">
+            <div class="card mb-3">
               <div class="card-body">
                 <h5 class="card-title">Chat 6</h5>
                 <p class="card-text">Lorem Ipsum</p>
               </div>
             </div>
-            <div class="card mt-3">
+            <div class="card mb-3">
               <div class="card-body">
                 <h5 class="card-title">Chat 5</h5>
                 <p class="card-text">Lorem Ipsum</p>
               </div>
             </div>
-            <div class="card mt-3">
+            <div class="card mb-3">
               <div class="card-body">
                 <h5 class="card-title">Chat 4</h5>
                 <p class="card-text">Lorem Ipsum</p>
               </div>
             </div>
-            <div class="card mt-3">
+            <div class="card mb-3">
               <div class="card-body">
                 <h5 class="card-title">Chat 3</h5>
                 <p class="card-text">Lorem Ipsum</p>
               </div>
             </div>
-            <div class="card mt-3">
+            <div class="card mb-3">
               <div class="card-body">
                 <h5 class="card-title">Chat 2</h5>
                 <p class="card-text">Lorem Ipsum</p>
               </div>
             </div>
-            <div class="card mt-3">
+            <div class="card mb-3">
               <div class="card-body">
                 <h5 class="card-title">Chat 1</h5>
                 <p class="card-text">Lorem Ipsum</p>
               </div>
             </div>
           </div>
-          <!-- <div class="row justify-content-center">
-            <div class="card m-3" style="display: inline-block;">
-              <div class="card-body">
-                <h5 class="card-title">Chat 1</h5>
-                <p class="card-text">Lorem Ipsum</p>
-              </div>
-            </div>
-          </div> -->
         </div>
       </div>
       <div class="col-md-9 col-lg-10">
-        <button class="btn btn-primary d-block d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasSidebar">
-          Toggle offcanvas
-        </button>
-        Chat
+        <div class="chat-container">
+          <button class="btn btn-primary d-block d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasSidebar">
+            Toggle offcanvas
+          </button>
+          <h3>Chat 10</h3>
+          <div class="overflow-auto">
+            chat
+          </div>
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Chatbox</h5>
+              <p class="card-text">Enter text here</p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 
   <!-- offcanvas -->
   <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasSidebar">
-
+    <!-- Sidebar -->
+    <div class="d-flex flex-column flex-grow-1">
+      <div class="overflow-auto vh-100 px-3 w-100">
+        <div class="p-3">
+          Sidebar
+        </div>
+        <div class="card mb-3">
+          <div class="card-body">
+            <h5 class="card-title">Chat 10</h5>
+            <p class="card-text">Lorem Ipsum</p>
+          </div>
+        </div>
+        <div class="card mb-3">
+          <div class="card-body">
+            <h5 class="card-title">Chat 9</h5>
+            <p class="card-text">Lorem Ipsum</p>
+          </div>
+        </div>
+        <div class="card mb-3">
+          <div class="card-body">
+            <h5 class="card-title">Chat 8</h5>
+            <p class="card-text">Lorem Ipsum</p>
+          </div>
+        </div>
+        <div class="card mb-3">
+          <div class="card-body">
+            <h5 class="card-title">Chat 7</h5>
+            <p class="card-text">Lorem Ipsum</p>
+          </div>
+        </div>
+        <div class="card mb-3">
+          <div class="card-body">
+            <h5 class="card-title">Chat 6</h5>
+            <p class="card-text">Lorem Ipsum</p>
+          </div>
+        </div>
+        <div class="card mb-3">
+          <div class="card-body">
+            <h5 class="card-title">Chat 5</h5>
+            <p class="card-text">Lorem Ipsum</p>
+          </div>
+        </div>
+        <div class="card mb-3">
+          <div class="card-body">
+            <h5 class="card-title">Chat 4</h5>
+            <p class="card-text">Lorem Ipsum</p>
+          </div>
+        </div>
+        <div class="card mb-3">
+          <div class="card-body">
+            <h5 class="card-title">Chat 3</h5>
+            <p class="card-text">Lorem Ipsum</p>
+          </div>
+        </div>
+        <div class="card mb-3">
+          <div class="card-body">
+            <h5 class="card-title">Chat 2</h5>
+            <p class="card-text">Lorem Ipsum</p>
+          </div>
+        </div>
+        <div class="card mb-3">
+          <div class="card-body">
+            <h5 class="card-title">Chat 1</h5>
+            <p class="card-text">Lorem Ipsum</p>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- Add bootstrap scripts -->
