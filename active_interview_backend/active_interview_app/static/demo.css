@@ -72,5 +72,5 @@ html, body {
 }
 .chat-card {
     color: white;
-    background-color: var(--shallows) !important;
+    background-color: var(--abyss) !important;
 }
