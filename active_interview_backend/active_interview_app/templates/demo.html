@@ -28,10 +28,10 @@
     .bubbles-container {
       overflow: hidden;
     }
-    .chatbox {
+    /* .chatbox {
       width: 100%;
       min-height: 40px;
-    }
+    } */
     .user-text-container {
       display: flex;
       justify-content: flex-end;
@@ -129,7 +129,6 @@
         </div>
       </div>
       <div class="col-md-9 col-lg-10 h-100 px-0">
-        
         <div class="chat-container h-100 d-flex flex-column">
           <nav class="navbar navbar-expand-md bg-body-tertiary px-3">
             <!-- Navbar content -->
@@ -258,8 +257,9 @@
           </div>
           <div class="card mb-3 mt-3">
             <div class="card-body">
-              <div class="chatbox">
-                <textarea id="chatInput" placeholder="Enter text here"></textarea>
+              <div class="d-flex">
+                <textarea id="chatInput" class="flex-grow-1 border-0 p-2" placeholder="Enter text here" style="resize: none;"></textarea>
+                <button class="btn btn-primary ms-2" type="button">Send</button>
               </div>
             </div>
           </div>
@@ -342,6 +342,15 @@
 
   <!-- Add bootstrap scripts -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    const chatInput = document.getElementById('chatInput');
+    chatInput.addEventListener('input', function() {
+      // Reset height to recalc scrollHeight
+      this.style.height = 'auto';
+      // Set the height based on the scrollHeight, which grows as needed
+      this.style.height = this.scrollHeight + 'px';
+    });
+  </script>
 </body>
 
 </html>
