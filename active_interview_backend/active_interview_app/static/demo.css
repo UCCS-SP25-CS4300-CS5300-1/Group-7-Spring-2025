@@ -70,3 +70,7 @@ html, body {
 .offcanvas {
     background-color: var(--reef);
 }
+.chat-card {
+    color: white;
+    background-color: var(--shallows) !important;
+}
