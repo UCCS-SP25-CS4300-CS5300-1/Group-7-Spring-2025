@@ -66,5 +66,5 @@ html, body {
     background-color: var(--reef);
 }
 .chat-offcanvas {
-    offcanvas-bg-color: var(--reef);
+    offcanvas-bg: var(--reef);
 }
