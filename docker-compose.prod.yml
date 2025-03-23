@@ -14,7 +14,7 @@ services:
       #      - "8000:8000"
     expose:
       - "8000"  # Exposed internally
-    command: gunicorn active_interview_project.wsgi:application --bind 0.0.0.0:8000 --workers 3
+    command: bash ./start.sh
     # network_mode: "host"
 
 #   react:
