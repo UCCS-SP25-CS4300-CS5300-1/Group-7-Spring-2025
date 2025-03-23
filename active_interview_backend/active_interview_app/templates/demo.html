@@ -20,6 +20,10 @@
       margin: 0 auto; /* Center horizontally */
       width: 100%;
     }
+    .user-text-bubble {
+      max-width: 500px;
+      width: 100%;
+    }
   </style>
 </head>
 
@@ -30,7 +34,7 @@
       <div class="col-md-3 col-lg-2 d-none d-md-flex border-end px-0">
         <!-- Sidebar -->
         <div class="d-flex flex-column flex-grow-1">
-          <div class="overflow-auto vh-100 px-3 w-100">
+          <div class="overflow-y-auto vh-100 px-3 w-100">
             <div class="p-3">
               Sidebar
             </div>
@@ -97,16 +101,22 @@
           </div>
         </div>
       </div>
-      <div class="col-md-9 col-lg-10">
-        <div class="chat-container">
+      <div class="col-md-9 col-lg-10 h-100">
+        <div class="chat-container h-100 d-flex flex-column">
           <button class="btn btn-primary d-block d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasSidebar">
             Toggle offcanvas
           </button>
           <h3>Chat 10</h3>
-          <div class="overflow-auto">
-            chat
+          <div class="flex-grow-1 overflow-y-auto overflow-x-hidden">
+            <div class="row">
+              <div class="col">
+                <div class="card">
+                  Text bubble 1
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="card">
+          <div class="card my-3">
             <div class="card-body">
               <h5 class="card-title">Chatbox</h5>
               <p class="card-text">Enter text here</p>
@@ -121,7 +131,7 @@
   <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasSidebar">
     <!-- Sidebar -->
     <div class="d-flex flex-column flex-grow-1">
-      <div class="overflow-auto vh-100 px-3 w-100">
+      <div class="overflow-y-auto vh-100 px-3 w-100">
         <div class="p-3">
           Sidebar
         </div>
