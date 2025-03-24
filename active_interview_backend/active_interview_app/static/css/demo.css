@@ -77,6 +77,7 @@ html, body {
 .offcanvas {
     /* background-color: var(--reef); */
     max-width: 85vw !important;
+    max-height: 100vh !important;
 }
 .chat-card {
     color: white;
