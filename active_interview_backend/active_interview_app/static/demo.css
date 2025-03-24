@@ -3,7 +3,7 @@
     --shallows: #4482A6;
     --abyss: #020305;
     --reef: #031414;
-    --marianna: #101026;
+    --alga: #16B777;
 }
 
 html, body {
@@ -73,5 +73,5 @@ html, body {
 }
 .chat-card {
     color: white;
-    background-color: var(--marianna) !important;
+    background-color: var(--alga) !important;
 }
