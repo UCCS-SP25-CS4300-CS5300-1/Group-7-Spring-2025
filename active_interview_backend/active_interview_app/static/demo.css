@@ -44,13 +44,19 @@ html, body {
 .user-text-container {
     display: flex;
     justify-content: flex-end;
-    margin: 1.0rem;
+    margin-top: 1.0rem;
+    margin-bottom: 1.0rem;
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
     /* margin-right: 20.0rem; */
 }
 .bot-text-container {
     display: flex;
     justify-content: flex-start;
-    margin: 1.0rem;
+    margin-top: 1.0rem;
+    margin-bottom: 1.0rem;
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
 }
 .user-text-bubble {
     max-width: 500px;
