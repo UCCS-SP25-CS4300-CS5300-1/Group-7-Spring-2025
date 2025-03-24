@@ -1,17 +1,29 @@
-from django.shortcuts import render, redirect
-from .models import *
-from django.contrib.auth.models import User
-from .forms import *
+import os
+
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from django.shortcuts import render, redirect
+
+from .forms import *
+from .models import *
+from .serializers import *
+
 
 # Create your views here.
 def index(request):
     return render(request, 'index.html')
+
+def demo(request):
+    return render(request, os.path.join('demo', 'demo.html'))
+
+
 @login_required
 def loggedin(request):
     return render(request, 'loggedinindex.html')
+
+
 def register(request):
     form = CreateUserForm(request.POST)
     if form.is_valid():
@@ -26,6 +38,7 @@ def register(request):
     context={'form':form}
         
     return render(request, 'register.html', context)
+
 
 def logout_view(request):
     if request.method == "POST":

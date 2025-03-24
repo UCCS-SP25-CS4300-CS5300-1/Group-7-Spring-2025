@@ -4,7 +4,7 @@ from django.urls import path, include
 from django.contrib.auth.models import User
 from rest_framework import routers
 
-from active_interview_app import views
+from . import views
 
 
 # Create router and register views
@@ -18,6 +18,9 @@ urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),
     path('accounts/register', views.register, name='register_page'),
     path('accounts/logout/', views.logout_view, name='logout'),
+
+    # Demo view
+    path('demo/', views.demo, name='demo'),
 
     # api urls
     path('api/', include(router.urls)),
