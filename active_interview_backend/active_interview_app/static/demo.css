@@ -75,3 +75,7 @@ html, body {
     color: white;
     background-color: var(--alga) !important;
 }
+.chats-button {
+    color: white;
+    border-color: white;
+}
