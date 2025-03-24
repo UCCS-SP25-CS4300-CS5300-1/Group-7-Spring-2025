@@ -3,7 +3,7 @@
     --shallows: #4482A6;
     --abyss: #020305;
     --reef: #031414;
-    --alga: #0F7D51;
+    --alga: #042518;
 }
 
 html, body {
@@ -75,7 +75,8 @@ html, body {
     background-color: var(--reef);
 }
 .offcanvas {
-    background-color: var(--reef);
+    /* background-color: var(--reef); */
+    max-width: 85vw !important;
 }
 .chat-card {
     color: white;
