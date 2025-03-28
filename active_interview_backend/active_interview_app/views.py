@@ -18,6 +18,10 @@ def index(request):
 def demo(request):
     return render(request, os.path.join('demo', 'demo.html'))
 
+@login_required
+def chat(request):
+    return render(request, 'chat.html')
+
 
 @login_required
 def loggedin(request):
