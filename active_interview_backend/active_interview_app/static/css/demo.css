@@ -3,7 +3,7 @@
     --shallows: #4482A6;
     --abyss: #020305;
     --reef: #031414;
-    --alga: #042518;
+    --alga: #141414;
 }
 
 html, body {
@@ -73,6 +73,7 @@ html, body {
 }
 .chat-sidebar {
     background-color: var(--reef);
+    max-height: 100dvh !important;
 }
 .offcanvas {
     /* background-color: var(--reef); */
