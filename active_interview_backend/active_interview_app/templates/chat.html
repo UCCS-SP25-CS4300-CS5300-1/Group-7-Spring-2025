@@ -2,7 +2,29 @@
 
 
 {% block content %}
-  <!-- <div class="chat-container flex-grow-1 d-flex flex-column"> -->
-    <h3 class="whiteTextOverride px-3 pt-3">Error: no page content</h3>
-  <!-- </div> -->
+  <div class="chat-container flex-grow-1 d-flex flex-column">
+    <h3 class="whiteTextOverride px-3 pt-3">Chat 10</h3>
+    {% include "demo/text-bubbles.html" %}
+    <div class="card mb-3 mt-3">
+      <div class="card-body">
+        <div class="d-flex">
+          <textarea id="chatInput" class="flex-grow-1 border-0 p-2" placeholder="Enter text here" style="resize: none;"></textarea>
+          <button class="btn btn-primary ms-2" type="button">Send</button>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+
+{% block scripts %}
+  <script>
+    const chatInput = document.getElementById('chatInput');
+    chatInput.addEventListener('input', function() {
+      // Reset height to recalc scrollHeight
+      this.style.height = 'auto';
+      // Set the height based on the scrollHeight, which grows as needed
+      this.style.height = this.scrollHeight + 'px';
+    });
+  </script>
 {% endblock %}
