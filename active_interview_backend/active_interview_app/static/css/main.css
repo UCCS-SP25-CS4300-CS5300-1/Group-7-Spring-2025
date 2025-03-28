@@ -14,7 +14,7 @@ html, body {
 .overflow-y-auto {
     padding-right: 1rem; /* adjust as needed */
 } 
-.chat-container {
+.content-container {
     /* max-width: 700px; */
     margin: 0 auto; /* Center horizontally */
     width: 100%;
@@ -22,7 +22,7 @@ html, body {
     flex-direction: column;
     background-color: var(--depths);
 }
-.inner-chat-container {
+.chat-container {
     max-width: 700px;
     margin: 0 auto; /* Center horizontally */
     width: 100%;
