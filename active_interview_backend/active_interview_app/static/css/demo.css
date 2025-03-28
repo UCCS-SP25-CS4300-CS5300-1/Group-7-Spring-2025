@@ -73,6 +73,7 @@ html, body {
 }
 .chat-sidebar {
     background-color: var(--reef);
+    max-height: 100dvh !important;
 }
 .offcanvas {
     /* background-color: var(--reef); */
