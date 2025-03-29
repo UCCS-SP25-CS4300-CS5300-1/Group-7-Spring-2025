@@ -6,6 +6,6 @@ from django.contrib.auth.models import User
 class Chat(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
-    record = models.JSONField() # Json of the messages object
+    messages = models.JSONField() # Json of the messages object
     # TODO: mandatory foreignkey to job listing object
     # TODO: optional foreignkey to resume object
