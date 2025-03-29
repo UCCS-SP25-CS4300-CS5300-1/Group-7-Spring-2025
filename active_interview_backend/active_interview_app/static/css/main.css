@@ -96,3 +96,6 @@ html, body {
     max-height: 40px;
     /* margin: 0.1rem; */
 }
+.chat-input {
+    resize: none;
+}
