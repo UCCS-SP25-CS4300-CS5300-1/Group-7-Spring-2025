@@ -86,6 +86,11 @@
         sendMessage();
 
         $(this).val('');
+
+        // Reset height to recalc scrollHeight
+        this.style.height = 'auto';
+        // Set the height based on the scrollHeight, which grows as needed
+        this.style.height = this.scrollHeight + 'px';
       }
     });
     
