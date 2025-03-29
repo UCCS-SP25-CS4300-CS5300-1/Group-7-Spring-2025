@@ -39,11 +39,13 @@
     function sendMessage() {
       var userInput = $('#user-input').val();
       if (userInput.trim() !== '') {
+        formattedUserInput = userInput.replace(/(?:\r\n|\r|\n)/g, '<br>');
+        
         $('#chat-messages').append(
             `<div class="col user-text-container">
               <div class="card user-text-bubble">
                 <div class="card-body">
-                  <p class="card-text">${userInput}</p>
+                  <p class="card-text">${formattedUserInput}</p>
                 </div>
               </div>
             </div>`);
@@ -56,13 +58,13 @@
             'message': userInput
           },
           success: function(response) {
-            response.message = response.message.replace(/(?:\r\n|\r|\n)/g, '<br>');
-            
+            formattedResponseMessage = response.message.replace(/(?:\r\n|\r|\n)/g, '<br>');
+
             $('#chat-messages').append(
                 `<div class="col bot-text-container">
                   <div class="card bot-text-bubble">
                     <div class="card-body">
-                      <p class="card-text">${response.message}</p>
+                      <p class="card-text">${formattedResponseMessage}</p>
                     </div>
                   </div>
                 </div>`);
