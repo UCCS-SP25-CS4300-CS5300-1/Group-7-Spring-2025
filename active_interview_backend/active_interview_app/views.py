@@ -39,7 +39,9 @@ def chat(request):
 
         request.session['chat_id'] = chat.id
 
-        return render(request, 'chat.html')
+        context = {'chat': chat}
+
+        return render(request, 'chat.html', context)
     
     elif request.method == 'POST':
         chat_id = request.session.get('chat_id')
