@@ -22,6 +22,7 @@ urlpatterns = [
 
     # Demo view
     path('demo/', views.demo, name='demo'),
+    # path('chat-test/', views.test_chat_view, name='chat-test'),
 
     # api urls
     path('api/', include(router.urls)),
