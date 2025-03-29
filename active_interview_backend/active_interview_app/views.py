@@ -31,22 +31,43 @@ def chat(request):
     return render(request, 'chat.html')
 
 
+@login_required
 @csrf_exempt
 def test_chat_view(request):
-    if request.method == 'POST':
-        user_message = request.POST.get('message', '')
-        response = client.chat.completions.create(
-            model="gpt-4",
+    if request.method == 'GET':
+        chat = Chat.objects.create(
+            owner=request.user,
+            title="new chat",
             messages=[
                 {"role": "system", "content": "You are a helpful assistant."},
-                {"role": "user", "content": user_message},
-            ],
+            ]
+        )
+
+        request.session['chat_id'] = chat.id
+
+        return render(request, 'chat-test.html')
+    
+    elif request.method == 'POST':
+        chat_id = request.session.get('chat_id')
+        chat = Chat.objects.get(id=chat_id)
+
+        user_message = request.POST.get('message', '')
+
+        new_messages = chat.messages
+        new_messages.append({"role": "user", "content": user_message})
+
+        response = client.chat.completions.create(
+            model="gpt-4",
+            messages=new_messages,
             max_tokens=200
         )
         ai_message = response.choices[0].message.content
+        new_messages.append({"role": "assistant", "content": ai_message})
+
+        chat.messages = new_messages
+        chat.save()
+
         return JsonResponse({'message': ai_message})
-    
-    return render(request, 'chat-test.html')
 
 
 @login_required
