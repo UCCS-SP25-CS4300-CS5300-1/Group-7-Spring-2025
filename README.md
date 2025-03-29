@@ -5,9 +5,11 @@
 3. Load the venv: `source myenv/bin/activate`
 4. Install the requirements: `pip install -r active_interview_backend/requirements.txt`
 5. Generate a secret django key: `python -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"`
+6. Make an OpenAI API key.
 6. Edit open a `.env` file in the root of your project and fill it out like so:
 ```
 DJANGO_SECRET_KEY=<your secret key>
+OPENAI_API_KEY=<your api key>
 ```
 
 ## Startup
