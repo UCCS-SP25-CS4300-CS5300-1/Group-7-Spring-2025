@@ -57,9 +57,9 @@ def test_chat_view(request):
         new_messages.append({"role": "user", "content": user_message})
 
         response = client.chat.completions.create(
-            model="gpt-4",
+            model="gpt-4o",
             messages=new_messages,
-            max_tokens=200
+            max_tokens=500
         )
         ai_message = response.choices[0].message.content
         new_messages.append({"role": "assistant", "content": ai_message})
