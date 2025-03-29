@@ -5,7 +5,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Static Demo Page</title>
+  <title>
+    {% block title %}
+      Error: no title
+    {% endblock %}
+  </title>
 
   {% load static %}
   <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
