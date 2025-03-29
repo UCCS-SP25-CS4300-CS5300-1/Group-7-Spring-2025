@@ -96,6 +96,7 @@ jobs:
 
       - name: Check Coverage >= 80%
         run: |
+          set -o pipefail;
           chmod +x ./scripts/check-coverage.sh;
           ./scripts/check-coverage.sh coverage_report.txt | tee coverage_verdict.txt
 
