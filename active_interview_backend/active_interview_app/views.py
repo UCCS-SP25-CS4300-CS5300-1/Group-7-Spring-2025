@@ -15,6 +15,10 @@ from .models import *
 from .serializers import *
 
 
+# Init openai client
+client = OpenAI(api_key=settings.OPENAI_API_KEY)
+
+
 # Create your views here.
 def index(request):
     return render(request, 'index.html')
@@ -25,6 +29,24 @@ def demo(request):
 @login_required
 def chat(request):
     return render(request, 'chat.html')
+
+
+@csrf_exempt
+def test_chat_view(request):
+    if request.method == 'POST':
+        user_message = request.POST.get('message', '')
+        response = client.chat.completions.create(
+            model="gpt-4o",
+            messages=[
+                {"role": "system", "content": "You are a helpful assistant."},
+                {"role": "user", "content": user_message},
+            ],
+            max_tokens=200
+        )
+        ai_message = response.choices[0].message.content
+        return JsonResponse({'message': ai_message})
+    
+    return render(request, 'chat-test.html')
 
 
 @login_required

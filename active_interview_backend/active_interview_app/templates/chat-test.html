@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ChatGPT Demo</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+  <h1>ChatGPT Demo</h1>
+  <div id="chat-container">
+    <div id="chat-messages"></div>
+    <input type="text" id="user-input" placeholder="Type your message...">
+    <button onclick="sendMessage()">Send</button>
+  </div>
+
+  <script>
+    function sendMessage() {
+      var userInput = $('#user-input').val();
+      if (userInput.trim() !== '') {
+        $('#chat-messages').append('<p><strong>You:</strong> ' + userInput + '</p>');
+        $('#user-input').val('');
+
+        $.ajax({
+          url: '{% url "chat" %}',
+          type: 'POST',
+          data: {
+            'message': userInput
+          },
+          success: function(response) {
+            $('#chat-messages').append('<p><strong>AI:</strong> ' + response.message + '</p>');
+          }
+        });
+      }
+    }
+
+    $('#user-input').keypress(function(e) {
+      if (e.which == 13) {
+        sendMessage();
+      }
+    });
+  </script>
+</body>
+</html>
