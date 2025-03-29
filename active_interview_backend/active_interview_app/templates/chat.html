@@ -75,11 +75,13 @@
       }
     }
 
-    $('#user-input').keypress(function(e) {
-      if (e.which == 13) {
+    $('#user-input').on('keypress', function(e) {
+      if (e.key === "Enter") {
+        e.preventDefault();
+
         sendMessage();
 
-        $('#user-input').val('');
+        $(this).val('');
       }
     });
   </script>
