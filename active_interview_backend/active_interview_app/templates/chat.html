@@ -50,6 +50,8 @@
               </div>
             </div>`);
         $('#user-input').val('');
+        
+        updateScroll();
 
         $.ajax({
           url: '{% url "chat-test" %}',
