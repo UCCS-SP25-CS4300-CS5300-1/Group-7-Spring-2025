@@ -9,3 +9,6 @@ class Chat(models.Model):
     messages = models.JSONField() # Json of the messages object
     # TODO: mandatory foreignkey to job listing object
     # TODO: optional foreignkey to resume object
+
+    def __str__(self):
+        return self.title
