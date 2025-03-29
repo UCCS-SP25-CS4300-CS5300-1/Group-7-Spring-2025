@@ -22,7 +22,7 @@
         $('#user-input').val('');
 
         $.ajax({
-          url: '{% url "chat" %}',
+          url: '{% url "chat-test" %}',
           type: 'POST',
           data: {
             'message': userInput
