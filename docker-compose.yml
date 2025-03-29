@@ -35,7 +35,6 @@ services:
       - "80"
     ports:
       - "80:80"
-      - "443:443"
     volumes:
       - static_volume:/app/staticfiles # shared staticfiles volume
       - ./nginx.local.conf:/etc/nginx/nginx.conf:ro
