@@ -77,8 +77,8 @@ jobs:
       - name: Configure Environment
         run: |
           set -o pipefail # make the pipe exist status carry non-zero values;
-          echo 'PROD=true' > .env;
-          echo 'DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }}' >> .env
+          echo 'DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }}' > .env
+          echo 'OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}' >> .env
 
       - name: Start Containers
         run: |
