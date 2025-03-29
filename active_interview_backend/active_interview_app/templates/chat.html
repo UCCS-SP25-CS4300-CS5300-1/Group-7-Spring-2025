@@ -9,8 +9,34 @@
 {% block content %}
   <div class="chat-container flex-grow-1 d-flex flex-column">
     <h3 class="whiteTextOverride px-3 pt-3">Chat 10</h3>
-    <div id="chat-messages">
-      <!-- Chat messages will populate here -->
+    <div class="overflow-y-auto overflow-x-hidden">
+      <div class="row" style="flex-direction: column;">
+        <div id="chat-messages">
+          <!-- Chat messages will populate here -->
+        </div>
+        {% comment %} <div class="col user-text-container">
+          <div class="card user-text-bubble">
+            <div class="card-body">
+              <p class="card-text">I turned round, and asked him where his master was.</p>
+            </div>
+          </div>
+        </div>
+        <div class="col bot-text-container">
+          <div class="card bot-text-bubble">
+            <div class="card-body">
+              <p class="card-text">
+                There he is, said the youth, coming after you, if you will only wait.
+                <br>
+                <br>
+                Certainly we will, said Glaucon; and in a few minutes Polemarchus appeared, and with him Adeimantus, Glaucon’s brother, Niceratus the son of Nicias, and several others who had been at the procession.
+                <br>
+                <br>
+                Polemarchus said to me: I perceive, Socrates, that you and your companion are already on your way to the city.
+              </p>
+            </div>
+          </div>
+        </div> {% endcomment %}
+      </div>
     </div>
     <div class="card mb-3 mt-3">
       <div class="card-body">
