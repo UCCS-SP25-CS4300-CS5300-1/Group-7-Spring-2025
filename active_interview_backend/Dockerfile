@@ -17,6 +17,7 @@ COPY . /app
 
 RUN chmod +x ./start.sh
 
+EXPOSE 443 
 EXPOSE 8000
 
 # Run startup script

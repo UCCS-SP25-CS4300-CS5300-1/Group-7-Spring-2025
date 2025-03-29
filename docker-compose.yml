@@ -1,5 +1,5 @@
 services:
-  backend:
+  django:
     build: active_interview_backend/.
     environment:
       - PROD=false
@@ -15,7 +15,7 @@ services:
     expose:
       - "8000"  # Exposed internally
     command: bash ./start.sh
-    network_mode: "host"
+#     network_mode: "host"
 #     networks:
 #       - ext_network
 
@@ -39,7 +39,7 @@ services:
       - static_volume:/app/staticfiles # shared staticfiles volume
       - ./nginx.local.conf:/etc/nginx/nginx.conf:ro
     depends_on:
-      - backend
+      - django
 
 # networks:
 #   ext_network:
