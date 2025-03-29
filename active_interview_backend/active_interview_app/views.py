@@ -31,7 +31,7 @@ def chat(request):
     if request.method == 'GET':
         chat = Chat.objects.create(
             owner=request.user,
-            title="new chat",
+            title="New Chat",
             messages=[
                 {"role": "system", "content": "You are a helpful assistant."},
             ]
