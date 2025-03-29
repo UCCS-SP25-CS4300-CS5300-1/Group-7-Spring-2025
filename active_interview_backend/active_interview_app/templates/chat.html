@@ -9,7 +9,7 @@
 {% block content %}
   <div class="chat-container flex-grow-1 d-flex flex-column">
     <h3 class="whiteTextOverride px-3 pt-3">Chat 10</h3>
-    <div class="d-flex flex-column flex-grow-1 overflow-y-auto overflow-x-hidden">
+    <div id="chat-scroll" class="d-flex flex-column flex-grow-1 overflow-y-auto overflow-x-hidden">
       <div class="row" style="flex-direction: column;">
         <div id="chat-messages">
           <!-- Chat messages will populate here -->
@@ -31,6 +31,11 @@
 {% block scripts %}
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script>
+    function updateScroll(){
+      var element = document.getElementById("chat-scroll");
+      element.scrollTop = element.scrollHeight;
+    }
+
     function sendMessage() {
       var userInput = $('#user-input').val();
       if (userInput.trim() !== '') {
@@ -61,12 +66,16 @@
                 </div>`);
           }
         });
+
+        updateScroll();
       }
     }
 
     $('#user-input').keypress(function(e) {
       if (e.which == 13) {
         sendMessage();
+
+        $('#user-input').val('');
       }
     });
   </script>
