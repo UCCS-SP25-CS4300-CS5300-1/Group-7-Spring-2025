@@ -56,7 +56,14 @@
     function sendMessage() {
       var userInput = $('#user-input').val();
       if (userInput.trim() !== '') {
-        $('#chat-messages').append('<p><strong>You:</strong> ' + userInput + '</p>');
+        $('#chat-messages').append(
+            `<div class="col user-text-container">
+              <div class="card user-text-bubble">
+                <div class="card-body">
+                  <p class="card-text">${userInput}</p>
+                </div>
+              </div>
+            </div>`);
         $('#user-input').val('');
 
         $.ajax({
