@@ -12,6 +12,11 @@ DJANGO_SECRET_KEY=<your secret key>
 OPENAI_API_KEY=<your api key>
 ```
 
+## Debugging
+### Network Issues
+#### Arch Linux(And Derivatives)
+Please follow [the last post on this forum thread](https://bbs.archlinux.org/viewtopic.php?pid=2025168#p2025168) to fix your local docker's networking issues.
+
 ## Startup
 1. Navigate to the root of the project.
 2. Run `docker-compose up -d --build`.  Same a production environment for now.
