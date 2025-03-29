@@ -56,6 +56,8 @@
             'message': userInput
           },
           success: function(response) {
+            response.message = response.message.replace(/(?:\r\n|\r|\n)/g, '<br>');
+            
             $('#chat-messages').append(
                 `<div class="col bot-text-container">
                   <div class="card bot-text-bubble">
