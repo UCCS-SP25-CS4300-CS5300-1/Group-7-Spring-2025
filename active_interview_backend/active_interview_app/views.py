@@ -36,7 +36,7 @@ def test_chat_view(request):
     if request.method == 'POST':
         user_message = request.POST.get('message', '')
         response = client.chat.completions.create(
-            model="gpt-4o",
+            model="gpt-4",
             messages=[
                 {"role": "system", "content": "You are a helpful assistant."},
                 {"role": "user", "content": user_message},
