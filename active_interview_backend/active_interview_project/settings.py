@@ -28,6 +28,8 @@ SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY",
                             get_random_secret_key() if os.environ.get("PROD", "true").lower() == "false"
                                 else None)
 
+OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get("PROD", "true").lower() == "false"
