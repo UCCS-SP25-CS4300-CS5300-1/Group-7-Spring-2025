@@ -59,7 +59,8 @@
           url: '{% url "chat" %}',
           type: 'POST',
           data: {
-            'message': userInput
+            'message': userInput,
+            csrfmiddlewaretoken: '{{ csrf_token }}'
           },
           success: function(response) {
             formattedResponseMessage = response.message.replace(/(?:\r\n|\r|\n)/g, '<br>');
