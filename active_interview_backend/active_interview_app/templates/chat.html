@@ -9,7 +9,9 @@
 {% block content %}
   <div class="chat-container flex-grow-1 d-flex flex-column">
     <h3 class="whiteTextOverride px-3 pt-3">Chat 10</h3>
-    {% include "demo/text-bubbles.html" %}
+    <div id="chat-messages">
+      <!-- Chat messages will populate here -->
+    </div>
     <div class="card mb-3 mt-3">
       <div class="card-body">
         <div class="d-flex">
@@ -23,6 +25,33 @@
 
 
 {% block scripts %}
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    function sendMessage() {
+      var userInput = $('#user-input').val();
+      if (userInput.trim() !== '') {
+        $('#chat-messages').append('<p><strong>You:</strong> ' + userInput + '</p>');
+        $('#user-input').val('');
+
+        $.ajax({
+          url: '{% url "chat-test" %}',
+          type: 'POST',
+          data: {
+            'message': userInput
+          },
+          success: function(response) {
+            $('#chat-messages').append('<p><strong>AI:</strong> ' + response.message + '</p>');
+          }
+        });
+      }
+    }
+
+    $('#user-input').keypress(function(e) {
+      if (e.which == 13) {
+        sendMessage();
+      }
+    });
+  </script>
   <script>
     const chatInput = document.getElementById('user-input');
     chatInput.addEventListener('input', function() {
