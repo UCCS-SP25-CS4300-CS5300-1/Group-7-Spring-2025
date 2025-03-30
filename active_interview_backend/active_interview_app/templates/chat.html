@@ -40,8 +40,7 @@
     function sendMessage() {
       var userInput = $('#user-input').val();
       if (userInput.trim() !== '') {
-        formattedUserInput = userInput.replace(/(?:\r\n|\r|\n)/g, '<br>');
-        formattedUserInput = DOMPurify.sanitize(formattedResponseMessage);
+        formattedUserInput = DOMPurify.sanitize(userInput.replace(/(?:\r\n|\r|\n)/g, '<br>'));
         
         $('#chat-messages').append(
             `<div class="col user-text-container">
@@ -63,8 +62,7 @@
             csrfmiddlewaretoken: '{{ csrf_token }}'
           },
           success: function(response) {
-            formattedResponseMessage = response.message.replace(/(?:\r\n|\r|\n)/g, '<br>');
-            formattedResponseMessage = DOMPurify.sanitize(formattedResponseMessage);
+            formattedResponseMessage = DOMPurify.sanitize(response.message.replace(/(?:\r\n|\r|\n)/g, '<br>'));
 
             $('#chat-messages').append(
                 `<div class="col bot-text-container">
