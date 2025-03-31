@@ -17,7 +17,7 @@ a {
 hr {
   height: 0; 
   border: 0 !important; 
-  border-top: 5px solid white !important; 
+  border-top: 3px solid white !important; 
 }
 .overflow-y-auto {
     padding-right: 1rem; /* adjust as needed */
