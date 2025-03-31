@@ -1,0 +1,12 @@
+<div class="chat-sidebar d-flex flex-column flex-grow-1">
+  <div class="overflow-y-auto vh-100 px-3 w-100">
+    {% for owner_chat in owner_chats %}
+      <div class="chat-card card mb-3 mt-3">
+        <div class="card-body">
+          <h5 class="card-title">{{ owner_chat.title }}</h5>
+          {% comment %} <p class="card-text">Lorem Ipsum</p> {% endcomment %}
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
