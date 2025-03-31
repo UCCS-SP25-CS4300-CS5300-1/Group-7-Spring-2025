@@ -37,7 +37,7 @@ def chat_view(request):
             ]
         )
 
-        owner_chats = Chat.objects.filter(owner=request.user).order_by('modified_date')
+        owner_chats = Chat.objects.filter(owner=request.user).order_by('-modified_date')
 
         request.session['chat_id'] = chat.id
 
