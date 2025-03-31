@@ -83,6 +83,17 @@ def chat(request):
 #         return JsonResponse({'message': ai_message})
 
 
+class CreateChat(LoginRequiredMixin, View):
+    def get(self, request):
+        owner_chats = Chat.objects.filter(owner=request.user).order_by('-modified_date')
+
+        context = {}
+        context['owner_chats'] = owner_chats
+
+        return render(request, os.path.join('chat', 'chat-create.html'), context)
+
+
+
 class ChatView(LoginRequiredMixin, UserPassesTestMixin, View):
     def test_func(self):
         # manually grab chat id from kwargs and process it
