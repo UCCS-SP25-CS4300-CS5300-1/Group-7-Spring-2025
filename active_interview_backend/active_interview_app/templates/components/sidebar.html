@@ -9,7 +9,7 @@
     </a>
     <hr>
     {% for owner_chat in owner_chats %}
-      <a href="{{ owner_chat.id }}">
+      <a href="{% url "chat-view" chat_id=owner_chat.id %}">
         <div class="chat-card card mb-3 mt-3">
           <div class="card-body">
             <h5 class="card-title">{{ owner_chat.title }}</h5>

@@ -20,8 +20,8 @@ urlpatterns = [
     path('accounts/logout/', views.logout_view, name='logout'),
 
     # Chat views
-    path('chat/REPLACEMELATER', views.chat_view, name='chat-view'),
     path('chat/', views.chat, name='chat'),
+    path('chat/<int:chat_id>', views.chat_view, name='chat-view'),
 
     # Demo view
     path('demo/', views.demo, name='demo'),
