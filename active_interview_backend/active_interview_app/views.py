@@ -27,6 +27,15 @@ def demo(request):
     return render(request, os.path.join('demo', 'demo.html'))
 
 @login_required
+def chat(request):
+    owner_chats = Chat.objects.filter(owner=request.user).order_by('-modified_date')
+
+    context = {}
+    context['owner_chats'] = owner_chats
+
+    return render(request, os.path.join('chat', 'chat.html'), context)
+
+@login_required
 def chat_view(request):
     if request.method == 'GET':
         chat = Chat.objects.create(
@@ -41,7 +50,8 @@ def chat_view(request):
 
         request.session['chat_id'] = chat.id
 
-        context = {'chat': chat}
+        context = {}
+        context['chat'] = chat
         context['owner_chats'] = owner_chats
 
         return render(request, os.path.join('chat', 'chat-view.html'), context)
