@@ -12,7 +12,12 @@ html, body {
     /* overflow: hidden;  */
 }
 a {
-    text-decoration: none;
+    text-decoration: none !important;
+}
+hr {
+  height: 0; 
+  border: 0; 
+  border-top: 1px solid white; 
 }
 .overflow-y-auto {
     padding-right: 1rem; /* adjust as needed */
