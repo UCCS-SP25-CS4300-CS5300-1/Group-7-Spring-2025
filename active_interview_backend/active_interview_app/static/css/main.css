@@ -11,6 +11,9 @@ html, body {
     background-color: var(--depths);
     /* overflow: hidden;  */
 }
+a {
+    text-decoration: none;
+}
 .overflow-y-auto {
     padding-right: 1rem; /* adjust as needed */
 } 
