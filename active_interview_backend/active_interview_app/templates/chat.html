@@ -1,0 +1,104 @@
+{% extends "base-sidebar.html" %}
+
+
+{% block title %}
+  AIS - AI Chat
+{% endblock %}
+
+
+{% block content %}
+  <div class="chat-container flex-grow-1 d-flex flex-column">
+    <h3 class="whiteTextOverride px-3 pt-3">{{ chat.title }}</h3>
+    <div id="chat-scroll" class="d-flex flex-column flex-grow-1 overflow-y-auto overflow-x-hidden">
+      <div class="row" style="flex-direction: column;">
+        <div id="chat-messages">
+          <!-- Chat messages will populate here -->
+        </div>
+      </div>
+    </div>
+    <div class="card mb-3 mt-3">
+      <div class="card-body">
+        <div class="d-flex">
+          <textarea id="user-input" class="chat-input flex-grow-1 border-0 p-2" placeholder="Enter text here..." style="resize: none;"></textarea>
+          <button class="btn btn-primary ms-2" type="button" onclick="sendMessage()">Send</button>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+
+{% block scripts %}
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    function updateScroll(){
+      var element = document.getElementById("chat-scroll");
+      element.scrollTop = element.scrollHeight;
+    }
+
+    function sendMessage() {
+      var userInput = $('#user-input').val();
+      if (userInput.trim() !== '') {
+        formattedUserInput = userInput.replace(/(?:\r\n|\r|\n)/g, '<br>');
+        
+        $('#chat-messages').append(
+            `<div class="col user-text-container">
+              <div class="card user-text-bubble">
+                <div class="card-body">
+                  <p class="card-text">${formattedUserInput}</p>
+                </div>
+              </div>
+            </div>`);
+        $('#user-input').val('');
+        
+        updateScroll();
+
+        $.ajax({
+          url: '{% url "chat" %}',
+          type: 'POST',
+          data: {
+            'message': userInput,
+            csrfmiddlewaretoken: '{{ csrf_token }}'
+          },
+          success: function(response) {
+            formattedResponseMessage = response.message.replace(/(?:\r\n|\r|\n)/g, '<br>');
+
+            $('#chat-messages').append(
+                `<div class="col bot-text-container">
+                  <div class="card bot-text-bubble">
+                    <div class="card-body">
+                      <p class="card-text">${formattedResponseMessage}</p>
+                    </div>
+                  </div>
+                </div>`);
+
+            updateScroll();
+          }
+        });
+      }
+    }
+
+    $('#user-input').on('keypress', function(e) {
+      if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault();
+
+        sendMessage();
+
+        $(this).val('');
+
+        // Reset height to recalc scrollHeight
+        this.style.height = 'auto';
+        // Set the height based on the scrollHeight, which grows as needed
+        this.style.height = this.scrollHeight + 'px';
+      }
+    });
+    
+    const chatInput = document.getElementById('user-input');
+    chatInput.addEventListener('input', function() {
+      // Reset height to recalc scrollHeight
+      this.style.height = 'auto';
+      // Set the height based on the scrollHeight, which grows as needed
+      this.style.height = this.scrollHeight + 'px';
+    });
+  </script>
+{% endblock %}
