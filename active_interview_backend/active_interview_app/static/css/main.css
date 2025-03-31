@@ -17,7 +17,7 @@ a {
 hr {
   height: 0; 
   border: 0; 
-  border-top: 1px solid white; 
+  border-top: 5px solid white; 
 }
 .overflow-y-auto {
     padding-right: 1rem; /* adjust as needed */
@@ -89,6 +89,10 @@ hr {
     max-height: 100dvh !important;
 }
 .chat-card {
+    color: white;
+    background-color: var(--alga) !important;
+}
+.button-card {
     color: white;
     background-color: var(--alga) !important;
 }
