@@ -94,7 +94,7 @@ a {
 }
 .chat-card-active {
     color: white;
-    background-color: hsl(from var(--alga) h s calc(l - 2)) !important;
+    background-color: hsl(from var(--alga) h s calc(l - 6)) !important;
 }
 .button-card {
     color: white;
