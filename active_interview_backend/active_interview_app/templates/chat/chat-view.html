@@ -12,7 +12,27 @@
     <div id="chat-scroll" class="d-flex flex-column flex-grow-1 overflow-y-auto overflow-x-hidden">
       <div class="row" style="flex-direction: column;">
         <div id="chat-messages">
-          <!-- Chat messages will populate here -->
+          {% comment %} Pre-populate existing messages here {% endcomment %}
+          {% comment %} Ignore system message in list {% endcomment %}
+          {% for message in chat.messages|slice:"1:" %}
+            {% if message.role == 'user' %}
+              <div class="col user-text-container">
+                <div class="card user-text-bubble">
+                  <div class="card-body">
+                    <p class="card-text">{{ message.content }}</p>
+                  </div>
+                </div>
+              </div>
+            {% else %}
+              <div class="col bot-text-container">
+                <div class="card bot-text-bubble">
+                  <div class="card-body">
+                    <p class="card-text">{{ message.content }}</p>
+                  </div>
+                </div>
+              </div>
+            {% endif %}
+          {% endfor %}
         </div>
       </div>
     </div>
@@ -55,7 +75,7 @@
         updateScroll();
 
         $.ajax({
-          url: '{% url "chat-view" %}',
+          url: '{% url "chat-view" chat_id=chat.id %}',
           type: 'POST',
           data: {
             'message': userInput,

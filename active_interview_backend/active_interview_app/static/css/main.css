@@ -14,7 +14,7 @@ html, body {
 a {
     text-decoration: none !important;
 }
-hr {
+.sidebar-break {
   height: 0; 
   border: 0 !important; 
   border-top: 3px solid white !important; 
