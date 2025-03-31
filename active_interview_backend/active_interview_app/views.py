@@ -44,7 +44,7 @@ def chat_view(request):
         context = {'chat': chat}
         context['owner_chats'] = owner_chats
 
-        return render(request, os.path.join('chat', 'chat.html'), context)
+        return render(request, os.path.join('chat', 'chat-view.html'), context)
     
     elif request.method == 'POST':
         chat_id = request.session.get('chat_id')
