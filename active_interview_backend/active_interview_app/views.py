@@ -37,9 +37,12 @@ def new_chat(request):
             ]
         )
 
+        owner_chats = Chat.objects.filter(owner=request.user)
+
         request.session['chat_id'] = chat.id
 
         context = {'chat': chat}
+        context['owner_chats'] = owner_chats
 
         return render(request, os.path.join('chat', 'new-chat.html'), context)
     
