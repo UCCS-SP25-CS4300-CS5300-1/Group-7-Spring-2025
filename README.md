@@ -12,17 +12,32 @@ DJANGO_SECRET_KEY=<your secret key>
 OPENAI_API_KEY=<your api key>
 ```
 
+## Startup and accessing
+### Local Manual 
+#### Startup
+1. Navigate to the active_interview_backend/ folder
+2. Create your venv
+3. Load your venv
+4. Pip install the requirements file
+5. Run a django migration
+6. Collect static files with django
+7. Run the server manually
+
+#### Accessing
+`http://127.0.0.1:8000`
+
+### Local Docker-Compose
+#### Startup
+1. Navigate to the root of the project.
+2. Run `docker-compose up -d --build`.  Same a production environment for now.
+
+#### Accessing
+`http://127.0.0.1`
+
 ## Debugging
 ### Network Issues
 #### Arch Linux(And Derivatives)
 Please follow [the last post on this forum thread](https://bbs.archlinux.org/viewtopic.php?pid=2025168#p2025168) to fix your local docker's networking issues.
-
-## Startup
-1. Navigate to the root of the project.
-2. Run `docker-compose up -d --build`.  Same a production environment for now.
-
-## Accessing
-`http://127.0.0.1`
 
 ## Cleaning
 Every once in a while, your local environment may break because of a refactor, but the code works just fine in production.  Here is a way to clean your local environment on linux/mac:
