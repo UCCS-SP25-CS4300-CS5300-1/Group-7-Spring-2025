@@ -92,6 +92,10 @@ a {
     color: white;
     background-color: var(--alga) !important;
 }
+.chat-card-active {
+    color: white;
+    background-color: hsl(from var(--alga) h s calc(l - 2)) !important;
+}
 .button-card {
     color: white;
     background-color: var(--alga) !important;
