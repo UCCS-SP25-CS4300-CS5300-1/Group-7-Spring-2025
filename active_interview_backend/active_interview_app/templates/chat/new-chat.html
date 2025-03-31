@@ -55,7 +55,7 @@
         updateScroll();
 
         $.ajax({
-          url: '{% url "chat" %}',
+          url: '{% url "new-chat" %}',
           type: 'POST',
           data: {
             'message': userInput,

@@ -27,7 +27,7 @@ def demo(request):
     return render(request, os.path.join('demo', 'demo.html'))
 
 @login_required
-def chat(request):
+def new_chat(request):
     if request.method == 'GET':
         chat = Chat.objects.create(
             owner=request.user,
@@ -41,7 +41,7 @@ def chat(request):
 
         context = {'chat': chat}
 
-        return render(request, 'chat.html', context)
+        return render(request, os.path.join('chat', 'new-chat.html'), context)
     
     elif request.method == 'POST':
         chat_id = request.session.get('chat_id')
