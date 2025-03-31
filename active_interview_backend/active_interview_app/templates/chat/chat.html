@@ -7,14 +7,6 @@
 
 
 {% block sidebar_content %}
-  {% for owner_chat in owner_chats %}
-    <div class="chat-card card mb-3 mt-3">
-      <div class="card-body">
-        <h5 class="card-title">{{ owner_chat.title }}</h5>
-        {% comment %} <p class="card-text">Lorem Ipsum</p> {% endcomment %}
-      </div>
-    </div>
-  {% endfor %}
 {% endblock %}
 
 
@@ -67,7 +59,7 @@
         updateScroll();
 
         $.ajax({
-          url: '{% url "new-chat" %}',
+          url: '{% url "chat-view" %}',
           type: 'POST',
           data: {
             'message': userInput,

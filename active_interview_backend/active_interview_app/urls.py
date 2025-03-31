@@ -14,7 +14,7 @@ router = routers.DefaultRouter()
 urlpatterns = [
     path('', views.index, name='index'),
     path('', views.index, name='login'),
-    path('chat/new/', views.new_chat, name='new-chat'),
+    path('chat/', views.chat_view, name='chat-view'),
     path('testlogged/', views.loggedin, name='loggedin'),
     path('accounts/', include('django.contrib.auth.urls')),
     path('accounts/register', views.register, name='register_page'),
