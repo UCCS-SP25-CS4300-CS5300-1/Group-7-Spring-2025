@@ -30,7 +30,7 @@ a {
     flex-direction: column;
     background-color: var(--depths);
 }
-.chat-container {
+.centered-container {
     max-width: 700px;
     margin: 0 auto; /* Center horizontally */
     width: 100%;
