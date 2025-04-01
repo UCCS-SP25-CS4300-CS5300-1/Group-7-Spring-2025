@@ -14,10 +14,11 @@ html, body {
 a {
     text-decoration: none !important;
 }
-.sidebar-break {
+.white-break {
   height: 0; 
   border: 0 !important; 
   border-top: 3px solid white !important; 
+  opacity: 100 !important;
 }
 .overflow-y-auto {
     padding-right: 1rem; /* adjust as needed */

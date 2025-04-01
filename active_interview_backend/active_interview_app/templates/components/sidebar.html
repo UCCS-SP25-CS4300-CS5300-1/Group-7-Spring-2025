@@ -7,7 +7,7 @@
         </div>
       </div>
     </a>
-    <hr class="sidebar-break">
+    <hr class="white-break">
     {% for owner_chat in owner_chats %}
       <a href="{% url "chat-view" chat_id=owner_chat.id %}">
         <div class="{% if chat.id == owner_chat.id %}chat-card-active{% else %}chat-card{% endif %} card mb-3 mt-3">
