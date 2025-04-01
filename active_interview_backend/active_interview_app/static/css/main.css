@@ -11,6 +11,14 @@ html, body {
     background-color: var(--depths);
     /* overflow: hidden;  */
 }
+a {
+    text-decoration: none !important;
+}
+.sidebar-break {
+  height: 0; 
+  border: 0 !important; 
+  border-top: 3px solid white !important; 
+}
 .overflow-y-auto {
     padding-right: 1rem; /* adjust as needed */
 } 
@@ -81,6 +89,14 @@ html, body {
     max-height: 100dvh !important;
 }
 .chat-card {
+    color: white;
+    background-color: var(--alga) !important;
+}
+.chat-card-active {
+    color: white;
+    background-color: hsl(from var(--alga) h s calc(l - 6)) !important;
+}
+.button-card {
     color: white;
     background-color: var(--alga) !important;
 }

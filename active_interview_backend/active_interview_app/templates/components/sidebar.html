@@ -1,67 +1,22 @@
 <div class="chat-sidebar d-flex flex-column flex-grow-1">
   <div class="overflow-y-auto vh-100 px-3 w-100">
-    <!-- <div class="p-3">
-      Sidebar
-    </div> -->
-    <div class="chat-card card mb-3 mt-3">
-      <div class="card-body">
-        <h5 class="card-title">Chat 10</h5>
-        <p class="card-text">Lorem Ipsum</p>
+    <a href="{% url "chat-create" %}">
+      <div class="button-card card mb-3 mt-3">
+        <div class="card-body">
+          <p class="card-text">New Interview</p>
+        </div>
       </div>
-    </div>
-    <div class="chat-card card mb-3 mt-3">
-      <div class="card-body">
-        <h5 class="card-title">Chat 9</h5>
-        <p class="card-text">Lorem Ipsum</p>
-      </div>
-    </div>
-    <div class="chat-card card mb-3 mt-3">
-      <div class="card-body">
-        <h5 class="card-title">Chat 8</h5>
-        <p class="card-text">Lorem Ipsum</p>
-      </div>
-    </div>
-    <div class="chat-card card mb-3 mt-3">
-      <div class="card-body">
-        <h5 class="card-title">Chat 7</h5>
-        <p class="card-text">Lorem Ipsum</p>
-      </div>
-    </div>
-    <div class="chat-card card mb-3 mt-3">
-      <div class="card-body">
-        <h5 class="card-title">Chat 6</h5>
-        <p class="card-text">Lorem Ipsum</p>
-      </div>
-    </div>
-    <div class="chat-card card mb-3 mt-3">
-      <div class="card-body">
-        <h5 class="card-title">Chat 5</h5>
-        <p class="card-text">Lorem Ipsum</p>
-      </div>
-    </div>
-    <div class="chat-card card mb-3 mt-3">
-      <div class="card-body">
-        <h5 class="card-title">Chat 4</h5>
-        <p class="card-text">Lorem Ipsum</p>
-      </div>
-    </div>
-    <div class="chat-card card mb-3 mt-3">
-      <div class="card-body">
-        <h5 class="card-title">Chat 3</h5>
-        <p class="card-text">Lorem Ipsum</p>
-      </div>
-    </div>
-    <div class="chat-card card mb-3 mt-3">
-      <div class="card-body">
-        <h5 class="card-title">Chat 2</h5>
-        <p class="card-text">Lorem Ipsum</p>
-      </div>
-    </div>
-    <div class="chat-card card mb-3 mt-3">
-      <div class="card-body">
-        <h5 class="card-title">Chat 1</h5>
-        <p class="card-text">Lorem Ipsum</p>
-      </div>
-    </div>
+    </a>
+    <hr class="sidebar-break">
+    {% for owner_chat in owner_chats %}
+      <a href="{% url "chat-view" chat_id=owner_chat.id %}">
+        <div class="{% if chat.id == owner_chat.id %}chat-card-active{% else %}chat-card{% endif %} card mb-3 mt-3">
+          <div class="card-body">
+            <h5 class="card-title">{{ owner_chat.title }}</h5>
+            {% comment %} <p class="card-text">Lorem Ipsum</p> {% endcomment %}
+          </div>
+        </div>
+      </a>
+    {% endfor %}
   </div>
 </div>

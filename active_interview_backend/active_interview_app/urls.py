@@ -14,11 +14,15 @@ router = routers.DefaultRouter()
 urlpatterns = [
     path('', views.index, name='index'),
     path('', views.index, name='login'),
-    path('chat/', views.chat, name='chat'),
     path('testlogged/', views.loggedin, name='loggedin'),
     path('accounts/', include('django.contrib.auth.urls')),
     path('accounts/register', views.register, name='register_page'),
     path('accounts/logout/', views.logout_view, name='logout'),
+
+    # Chat views
+    path('chat/', views.chat, name='chat'),
+    path('chat/create/', views.CreateChat.as_view(), name='chat-create'),
+    path('chat/<int:chat_id>/', views.ChatView.as_view(), name='chat-view'),
 
     # Demo view
     path('demo/', views.demo, name='demo'),

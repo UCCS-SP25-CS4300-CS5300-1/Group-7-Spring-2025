@@ -10,5 +10,7 @@ class Chat(models.Model):
     # TODO: mandatory foreignkey to job listing object
     # TODO: optional foreignkey to resume object
 
+    modified_date = models.DateTimeField(auto_now=True) # date last modified
+
     def __str__(self):
         return self.title
