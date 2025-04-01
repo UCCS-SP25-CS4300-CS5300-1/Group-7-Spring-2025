@@ -9,3 +9,9 @@ class CreateUserForm(UserCreationForm):
     class Meta:
         model = User
         fields = ['username', 'email', 'password1', 'password2']
+
+
+class ChatForm(ModelForm):
+    class Meta:
+        model = Chat
+        fields = ["title"]
