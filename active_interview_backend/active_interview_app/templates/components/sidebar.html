@@ -10,26 +10,17 @@
     <hr class="white-break">
     {% for owner_chat in owner_chats %}
       <div class="{% if chat.id == owner_chat.id %}chat-card-active{% else %}chat-card{% endif %} card mb-3 mt-3">
-        <div class="card-body">
-          <div class="d-flex flex-row">
-            <a href="{% url "chat-view" chat_id=owner_chat.id %}" class="full-block-link">    
-              <div class="flex-grow-1">
-                <h5 class="card-title">{{ owner_chat.title }}</h5>
-              </div>
-            </a>
-            {% comment %} <p>B</p> {% endcomment %}
-            {% comment %} <div class="btn-group dropend">
-              <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                B
-              </button>
-              <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="#">Action</a></li>
-                <li><a class="dropdown-item" href="#">Action two</a></li>
-                <li><a class="dropdown-item" href="#">Action three</a></li>
-              </ul>
-            </div> {% endcomment %}
-            {% comment %} <p class="card-text">Lorem Ipsum</p> {% endcomment %}
-          </div>
+        <div class="btn-group dropend" data-bs-theme="dark">
+          <a href="{% url "chat-view" chat_id=owner_chat.id %}" class="full-block-link">    
+            <h5 class="card-title m-2">{{ owner_chat.title }}</h5>
+          </a>
+          <button type="button" class="sidebar-dropend btn btn-dark dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" data-bs-popper-config='{"strategy":"fixed"}' aria-expanded="false">
+            <span class="visually-hidden">Toggle Dropend</span>
+          </button>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">Edit</a></li>
+            <li><a class="dropdown-item" href="#">Delete</a></li>
+          </ul>
         </div>
       </div>
     {% endfor %}
