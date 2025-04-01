@@ -1,22 +1,37 @@
 <div class="chat-sidebar d-flex flex-column flex-grow-1">
   <div class="overflow-y-auto vh-100 px-3 w-100">
-    <a href="{% url "chat-create" %}">
+    <a href="{% url "chat-create" %}" class="full-block-link">
       <div class="button-card card mb-3 mt-3">
         <div class="card-body">
           <p class="card-text">New Interview</p>
         </div>
       </div>
     </a>
-    <hr class="sidebar-break">
+    <hr class="white-break">
     {% for owner_chat in owner_chats %}
-      <a href="{% url "chat-view" chat_id=owner_chat.id %}">
-        <div class="{% if chat.id == owner_chat.id %}chat-card-active{% else %}chat-card{% endif %} card mb-3 mt-3">
-          <div class="card-body">
-            <h5 class="card-title">{{ owner_chat.title }}</h5>
+      <div class="{% if chat.id == owner_chat.id %}chat-card-active{% else %}chat-card{% endif %} card mb-3 mt-3">
+        <div class="card-body">
+          <div class="d-flex flex-row">
+            <a href="{% url "chat-view" chat_id=owner_chat.id %}" class="full-block-link">    
+              <div class="flex-grow-1">
+                <h5 class="card-title">{{ owner_chat.title }}</h5>
+              </div>
+            </a>
+            {% comment %} <p>B</p> {% endcomment %}
+            {% comment %} <div class="btn-group dropend">
+              <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                B
+              </button>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#">Action</a></li>
+                <li><a class="dropdown-item" href="#">Action two</a></li>
+                <li><a class="dropdown-item" href="#">Action three</a></li>
+              </ul>
+            </div> {% endcomment %}
             {% comment %} <p class="card-text">Lorem Ipsum</p> {% endcomment %}
           </div>
         </div>
-      </a>
+      </div>
     {% endfor %}
   </div>
 </div>

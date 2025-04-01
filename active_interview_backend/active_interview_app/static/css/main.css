@@ -11,13 +11,17 @@ html, body {
     background-color: var(--depths);
     /* overflow: hidden;  */
 }
-a {
-    text-decoration: none !important;
+.full-block-link {
+  display: block;
+  width: 100%;
+  text-decoration: none;
+  color: inherit;
 }
-.sidebar-break {
+.white-break {
   height: 0; 
   border: 0 !important; 
   border-top: 3px solid white !important; 
+  opacity: 100 !important;
 }
 .overflow-y-auto {
     padding-right: 1rem; /* adjust as needed */
@@ -30,7 +34,7 @@ a {
     flex-direction: column;
     background-color: var(--depths);
 }
-.chat-container {
+.centered-container {
     max-width: 700px;
     margin: 0 auto; /* Center horizontally */
     width: 100%;
