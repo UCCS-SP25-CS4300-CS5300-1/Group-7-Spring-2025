@@ -1,6 +1,11 @@
-<<<<<<< HEAD
 from django import forms
 from .models import UploadedFile
+from django.forms import ModelForm
+from .models import *
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
+from django.contrib.auth.models import Group
+
 
 #Defines a Django form for handling file uploads.
 class UploadFileForm(forms.ModelForm):
@@ -21,14 +26,7 @@ class UploadFileForm(forms.ModelForm):
             #if uploaded_file.content_type not in allowed_types:
              #   raise forms.ValidationError("Only PDF and Word documents (.doc, .docx) are allowed.")
         return uploaded_file
-=======
-from django.forms import ModelForm
-from .models import *
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User
-from django.contrib.auth.models import Group
 class CreateUserForm(UserCreationForm):
     class Meta:
         model = User
         fields = ['username', 'email', 'password1', 'password2']
->>>>>>> main

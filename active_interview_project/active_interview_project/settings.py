@@ -13,19 +13,9 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 import os
 import mimetypes
 from pathlib import Path
-import os
-from dotenv import load_dotenv
-
-load_dotenv()
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 
 # Quick-start development settings - unsuitable for production
@@ -39,7 +29,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['app-cs4300craiglillemon-5.devedu.io',
                  'localhost', '127.0.0.1', 'localhost:3000', '127.0.0.1:3000',
-                 '172.17.0.2', 'django', 'app.activeinterviewservice.me']
+                 '172.17.0.2', 'django']
 
 # Application definition
 
@@ -70,9 +60,7 @@ ROOT_URLCONF = 'active_interview_project.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [
-            BASE_DIR / 'templates',
-        ],
+        'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -84,7 +72,6 @@ TEMPLATES = [
         },
     },
 ]
-
 
 WSGI_APPLICATION = 'active_interview_project.wsgi.application'
 

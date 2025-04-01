@@ -1,11 +1,17 @@
-<<<<<<< HEAD
 # views.py
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect
-from .forms import UploadFileForm
+from .models import *  # Keep models from main
+from django.contrib.auth.models import User
+from django.contrib import messages
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+from .forms import UploadFileForm, CreateUserForm  # Ensure both forms are imported
 
+# Create your views here.
 def index(request):
     return render(request, "index.html")
+
 
 def upload_file(request):
     if request.method == "POST":
@@ -16,21 +22,12 @@ def upload_file(request):
     else:
         form = UploadFileForm()
     return render(request, "index.html", {"form": form})
-=======
-from django.shortcuts import render, redirect
-from .models import *
-from django.contrib.auth.models import User
-from .forms import *
-from django.contrib import messages
-from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.decorators import login_required
 
-# Create your views here.
-def index(request):
-    return render(request, 'index.html')
+
 @login_required
 def loggedin(request):
     return render(request, 'loggedinindex.html')
+
 def register(request):
     form = CreateUserForm(request.POST)
     if form.is_valid():
@@ -38,12 +35,11 @@ def register(request):
         username = form.cleaned_data.get('username')
         group = Group.objects.get(name='manager_role')
         user.groups.add(group)
-        #user = User.objects.create(user=user)
+        # user = User.objects.create(user=user)  # Keep this comment from main
         user.save()
-        messages.success(request, 'Account was create for ' + username)
+        messages.success(request, 'Account was created for ' + username)
         return redirect('login')
-    context={'form':form}
-        
+    context = {'form': form}
     return render(request, 'register.html', context)
 
 def logout_view(request):
@@ -51,4 +47,3 @@ def logout_view(request):
         logout(request)
         return redirect('logout')
     return render(request, 'logout.html')
->>>>>>> main

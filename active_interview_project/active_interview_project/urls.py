@@ -7,16 +7,14 @@ from django.conf import settings
 
 
 urlpatterns = [
-<<<<<<< HEAD
-=======
     path('', views.index, name='index'),
-    path('', views.index, name = 'login'),
-    path('testlogged/', views.loggedin, name ='loggedin'),
-     path('accounts/', include('django.contrib.auth.urls')),
-    path('accounts/register', views.register, name = 'register_page'),
+    path('upload/', views.upload_file, name='upload_file'),  # Keep your file upload functionality
+
+    # Keep authentication-related URLs from main
+    path('accounts/', include('django.contrib.auth.urls')),
+    path('accounts/register', views.register, name='register_page'),
     path('accounts/logout/', views.logout_view, name='logout'),
->>>>>>> main
+
+    path('testlogged/', views.loggedin, name='loggedin'),
     path('admin/', admin.site.urls),
-    path('', views.index, name='index'),
-    path('upload/', views.upload_file, name='upload_file'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
