@@ -20,7 +20,7 @@
               <div class="col user-text-container">
                 <div class="card user-text-bubble">
                   <div class="card-body">
-                    <p class="card-text">{{ message.content }}</p>
+                    <p class="card-text">{{ message.content|linebreaks }}</p>
                   </div>
                 </div>
               </div>
@@ -28,7 +28,7 @@
               <div class="col bot-text-container">
                 <div class="card bot-text-bubble">
                   <div class="card-body">
-                    <p class="card-text">{{ message.content }}</p>
+                    <p class="card-text">{{ message.content|linebreaks }}</p>
                   </div>
                 </div>
               </div>
