@@ -7,6 +7,7 @@
 
 
 {% block content %}
+  {% load static %}
   <div class="chat-container flex-grow-1 d-flex flex-column">
     <h3 class="whiteTextOverride px-3 pt-3">{{ chat.title }}</h3>
     <div id="chat-scroll" class="d-flex flex-column-reverse flex-grow-1 overflow-y-auto overflow-x-hidden">
@@ -52,14 +53,14 @@
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.2.4/purify.min.js" integrity="sha512-Y1p/STLW/B+l+MPJ5K5OdILMwJa2gMFXXmC/qsyDuGH9uc1MZMUo6/8YQUg9Ut4ns8KGCrCtt+58UwmNFFiVvA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script>
-    {% comment %} function updateScroll(){
+    function updateScroll(){
       var element = document.getElementById("chat-scroll");
       element.scrollTop = element.scrollHeight;
-    } {% endcomment %}
+    }
 
-    $(document).ready(function() {
+    {% comment %} $(document).ready(function() {
       updateScroll();
-    });
+    }); {% endcomment %}
 
 
     function sendMessage() {
@@ -76,6 +77,16 @@
               </div>
             </div>`);
         $('#user-input').val('');
+
+        // Show loading bubble
+        $('#chat-messages').append(
+          `<div id="loading-bubble" class="col bot-text-container">
+            <div class="card bot-text-bubble">
+              <div class="card-body">
+                <img src={% static 'images/loading.gif' %} alt="Loading..." style="width: 24px; height: 24px;">
+              </div>
+            </div>
+          </div>`);
         
         updateScroll();
 
@@ -88,6 +99,9 @@
           },
           success: function(response) {
             formattedResponseMessage = DOMPurify.sanitize(response.message.replace(/(?:\r\n|\r|\n)/g, '<br>'));
+            
+            // delete loading bubble
+            $('#loading-bubble').remove();
 
             $('#chat-messages').append(
                 `<div class="col bot-text-container">
