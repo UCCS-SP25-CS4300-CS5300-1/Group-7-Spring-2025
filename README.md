@@ -20,8 +20,12 @@ OPENAI_API_KEY=<your api key>
 3. Load your venv
 4. Pip install the requirements file
 5. Run a django migration
-6. Collect static files with django
-7. Run the server manually
+7. Delete the folder active_interview_backend/staticfiles/
+8. Export these environment variables to your local machine
+   - `PROD=false`
+   - `DANGO_SECRET_KEY='<your secret key>'` (make sure to surround the key itself in apostraphes)
+   - `OPENAI_API_KEY=<your api key>`
+10. Run the server manually
 
 #### Accessing
 `http://127.0.0.1:8000`
