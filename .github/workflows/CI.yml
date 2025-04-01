@@ -76,26 +76,29 @@ jobs:
 
       - name: Configure Environment
         run: |
-          set -o pipefail # make the pipe exist status carry non-zero values;
-          echo 'PROD=true' > .env;
-          echo 'DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }}' >> .env
+          echo 'DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }}' > .env;
+          echo 'OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}' >> .env;
 
       - name: Start Containers
         run: |
+          set -o pipefail;
           docker compose up -d --build
 
       - name: Run Django Tests
         if: always()
         run: |
+          set -o pipefail;
           docker exec django coverage run manage.py test -v 2 | tee dj_test_out.txt;
 
       - name: Run Coverage Report
         if: always()
         run: |
+          set -o pipefail;
           docker exec django coverage report -m | tee coverage_report.txt;
 
       - name: Check Coverage >= 80%
         run: |
+          set -o pipefail;
           chmod +x ./scripts/check-coverage.sh;
           ./scripts/check-coverage.sh coverage_report.txt | tee coverage_verdict.txt
 
