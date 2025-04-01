@@ -86,6 +86,7 @@ def chat(request):
 class CreateChat(LoginRequiredMixin, View):
     def get(self, request):
         owner_chats = Chat.objects.filter(owner=request.user).order_by('-modified_date')
+        
         form = ChatForm()
 
         context = {}
@@ -94,6 +95,24 @@ class CreateChat(LoginRequiredMixin, View):
 
         return render(request, os.path.join('chat', 'chat-create.html'), context)
 
+    def post(self, request):
+        if 'create' in request.POST:
+            form = ChatForm(request.POST)
+            
+            if form.is_valid():
+                chat = form.save(commit=False)
+
+                chat.owner = request.user
+                chat.messages = [
+                    {
+                        "role": "system", 
+                        "content": "You are a helpful assistant."
+                    },
+                ]
+
+                chat.save()
+
+                return redirect("chat-view", chat_id=chat.id)
 
 
 class ChatView(LoginRequiredMixin, UserPassesTestMixin, View):

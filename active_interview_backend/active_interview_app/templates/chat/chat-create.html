@@ -11,8 +11,15 @@
     <h3 class="whiteTextOverride px-3 pt-3" style="text-align: center;">Create an AI Interview</h3>
     <hr class="white-break">
     <div id="content-scroll" class="d-flex flex-column overflow-y-auto overflow-x-hidden pe-0">
-      <form>
-        {{ form }}
+      <form method="post" action="{% url "chat-create" %}">
+        {% csrf_token %}
+        <div>
+          {{ form }}
+        </div>
+        <br>
+        <div class="d-flex justify-content-center">
+          <button class="btn btn-primary mx-2" name="create">Create</button>
+        </div>
       </form>
     </div>
   </div>
