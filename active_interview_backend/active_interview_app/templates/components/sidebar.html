@@ -18,8 +18,10 @@
             <span class="visually-hidden">Toggle Dropend</span>
           </button>
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="#">Edit</a></li>
-            <li><a class="dropdown-item" href="#">Delete</a></li>
+            <li><a class="dropdown-item" href="{% url "chat-edit" chat_id=owner_chat.id %}">Edit</a></li>
+            <li><a class="dropdown-item" href="#">Results</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item text-danger" href="#">Delete</a></li>
           </ul>
         </div>
       </div>

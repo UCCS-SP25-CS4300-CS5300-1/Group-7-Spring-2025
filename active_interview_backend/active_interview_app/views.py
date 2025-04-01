@@ -8,6 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.contrib.auth.models import User
+from django.forms.models import model_to_dict
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.views import View
@@ -115,6 +116,42 @@ class CreateChat(LoginRequiredMixin, View):
                 return redirect("chat-view", chat_id=chat.id)
 
 
+class EditChat(LoginRequiredMixin, UserPassesTestMixin, View):
+    def test_func(self):
+        # manually grab chat id from kwargs and process it
+        chat = Chat.objects.get(id=self.kwargs['chat_id'])
+
+        return self.request.user == chat.owner
+
+    def get(self, request, chat_id):
+        chat = Chat.objects.get(id=chat_id)
+        owner_chats = Chat.objects.filter(owner=request.user).order_by('-modified_date')
+        
+        form = ChatForm(initial=model_to_dict(chat), instance=chat)
+
+        context = {}
+        context['chat'] = chat
+        context['owner_chats'] = owner_chats
+        context['form'] = form
+
+        return render(request, os.path.join('chat', 'chat-edit.html'), context)
+
+    def post(self, request, chat_id):
+        chat = Chat.objects.get(id=chat_id)
+
+        if 'update' in request.POST:
+            form = ChatForm(request.POST, instance=chat)
+            
+            if form.is_valid():
+                chat = form.save(commit=False)
+
+                # Do other stuff if necessary, especially if a file is changed
+
+                chat.save()
+
+                return redirect("chat-view", chat_id=chat.id)
+
+
 class ChatView(LoginRequiredMixin, UserPassesTestMixin, View):
     def test_func(self):
         # manually grab chat id from kwargs and process it
@@ -124,7 +161,6 @@ class ChatView(LoginRequiredMixin, UserPassesTestMixin, View):
 
     def get(self, request, chat_id):
         chat = Chat.objects.get(id=chat_id)
-
         owner_chats = Chat.objects.filter(owner=request.user).order_by('-modified_date')
 
         context = {}
