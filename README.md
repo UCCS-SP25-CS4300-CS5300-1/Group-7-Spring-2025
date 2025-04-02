@@ -4,23 +4,32 @@
 #### Setup
 1. Navigate to the root of the project.
 2. Make a venv: `python3 -m venv myenv`
-3. Load the venv: `source myenv/bin/activate`
-4. Navigate to the active_interview_backend/ folder
-5. Install the requirements: `pip install -r active_interview_backend/requirements.txt`
-6. Generate a secret django key: `python -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"`
-7. Run a django migration: `python3 manage.py migrate`
-8. Export these environment variables to your local machine
-   - `export PROD=false`
-   - `export DANGO_SECRET_KEY='<your secret key>'` (make sure to surround the key itself in apostraphes)
-   - `export OPENAI_API_KEY=<your api key>`
+3. Load the venv
+   - Windows(Powershell): `.\myenv\bin\activate`
+   - Linux/Mac: `source myenv/bin/activate`
+5. Navigate to the active_interview_backend/ folder
+6. Install the requirements: `pip install -r requirements.txt`
+7. Generate a secret django key: `python -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"`
+8. Run a django migration: `python3 manage.py migrate`
+9. Export these environment variables to your local machine
+   - Windows(Powershell)
+      - `$env:PROD = "false"`
+      - `$env:DANGO_SECRET_KEY = "<your secret key>"`
+      - `$env:OPENAI_API_KEY = "<your api key>"`
+   - Linux/Mac
+      - `export PROD=false`
+      - `export DANGO_SECRET_KEY='<your secret key>'` (make sure to surround the key itself in apostraphes)
+      - `export OPENAI_API_KEY=<your api key>`
 
 #### Startup
 1. Navigate to the root of the project.
 2. <ins>(if you recently ran the clean-startup script)</ins> Repeat the manual setup steps 2-5 to set up the venv after it was erased
-3. Load the venv: `source myenv/bin/activate`
+3. Load the venv
+   - Windows(Powershell): `.\myenv\bin\activate`
+   - Linux/Mac: `source myenv/bin/activate`
 4. Navigate to the active_interview_backend/ folder
 5. <ins>(if you changed a static file like **CSS** or **images**)</ins> Delete the folder active_interview_backend/staticfiles/: `rm -Rf staticfiles`
-6. Run the server manually: `python3 manage.py migrate`
+6. Run the server manually: `python3 manage.py runserver`
 
 #### Accessing
 `http://127.0.0.1:8000`
