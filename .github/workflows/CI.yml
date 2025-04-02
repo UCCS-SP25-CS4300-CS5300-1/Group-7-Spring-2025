@@ -82,7 +82,7 @@ jobs:
       - name: Start Containers
         run: |
           set -o pipefail;
-          docker compose up -d --build
+          docker compose -f docker-compose.prod.yml up -d --build
 
       - name: Run Django Tests
         if: always()
