@@ -16,15 +16,15 @@ urlpatterns = [
     path('', views.index, name='login'),
     path('testlogged/', views.loggedin, name='loggedin'),
     path('accounts/', include('django.contrib.auth.urls')),
-    path('accounts/register', views.register, name='register_page'),
+    path('accounts/register/', views.register, name='register_page'),
     path('accounts/logout/', views.logout_view, name='logout'),
 
     # Chat views
     path('chat/', views.chat, name='chat'),
     path('chat/create/', views.CreateChat.as_view(), name='chat-create'),
     path('chat/<int:chat_id>/', views.ChatView.as_view(), name='chat-view'),
-    path('chat/<int:chat_id>/edit', views.EditChat.as_view(), name='chat-edit'),
-    path('chat/<int:chat_id>/delete', views.DeleteChat.as_view(), name='chat-delete'),
+    path('chat/<int:chat_id>/edit/', views.EditChat.as_view(), name='chat-edit'),
+    path('chat/<int:chat_id>/delete/', views.DeleteChat.as_view(), name='chat-delete'),
 
     # Demo view
     path('demo/', views.demo, name='demo'),

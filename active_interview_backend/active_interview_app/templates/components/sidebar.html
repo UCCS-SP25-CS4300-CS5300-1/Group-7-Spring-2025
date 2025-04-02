@@ -21,7 +21,11 @@
             <li><a class="dropdown-item" href="{% url "chat-edit" chat_id=owner_chat.id %}">Edit</a></li>
             <li><a class="dropdown-item" href="#">Results</a></li>
             <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item text-danger" data-bs-toggle="modal" data-bs-target="#deleteChatModal">Delete</a></li>
+            <li>
+              <a class="dropdown-item text-danger" data-bs-toggle="modal" data-bs-target="#deleteChatModal" data-chat-id="{{ owner_chat.id }}">
+                Delete
+              </a>
+            </li>
           </ul>
         </div>
       </div>

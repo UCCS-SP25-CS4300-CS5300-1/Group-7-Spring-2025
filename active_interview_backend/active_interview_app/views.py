@@ -203,16 +203,11 @@ class DeleteChat(LoginRequiredMixin, UserPassesTestMixin, View):
         chat = Chat.objects.get(id=chat_id)
 
         if 'delete' in request.POST:
-            form = ChatForm(request.POST, instance=chat)
-            
-            if form.is_valid():
-                chat = form.save(commit=False)
-
-                # Do other stuff if necessary, especially if a file is changed
-
-                chat.save()
-
-                return redirect("chat-view", chat_id=chat.id)
+            chat.delete()
+            return redirect("chat")
+        else:
+            print("delete not in form")
+            return redirect("chat-view", chat_id=chat.id)
 
 @login_required
 def loggedin(request):
