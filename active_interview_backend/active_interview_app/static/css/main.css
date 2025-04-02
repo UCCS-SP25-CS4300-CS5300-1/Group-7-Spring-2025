@@ -116,3 +116,8 @@ html, body {
     max-height: 40px;
     /* margin: 0.1rem; */
 }
+.dropdown-menu {
+    /* Move dropdown to top */
+    z-index: 9999 !important; 
+}
+
