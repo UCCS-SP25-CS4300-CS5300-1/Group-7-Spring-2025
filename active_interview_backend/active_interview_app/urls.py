@@ -24,6 +24,7 @@ urlpatterns = [
     path('chat/create/', views.CreateChat.as_view(), name='chat-create'),
     path('chat/<int:chat_id>/', views.ChatView.as_view(), name='chat-view'),
     path('chat/<int:chat_id>/edit', views.EditChat.as_view(), name='chat-edit'),
+    path('chat/<int:chat_id>/delete', views.DeleteChat.as_view(), name='chat-delete'),
 
     # Demo view
     path('demo/', views.demo, name='demo'),

@@ -97,11 +97,6 @@
               </div>
             </div>`);
 
-        {% comment %} // Reset height to recalc scrollHeight
-        this.style.height = 'auto';
-        // Set the height based on the scrollHeight, which grows as needed
-        var scrollHeight = this.scrollHeight {% endcomment %}
-
         // Show loading bubble
         $('#chat-messages').append(
           `<div id="loading-bubble" class="col bot-text-container">
