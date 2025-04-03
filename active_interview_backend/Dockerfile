@@ -48,6 +48,9 @@ RUN wget -O google-chrome.deb https://dl.google.com/linux/direct/google-chrome-s
 # RUN python manage.py makemigrations
 # RUN python manage.py migrate
 
+# make user
+RUN useradd testinguser
+
 RUN chmod +x ./start.sh
 
 EXPOSE 443 
