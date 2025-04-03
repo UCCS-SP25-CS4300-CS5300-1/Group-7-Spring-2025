@@ -74,14 +74,23 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Setup Chrome
-        uses: browser-actions/setup-chrome@v1
-        with:
-          install-dependencies: true
-          install-chromedriver: true
+      - name: Set up chromedriver
+        uses: nanasess/setup-chromedriver@v2
 
-      - name: Check chrome
-        run: chrome --version
+      - name: Set up pseudo-display
+        run: |
+          export DISPLAY=:99
+          chromedriver --url-base=/wd/hub &
+          sudo Xvfb -ac :99 -screen 0 1280x1024x24 > /dev/null 2>&1 & # optional
+
+      # - name: Setup Chrome
+      #   uses: browser-actions/setup-chrome@v1
+      #   with:
+      #     install-dependencies: true
+      #     install-chromedriver: true
+
+      # - name: Check chrome
+      #   run: chrome --version
 
       # - name: Install Chrome dependencies
       #   run: |
