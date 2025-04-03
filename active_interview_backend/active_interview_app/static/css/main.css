@@ -71,13 +71,13 @@ html, body {
     margin-right: 0.5rem;
 }
 .user-text-bubble {
-    max-width: 500px;
+    max-width: min(500px, 80vw);
     width: auto;
     color: white;
     background-color: var(--shallows) !important;
 }
 .bot-text-bubble {
-    max-width: 500px;
+    max-width: min(500px, 80vw);
     width: auto;
 }
 .whiteTextOverride {

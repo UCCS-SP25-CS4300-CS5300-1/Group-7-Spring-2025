@@ -47,7 +47,7 @@ class TestChatModel(TestCase):
         self.user = generateExampleUser()
         self.chat = generateExampleChat(self.user)
 
-    def testStr(self):
+    def testChatModelStr(self):
         self.assertEqual(self.chat.__str__(), "Example Title")
 
 
@@ -97,6 +97,9 @@ class TestCreateChatView(TestCase):
         # Validate that the view is valid.  This view redirects
         self.assertEqual(response.status_code, 302)
 
+        # Validate that the new chat has been created
+        self.assertTrue(Chat.objects.filter(title = 'Example Title Strikes Back').exists())
+
 
 class TestChatView(TestCase):
     def setUp(self):
@@ -129,3 +132,34 @@ class TestChatView(TestCase):
         print(response.content.decode('utf-8'))
         self.assertIn("3.14", response.content.decode('utf-8'))
 
+
+class TestEditChatView(TestCase):
+    def setUp(self):
+        self.user = generateExampleUser()
+        self.chat = generateExampleChat(self.user)
+        self.client.force_login(self.user)
+
+    def testGETEditChatView(self):
+        # Call the view with a response
+        response = self.client.get(reverse('chat-edit', args=[self.chat.id]))
+
+        # Validate that the view is valid
+        self.assertEqual(response.status_code, 200)
+
+        # Validate that the index template was used
+        self.assertTemplateUsed(response,'base-sidebar.html')
+
+    def testPOSTEditChatView(self):
+        # Call the view to update the current item's title
+        response = self.client.post(reverse('chat-edit', args=[self.chat.id]), 
+            {
+                "title": "Changed Title",
+                "update": "update"
+            }
+        )
+
+        # Validate that the view is valid.  This view redirects
+        self.assertEqual(response.status_code, 302)
+
+        # Validate that the chat's title has been updated
+        self.assertEqual(Chat.objects.get(id = self.chat.id).title, "Changed Title")
