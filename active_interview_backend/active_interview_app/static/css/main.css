@@ -127,3 +127,24 @@ html, body {
   width: 100%;
   min-width: 0;
 } */
+
+/* Dynamic button text */
+.full-block-link p {
+    max-width: min(320px, calc(85vw - 80px));
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin: 0;
+}
+/* bootstrap md */
+@media (min-width: 768px) and (max-width: 991.99px) {
+  .full-block-link p {
+    max-width: calc((100vw / 4) - 70px);
+  }
+}
+/* bootstrap lg+ */
+@media (min-width: 992px) {
+  .full-block-link p {
+    max-width: calc((100vw / 6) - 70px);
+  }
+}
