@@ -12,7 +12,7 @@
       <div class="{% if chat.id == owner_chat.id %}chat-card-active{% else %}chat-card{% endif %} card mb-3 mt-3">
         <div class="btn-group dropend" data-bs-theme="dark">
           <a href="{% url "chat-view" chat_id=owner_chat.id %}" class="full-block-link">    
-            <h5 class="card-title m-2">{{ owner_chat.title }}</h5>
+            <p class="chat-card-text card-text m-2">{{ owner_chat.title }}</p>
           </a>
           <button type="button" class="sidebar-dropend btn btn-dark dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" data-bs-popper-config='{"strategy":"fixed"}' aria-expanded="false">
             <span class="visually-hidden">Toggle Dropend</span>
