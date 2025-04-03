@@ -93,10 +93,10 @@ jobs:
       - name: Check chrome
         run: chrome --version
 
-      - name: Install Chrome dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y libnss3 libgconf-2-4 libxi6 libgdk-pixbuf2.0-0 libxrandr2 libasound2
+      # - name: Install Chrome dependencies
+      #   run: |
+      #     sudo apt-get update
+      #     sudo apt-get install -y libnss3 libgconf-2-4 libxi6 libgdk-pixbuf2.0-0 libxrandr2 libasound2
 
       - name: Configure Environment
         run: |
