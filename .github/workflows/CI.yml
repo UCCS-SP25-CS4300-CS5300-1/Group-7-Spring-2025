@@ -76,6 +76,9 @@ jobs:
 
       - name: Setup Chrome
         uses: browser-actions/setup-chrome@v1
+        with:
+          install-dependencies: true
+          install-chromedriver: true
 
       - name: Configure Environment
         run: |
