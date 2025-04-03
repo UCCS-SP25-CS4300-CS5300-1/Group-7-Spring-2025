@@ -127,6 +127,7 @@ jobs:
           ./scripts/check-coverage.sh coverage_report.txt | tee coverage_verdict.txt
 
       - name: See if chromedriver is present
+        if: always()
         run: ls /root/.cache/selenium/chromedriver/linux64/135.0.7049.42/
 
       - name: Create Step Summary
