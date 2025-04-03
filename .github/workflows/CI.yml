@@ -80,7 +80,7 @@ jobs:
           install-dependencies: true
           install-chromedriver: true
 
-      - Name: Check chrome
+      - name: Check chrome
         run: chrome --version
 
       - name: Install Chrome dependencies
