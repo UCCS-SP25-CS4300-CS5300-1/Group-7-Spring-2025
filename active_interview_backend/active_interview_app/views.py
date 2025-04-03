@@ -31,14 +31,6 @@ def index(request):
 def demo(request):
     return render(request, os.path.join('demo', 'demo.html'))
 
-@login_required
-def chat(request):
-    owner_chats = Chat.objects.filter(owner=request.user).order_by('-modified_date')
-
-    context = {}
-    context['owner_chats'] = owner_chats
-
-    return render(request, os.path.join('chat', 'chat.html'), context)
 
 # @login_required
 # def chat_view(request):
@@ -82,6 +74,16 @@ def chat(request):
 #         chat.save()
 
 #         return JsonResponse({'message': ai_message})
+
+
+@login_required
+def chat_list(request):
+    owner_chats = Chat.objects.filter(owner=request.user).order_by('-modified_date')
+
+    context = {}
+    context['owner_chats'] = owner_chats
+
+    return render(request, os.path.join('chat', 'chat-list.html'), context)
 
 
 class CreateChat(LoginRequiredMixin, View):
@@ -204,10 +206,10 @@ class DeleteChat(LoginRequiredMixin, UserPassesTestMixin, View):
 
         if 'delete' in request.POST:
             chat.delete()
-            return redirect("chat")
-        else:
-            print("delete not in form")
-            return redirect("chat-view", chat_id=chat.id)
+            return redirect("chat-list")
+        # else:
+        #     print("delete not in form")
+        #     return redirect("chat-view", chat_id=chat.id)
 
 @login_required
 def loggedin(request):
