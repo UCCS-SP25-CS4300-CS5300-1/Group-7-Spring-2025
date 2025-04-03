@@ -25,6 +25,9 @@ jobs:
         with:
           python-version: '3.13'
           # cache: 'pip'
+
+      - name: Setup Chrome
+        uses: browser-actions/setup-chrome@v1
           
       - name: Install OpenAI
         run: pip install openai
