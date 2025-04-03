@@ -8,6 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.contrib.auth.models import User
+from django.forms.models import model_to_dict
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.views import View
@@ -30,14 +31,6 @@ def index(request):
 def demo(request):
     return render(request, os.path.join('demo', 'demo.html'))
 
-@login_required
-def chat(request):
-    owner_chats = Chat.objects.filter(owner=request.user).order_by('-modified_date')
-
-    context = {}
-    context['owner_chats'] = owner_chats
-
-    return render(request, os.path.join('chat', 'chat.html'), context)
 
 # @login_required
 # def chat_view(request):
@@ -83,6 +76,16 @@ def chat(request):
 #         return JsonResponse({'message': ai_message})
 
 
+@login_required
+def chat_list(request):
+    owner_chats = Chat.objects.filter(owner=request.user).order_by('-modified_date')
+
+    context = {}
+    context['owner_chats'] = owner_chats
+
+    return render(request, os.path.join('chat', 'chat-list.html'), context)
+
+
 class CreateChat(LoginRequiredMixin, View):
     def get(self, request):
         owner_chats = Chat.objects.filter(owner=request.user).order_by('-modified_date')
@@ -124,7 +127,6 @@ class ChatView(LoginRequiredMixin, UserPassesTestMixin, View):
 
     def get(self, request, chat_id):
         chat = Chat.objects.get(id=chat_id)
-
         owner_chats = Chat.objects.filter(owner=request.user).order_by('-modified_date')
 
         context = {}
@@ -154,6 +156,60 @@ class ChatView(LoginRequiredMixin, UserPassesTestMixin, View):
 
         return JsonResponse({'message': ai_message})
 
+
+class EditChat(LoginRequiredMixin, UserPassesTestMixin, View):
+    def test_func(self):
+        # manually grab chat id from kwargs and process it
+        chat = Chat.objects.get(id=self.kwargs['chat_id'])
+
+        return self.request.user == chat.owner
+        
+    def get(self, request, chat_id):
+        chat = Chat.objects.get(id=chat_id)
+        owner_chats = Chat.objects.filter(owner=request.user).order_by('-modified_date')
+        
+        form = ChatForm(initial=model_to_dict(chat), instance=chat)
+
+        context = {}
+        context['chat'] = chat
+        context['owner_chats'] = owner_chats
+        context['form'] = form
+
+        return render(request, os.path.join('chat', 'chat-edit.html'), context)
+
+    def post(self, request, chat_id):
+        chat = Chat.objects.get(id=chat_id)
+
+        if 'update' in request.POST:
+            form = ChatForm(request.POST, instance=chat)
+            
+            if form.is_valid():
+                chat = form.save(commit=False)
+
+                # Do other stuff if necessary, especially if a file is changed
+
+                chat.save()
+
+                return redirect("chat-view", chat_id=chat.id)
+
+
+# Note: this class has no template.  it is technically built into base-sidebar
+class DeleteChat(LoginRequiredMixin, UserPassesTestMixin, View):
+    def test_func(self):
+        # manually grab chat id from kwargs and process it
+        chat = Chat.objects.get(id=self.kwargs['chat_id'])
+
+        return self.request.user == chat.owner
+        
+    def post(self, request, chat_id):
+        chat = Chat.objects.get(id=chat_id)
+
+        if 'delete' in request.POST:
+            chat.delete()
+            return redirect("chat-list")
+        # else:
+        #     print("delete not in form")
+        #     return redirect("chat-view", chat_id=chat.id)
 
 @login_required
 def loggedin(request):

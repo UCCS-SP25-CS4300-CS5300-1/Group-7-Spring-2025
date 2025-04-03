@@ -71,13 +71,13 @@ html, body {
     margin-right: 0.5rem;
 }
 .user-text-bubble {
-    max-width: 500px;
+    max-width: min(500px, 80vw);
     width: auto;
     color: white;
     background-color: var(--shallows) !important;
 }
 .bot-text-bubble {
-    max-width: 500px;
+    max-width: min(500px, 80vw);
     width: auto;
 }
 .whiteTextOverride {
@@ -115,4 +115,36 @@ html, body {
     height: 100%;
     max-height: 40px;
     /* margin: 0.1rem; */
+}
+.dropdown-menu {
+    /* Move dropdown to top */
+    z-index: 9999 !important; 
+}
+/* .chat-card-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+  min-width: 0;
+} */
+
+/* Dynamic button text */
+.full-block-link p {
+    max-width: min(320px, calc(85vw - 80px));
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin: 0;
+}
+/* bootstrap md */
+@media (min-width: 768px) and (max-width: 991.99px) {
+  .full-block-link p {
+    max-width: calc((100vw / 4) - 70px);
+  }
+}
+/* bootstrap lg+ */
+@media (min-width: 992px) {
+  .full-block-link p {
+    max-width: calc((100vw / 6) - 70px);
+  }
 }

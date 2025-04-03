@@ -61,13 +61,33 @@
     {% comment %} $(document).ready(function() {
       updateScroll();
     }); {% endcomment %}
+    
 
+    const chatInput = document.getElementById('user-input');
+    chatInput.addEventListener('input', function() {
+      // Reset height to recalc scrollHeight
+      this.style.height = 'auto';
+      // Set the height based on the scrollHeight, which grows as needed
+      var scrollHeight = this.scrollHeight
+      
+      if (scrollHeight < 200) {
+        this.style.height = scrollHeight + 'px';
+      } else {
+        this.style.height = '200px';
+      }
+    });
+    
 
     function sendMessage() {
       var userInput = $('#user-input').val();
       if (userInput.trim() !== '') {
         formattedUserInput = DOMPurify.sanitize(userInput.replace(/(?:\r\n|\r|\n)/g, '<br>'));
-        
+
+        $('#user-input').val('');
+        // Reset height to recalc scrollHeight
+        chatInput.style.height = 'auto';
+        chatInput.style.height = chatInput.scrollHeight + 'px';
+
         $('#chat-messages').append(
             `<div class="col user-text-container">
               <div class="card user-text-bubble">
@@ -76,7 +96,6 @@
                 </div>
               </div>
             </div>`);
-        $('#user-input').val('');
 
         // Show loading bubble
         $('#chat-messages').append(
@@ -131,14 +150,6 @@
         // Set the height based on the scrollHeight, which grows as needed
         this.style.height = this.scrollHeight + 'px';
       }
-    });
-    
-    const chatInput = document.getElementById('user-input');
-    chatInput.addEventListener('input', function() {
-      // Reset height to recalc scrollHeight
-      this.style.height = 'auto';
-      // Set the height based on the scrollHeight, which grows as needed
-      this.style.height = this.scrollHeight + 'px';
     });
   </script>
 {% endblock %}
