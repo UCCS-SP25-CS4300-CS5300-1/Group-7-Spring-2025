@@ -69,6 +69,14 @@
                             <input type="file" name="file" id="file" required>
                             <button type="submit">Upload</button>
                         </form>
+                        {% if messages %}
+    {% for message in messages %}
+        <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}
+
                 {% endif %}
                 
                         {% if uploaded_file_url %}

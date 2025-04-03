@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'bootstrap5',
     'rest_framework',
     'active_interview_app',
+    'filetype',
 ]
 
 MIDDLEWARE = [
