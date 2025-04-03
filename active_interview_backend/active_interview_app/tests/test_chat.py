@@ -163,3 +163,25 @@ class TestEditChatView(TestCase):
 
         # Validate that the chat's title has been updated
         self.assertEqual(Chat.objects.get(id = self.chat.id).title, "Changed Title")
+    
+
+class TestDeleteChatView(TestCase):
+    def setUp(self):
+        self.user = generateExampleUser()
+        self.chat = generateExampleChat(self.user)
+        self.client.force_login(self.user)
+
+    def testPOSTDeleteChatView(self):
+        # Call the view to update the current item's title
+        response = self.client.post(reverse('chat-delete', args=[self.chat.id]), 
+            {
+                "delete": "delete"
+            }
+        )
+
+        # Validate that the view is valid.  This view redirects
+        self.assertEqual(response.status_code, 302)
+
+        # Validate that the chat has been deleted
+        self.assertFalse(Chat.objects.filter(id = self.chat.id).exists())
+    
