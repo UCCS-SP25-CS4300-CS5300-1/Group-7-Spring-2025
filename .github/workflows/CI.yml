@@ -25,9 +25,6 @@ jobs:
         with:
           python-version: '3.13'
           # cache: 'pip'
-
-      - name: Setup Chrome
-        uses: browser-actions/setup-chrome@v1
           
       - name: Install OpenAI
         run: pip install openai
@@ -76,6 +73,9 @@ jobs:
     steps: 
       - name: Checkout Code
         uses: actions/checkout@v4
+
+      - name: Setup Chrome
+        uses: browser-actions/setup-chrome@v1
 
       - name: Configure Environment
         run: |
