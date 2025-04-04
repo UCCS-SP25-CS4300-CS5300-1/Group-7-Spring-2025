@@ -33,7 +33,7 @@
     {% if user.is_authenticated %}
       <ul class="navbar-nav ms-auto">
         <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" id="profile-dropdown">
             Profile
           </a>
           <ul class="dropdown-menu dropdown-menu-end">
@@ -46,7 +46,7 @@
     {% else %}
       <ul class="navbar-nav ms-auto">
         <li class="nav-item">
-          <a class="nav-link" href="#">Login</a>
+          <a class="nav-link" href="#" id="login-button">Login</a>
         </li>
       </ul>
     {% endif %}
