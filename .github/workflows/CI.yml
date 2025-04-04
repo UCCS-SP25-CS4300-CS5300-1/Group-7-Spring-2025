@@ -112,13 +112,13 @@ jobs:
         if: always()
         run: |
           set -o pipefail;
-          docker exec --user testinguser django coverage run manage.py test -v 2 | tee dj_test_out.txt;
+          docker exec django coverage run manage.py test -v 2 | tee dj_test_out.txt;
 
       - name: Run Coverage Report
         if: always()
         run: |
           set -o pipefail;
-          docker exec --user testinguser django coverage report -m | tee coverage_report.txt;
+          docker exec django coverage report -m | tee coverage_report.txt;
 
       - name: Check Coverage >= 80%
         run: |
