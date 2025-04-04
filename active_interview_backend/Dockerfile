@@ -14,10 +14,10 @@ COPY . /app
 ENV DEBIAN_FRONTEND=noninteractive
 
 # Set ChromeDriver version (adjust to the appropriate version for Chrome 135)
-ENV CHROME_VERSION=135.0.7049.52
+ENV CHROME_VERSION=135.0.7049.52-1
 
 # Optionally, install Google Chrome if needed for your tests
-RUN wget -O google-chrome.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb \
+RUN wget -O google-chrome.deb https://dl.google.com/linux/chrome/deb/pool/main/g/google-chrome-stable/google-chrome-stable_${CHROME_VERSION}_amd64.deb \
  && apt-get update \
  && apt-get install -y ./google-chrome.deb \
  && rm google-chrome.deb
@@ -37,8 +37,8 @@ RUN wget -O chromedriver.zip https://storage.googleapis.com/chrome-for-testing-p
 # RUN python manage.py makemigrations
 # RUN python manage.py migrate
 
-# make user
-RUN useradd testinguser
+# # make user
+# RUN useradd testinguser
 
 RUN chmod +x ./start.sh
 
