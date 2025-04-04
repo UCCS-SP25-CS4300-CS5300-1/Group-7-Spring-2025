@@ -13,25 +13,6 @@ COPY . /app
 # Prevent interactive prompts during package installation
 ENV DEBIAN_FRONTEND=noninteractive
 
-# # Install dependencies required for Chrome and ChromeDriver
-# RUN apt-get update && apt-get install -y \
-#     wget \
-#     unzip \
-#     xvfb \
-#     libxi6 \
-#     libgconf-2-4 \
-#     libnss3 \
-#     libxss1 \
-#     libappindicator1 \
-#     libindicator7 \
-#     fonts-liberation \
-#  && rm -rf /var/lib/apt/lists/*
-
-# # Optionally, install Google Chrome if needed for your tests
-# RUN wget -O google-chrome.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb \
-#  && apt-get update \
-#  && apt-get install -y ./google-chrome.deb \
-#  && rm google-chrome.deb
 # Set ChromeDriver version (adjust to the appropriate version for Chrome 135)
 ENV CHROME_VERSION=135.0.7049.52
 
@@ -43,7 +24,6 @@ RUN wget -O google-chrome.deb https://dl.google.com/linux/direct/google-chrome-s
 
 # # Set ChromeDriver version (adjust as needed)
 ENV CHROMEDRIVER_VERSION=135.0.7049.52
-# ENV CHROMEDRIVER_VERSION=114.0.5735.90
 
 # Download and install ChromeDriver
 RUN wget -O chromedriver.zip https://storage.googleapis.com/chrome-for-testing-public/${CHROMEDRIVER_VERSION}/linux64/chromedriver-linux64.zip \
@@ -67,3 +47,21 @@ EXPOSE 8000
 
 # Run startup script
 CMD ["bash", "./start.sh"]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-+
