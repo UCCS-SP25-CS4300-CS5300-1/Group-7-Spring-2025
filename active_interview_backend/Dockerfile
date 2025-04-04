@@ -34,14 +34,14 @@ RUN wget -O google-chrome.deb https://dl.google.com/linux/direct/google-chrome-s
  && rm google-chrome.deb
 
 # # Set ChromeDriver version (adjust as needed)
-# ENV CHROMEDRIVER_VERSION=114.0.5735.90
+ENV CHROMEDRIVER_VERSION=114.0.5735.90
 
-# # Download and install ChromeDriver
-# RUN wget -O chromedriver.zip https://chromedriver.storage.googleapis.com/${CHROMEDRIVER_VERSION}/chromedriver_linux64.zip \
-#  && unzip chromedriver.zip \
-#  && mv chromedriver /usr/local/bin/chromedriver \
-#  && chmod +x /usr/local/bin/chromedriver \
-#  && rm chromedriver.zip
+# Download and install ChromeDriver
+RUN wget -O chromedriver.zip https://chromedriver.storage.googleapis.com/${CHROMEDRIVER_VERSION}/chromedriver_linux64.zip \
+ && unzip chromedriver.zip \
+ && mv chromedriver /usr/local/bin/chromedriver \
+ && chmod +x /usr/local/bin/chromedriver \
+ && rm chromedriver.zip
 
 # Setup django
 # RUN python manage.py collectstatic --noinput
