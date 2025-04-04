@@ -35,12 +35,12 @@ urlpatterns = [
     path('api/', include(router.urls)),
 ]
 
-if settings.PROD:
-    # add these urls for production environments only
-    # urlpatterns.append(path('api/', include(router.urls)))
-    pass
-else:
-    # add these urls for non-production environments only
-    # urlpatterns.append(path('api/', include(router.urls)))
-    pass
+# if settings.PROD:
+#     # add these urls for production environments only
+#     # urlpatterns.append(path('api/', include(router.urls)))
+#     pass
+# else:
+#     # add these urls for non-production environments only
+#     # urlpatterns.append(path('api/', include(router.urls)))
+#     pass
     
