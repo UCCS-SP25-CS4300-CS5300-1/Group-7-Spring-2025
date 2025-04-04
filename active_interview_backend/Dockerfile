@@ -13,24 +13,24 @@ COPY . /app
 # Prevent interactive prompts during package installation
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Set ChromeDriver version (adjust to the appropriate version for Chrome 135)
-ENV CHROME_VERSION=135.0.7049.52-1
+# # Set ChromeDriver version (adjust to the appropriate version for Chrome 135)
+# ENV CHROME_VERSION=135.0.7049.52-1
 
-# Optionally, install Google Chrome if needed for your tests
-RUN wget -O google-chrome.deb https://dl.google.com/linux/chrome/deb/pool/main/g/google-chrome-stable/google-chrome-stable_${CHROME_VERSION}_amd64.deb \
- && apt-get update \
- && apt-get install -y ./google-chrome.deb \
- && rm google-chrome.deb
+# # Optionally, install Google Chrome if needed for your tests
+# RUN wget -O google-chrome.deb https://dl.google.com/linux/chrome/deb/pool/main/g/google-chrome-stable/google-chrome-stable_${CHROME_VERSION}_amd64.deb \
+#  && apt-get update \
+#  && apt-get install -y ./google-chrome.deb \
+#  && rm google-chrome.deb
 
-# # Set ChromeDriver version (adjust as needed)
-ENV CHROMEDRIVER_VERSION=135.0.7049.52
+# # # Set ChromeDriver version (adjust as needed)
+# ENV CHROMEDRIVER_VERSION=135.0.7049.52
 
-# Download and install ChromeDriver
-RUN wget -O chromedriver.zip https://storage.googleapis.com/chrome-for-testing-public/${CHROMEDRIVER_VERSION}/linux64/chromedriver-linux64.zip \
- && unzip chromedriver.zip \
- && mv chromedriver-linux64/chromedriver /usr/local/bin/chromedriver \
- && chmod +x /usr/local/bin/chromedriver \
- && rm chromedriver.zip
+# # Download and install ChromeDriver
+# RUN wget -O chromedriver.zip https://storage.googleapis.com/chrome-for-testing-public/${CHROMEDRIVER_VERSION}/linux64/chromedriver-linux64.zip \
+#  && unzip chromedriver.zip \
+#  && mv chromedriver-linux64/chromedriver /usr/local/bin/chromedriver \
+#  && chmod +x /usr/local/bin/chromedriver \
+#  && rm chromedriver.zip
 
 # Setup django
 # RUN python manage.py collectstatic --noinput

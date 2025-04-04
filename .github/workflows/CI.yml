@@ -74,30 +74,6 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      # - name: Set up chromedriver
-      #   uses: nanasess/setup-chromedriver@v2
-
-      # - name: Set up pseudo-display
-      #   run: |
-      #     export DISPLAY=:99
-      #     chromedriver --url-base=/wd/hub &
-      #     sudo Xvfb -ac :99 -screen 0 1280x1024x24 > /dev/null 2>&1 & # optional
-
-      # - name: Setup Chrome
-      #   uses: browser-actions/setup-chrome@v1
-      #   with:
-      #     chrome-version: 135
-      #     install-dependencies: true
-      #     install-chromedriver: true
-
-      # - name: Check chrome
-      #   run: chrome --version
-
-      # - name: Install Chrome dependencies
-      #   run: |
-      #     sudo apt-get update
-      #     sudo apt-get install -y libnss3 libgconf-2-4 libxi6 libgdk-pixbuf2.0-0 libxrandr2 libasound2
-
       - name: Configure Environment
         run: |
           echo 'DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }}' > .env;
@@ -107,6 +83,23 @@ jobs:
         run: |
           set -o pipefail;
           docker compose -f docker-compose.prod.yml up -d --build
+          
+      - name: Install Chrome in Containers
+        run: | 
+          docker exec django bash -c 
+            "wget -O google-chrome.deb https://dl.google.com/linux/chrome/deb/pool/main/g/google-chrome-stable/google-chrome-stable_${CHROME_VERSION}_amd64.deb \
+            && apt-get update \
+            && apt-get install -y ./google-chrome.deb \
+            && rm google-chrome.deb" &&
+          docker exec django bash -c
+            "wget -O chromedriver.zip https://storage.googleapis.com/chrome-for-testing-public/${CHROMEDRIVER_VERSION}/linux64/chromedriver-linux64.zip \
+            && unzip chromedriver.zip \
+            && mv chromedriver-linux64/chromedriver /usr/local/bin/chromedriver \
+            && chmod +x /usr/local/bin/chromedriver \
+            && rm chromedriver.zip"
+        env:
+          CHROME_VERSION: 135.0.7049.52-1
+          CHROMEDRIVER_VERSION: 135.0.7049.52
 
       - name: Run Django Tests
         if: always()
@@ -125,10 +118,6 @@ jobs:
           set -o pipefail;
           chmod +x ./scripts/check-coverage.sh;
           ./scripts/check-coverage.sh coverage_report.txt | tee coverage_verdict.txt
-
-      # - name: See if chromedriver is present
-      #   if: always()
-      #   run: ls /root/.cache/selenium/chromedriver/linux64/135.0.7049.42/
 
       - name: Create Step Summary
         if: always()
