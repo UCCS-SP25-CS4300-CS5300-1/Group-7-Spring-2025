@@ -12,7 +12,7 @@ from selenium.webdriver.support import expected_conditions as EC
 
 
 # Make a context-dependent driver for the environment
-def getEnvDriver(self):
+def getEnvDriver():
     # if testing in production container environment:
     if settings.PROD:
         # Configure chrome options
