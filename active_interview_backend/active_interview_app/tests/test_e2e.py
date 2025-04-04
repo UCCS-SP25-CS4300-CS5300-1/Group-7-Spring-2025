@@ -1,5 +1,4 @@
-import tempfile
-
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
@@ -12,11 +11,10 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 
-class TestHost(LiveServerTestCase):
-    def test0010(self):
-        # make temp profile dir
-        temp_profile_dir = tempfile.mkdtemp()
-
+# Make a context-dependent driver for the environment
+def getEnvDriver(self):
+    # if testing in production container environment:
+    if settings.PROD:
         # Configure chrome options
         chrome_options = Options()
         chrome_options.add_argument("--no-sandbox")
@@ -24,9 +22,22 @@ class TestHost(LiveServerTestCase):
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--disable-gpu")
         chrome_options.add_argument("--window-size=1920,1080")
-        # chrome_options.add_argument(f"--user-data-dir={temp_profile_dir}")
-        
-        # Init chrome driver
+
         driver = webdriver.Chrome(options=chrome_options)
+
+        return driver
+    
+    # if testing in local non-container environment:
+    else:
+        driver = webdriver.Chrome()
+
+        return driver
+
+
+
+class TestHost(LiveServerTestCase):
+    def test0010(self):
+        # Init chrome driver
+        driver = getEnvDriver()
 
         driver.quit()

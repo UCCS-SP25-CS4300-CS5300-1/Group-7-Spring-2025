@@ -1,7 +1,8 @@
 import os
 
-from django.urls import path, include
+from django.conf import settings
 from django.contrib.auth.models import User
+from django.urls import path, include
 from rest_framework import routers
 
 from . import views
@@ -34,7 +35,7 @@ urlpatterns = [
     path('api/', include(router.urls)),
 ]
 
-if os.environ.get("PROD", "true").lower() == "true":
+if settings.PROD:
     # add these urls for production environments only
     # urlpatterns.append(path('api/', include(router.urls)))
     pass
