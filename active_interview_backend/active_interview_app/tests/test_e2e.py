@@ -35,8 +35,8 @@ def getEnvDriver():
 
 
 
-class TestHost(LiveServerTestCase):
-    def test0010(self):
+class TestDriver(LiveServerTestCase):
+    def test0000Driver(self):
         # Init chrome driver
         driver = getEnvDriver()
 
