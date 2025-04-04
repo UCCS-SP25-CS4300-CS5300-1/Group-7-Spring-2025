@@ -67,7 +67,7 @@ def authenticate(test_case, driver):
 
 
 class TestDriver(LiveServerTestCase):
-    def testDriver(self):
+    def testE2EDriver(self):
         # Init chrome driver
         driver = getEnvDriver()
 
@@ -87,4 +87,3 @@ class TestDriver(LiveServerTestCase):
 
         # Stop chrome driver
         driver.quit()
-        
