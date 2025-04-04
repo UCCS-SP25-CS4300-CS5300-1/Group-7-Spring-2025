@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.contrib.auth.models import User
-from django.test import LiveServerTestCase
+from django.contrib.staticfiles.testing import StaticLiveServerTestCase
+# from django.test import LiveServerTestCase
 
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
@@ -67,7 +68,7 @@ def authenticate(test_case, driver):
 
 
 
-class TestDriver(LiveServerTestCase):
+class TestDriver(StaticLiveServerTestCase):
     def testE2EDriver(self):
         # Init chrome driver
         driver = getEnvDriver()
