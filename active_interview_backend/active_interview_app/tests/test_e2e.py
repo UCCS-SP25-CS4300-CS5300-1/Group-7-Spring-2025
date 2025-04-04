@@ -33,18 +33,19 @@ def getEnvDriver():
         return driver
 
 
-def generateExampleUser():
-    user = User.objects.create_user(
-        username="example", 
-        password="goodray31"
-    )
-
-    return user
-
-
 def authenticate(test_case, driver):
-    # Generate user and log in on client object
-    test_case.user = generateExampleUser()
+    # Retrieve or generate E2E user
+    user = None
+    if not User.objects.filter(username = 'E2ETester').exists():
+        user = User.objects.create_user(
+            username="E2ETester", 
+            password="curlylift77"
+        )
+    else:
+        user = User.objects.get(username = 'E2ETester')
+
+    # log in on client object
+    test_case.user = user
     test_case.client.force_login(test_case.user)
 
     # Get session cookie from Django test client
