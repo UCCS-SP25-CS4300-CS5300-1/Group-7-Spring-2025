@@ -47,21 +47,3 @@ EXPOSE 8000
 
 # Run startup script
 CMD ["bash", "./start.sh"]
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
--+
