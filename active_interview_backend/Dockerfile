@@ -48,7 +48,7 @@ ENV CHROMEDRIVER_VERSION=135.0.7049.52
 # Download and install ChromeDriver
 RUN wget -O chromedriver.zip https://storage.googleapis.com/chrome-for-testing-public/${CHROMEDRIVER_VERSION}/linux64/chromedriver-linux64.zip \
  && unzip chromedriver.zip \
- && mv chromedriver /usr/local/bin/chromedriver \
+ && mv chromedriver-linux64/chromedriver /usr/local/bin/chromedriver \
  && chmod +x /usr/local/bin/chromedriver \
  && rm chromedriver.zip
 
