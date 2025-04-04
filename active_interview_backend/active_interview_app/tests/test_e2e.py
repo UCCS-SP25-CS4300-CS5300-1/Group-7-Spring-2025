@@ -24,7 +24,7 @@ class TestHost(LiveServerTestCase):
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--disable-gpu")
         chrome_options.add_argument("--window-size=1920,1080")
-        # chrome_options.add_argument(f"--user-data-dir={temp_profile_dir}")
+        chrome_options.add_argument(f"--user-data-dir={temp_profile_dir}")
         
         # Init chrome driver
         driver = webdriver.Chrome(options=chrome_options)
