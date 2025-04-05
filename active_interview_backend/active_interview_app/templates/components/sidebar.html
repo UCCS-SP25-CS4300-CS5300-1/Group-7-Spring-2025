@@ -11,15 +11,15 @@
     {% for owner_chat in owner_chats %}
       <div class="chat-card card mb-3 mt-3">
         <div class="d-flex">
-          <a role="button" class="full-block-link btn btn-dark flex-grow-1 rounded-0 rounded-start {% if chat.id == owner_chat.id %}active{% endif %}" href="{% url 'chat-view' chat_id=owner_chat.id %}">
+          <a role="button" class="chat-card-button full-block-link btn btn-dark flex-grow-1 rounded-0 rounded-start {% if chat.id == owner_chat.id %}active{% endif %}" href="{% url 'chat-view' chat_id=owner_chat.id %}">
             <p class="chat-card-text card-text text-start m-0">{{ owner_chat.title }}</p>
           </a>
           <div class="d-flex flex-shrink-0">
             <div class="btn-group dropend" data-bs-theme="dark">
-              <button type="button" class="sidebar-dropend btn btn-dark dropdown-toggle dropdown-toggle-split rounded-0 rounded-end" data-bs-toggle="dropdown" data-bs-popper-config='{"strategy":"fixed"}' aria-expanded="false">
+              <button type="button" class="chat-card-button sidebar-dropend btn btn-dark dropdown-toggle dropdown-toggle-split rounded-0 rounded-end" data-bs-toggle="dropdown" data-bs-popper-config='{"strategy":"fixed"}' aria-expanded="false">
                 <span class="visually-hidden">Toggle Dropend</span>
               </button>
-              <ul class="dropdown-menu">
+              <ul class="sidebar-dropdown-menu dropdown-menu">
                 <li><a class="dropdown-item" href="{% url 'chat-edit' chat_id=owner_chat.id %}">Edit</a></li>
                 <li><a class="dropdown-item" href="#">Results</a></li>
                 <li><hr class="dropdown-divider"></li>

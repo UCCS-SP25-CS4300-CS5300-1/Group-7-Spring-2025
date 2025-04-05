@@ -4,6 +4,8 @@
     --abyss: #020305;
     --reef: #031414;
     --alga: #042518;
+
+    --bloom: hsl(from var(--alga) h s calc(l + 6))
 }
 
 html, body {
@@ -141,13 +143,36 @@ html, body {
 }
 /* bootstrap md */
 @media (min-width: 768px) and (max-width: 991.99px) {
-  .full-block-link p {
-    max-width: calc((100vw / 4) - 80px);
-  }
+    .full-block-link p {
+        max-width: calc((100vw / 4) - 80px);
+    }
 }
 /* bootstrap lg+ */
 @media (min-width: 992px) {
-  .full-block-link p {
-    max-width: calc((100vw / 6) - 80px);
-  }
+    .full-block-link p {
+        max-width: calc((100vw / 6) - 80px);
+    }
+}
+
+.dropdown-menu {
+    background-color: var(--abyss) !important;
+}
+
+/* Chat card buttons */
+.chat-card-button {
+    background-color: var(--alga) !important;
+    /* color:white !important; */
+    border: 0px !important;
+}
+.chat-card-button:hover,
+.chat-card-button:focus {
+    background-color: var(--bloom) !important;
+}
+.chat-card-button.active,
+.chat-card-button:active {
+    background-color: var(--bloom) !important;
+}
+.sidebar-dropdown-menu {
+    background-color: var(--reef) !important;
+    /* border: 1px solid var(--bloom) !important; */
 }
