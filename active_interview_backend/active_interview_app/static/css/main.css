@@ -94,12 +94,15 @@ html, body {
 }
 .chat-card {
     color: white;
-    background-color: var(--alga) !important;
+    border: 0px !important;
+    background-color: rgba(0.0, 0.0, 0.0, 0.0) !important;
+    /* background-color: var(--alga) !important; */
+    /* opacity: 0.5 !important; */
 }
-.chat-card-active {
+/* .chat-card-active {
     color: white;
     background-color: hsl(from var(--alga) h s calc(l - 6)) !important;
-}
+} */
 .button-card {
     color: white;
     background-color: var(--alga) !important;
@@ -130,7 +133,7 @@ html, body {
 
 /* Dynamic button text */
 .full-block-link p {
-    max-width: min(320px, calc(85vw - 80px));
+    max-width: min(310px, calc(85vw - 90px));
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -139,12 +142,12 @@ html, body {
 /* bootstrap md */
 @media (min-width: 768px) and (max-width: 991.99px) {
   .full-block-link p {
-    max-width: calc((100vw / 4) - 70px);
+    max-width: calc((100vw / 4) - 80px);
   }
 }
 /* bootstrap lg+ */
 @media (min-width: 992px) {
   .full-block-link p {
-    max-width: calc((100vw / 6) - 70px);
+    max-width: calc((100vw / 6) - 80px);
   }
 }
