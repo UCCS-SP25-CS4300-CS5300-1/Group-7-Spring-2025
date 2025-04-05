@@ -28,6 +28,9 @@ client = OpenAI(api_key=settings.OPENAI_API_KEY)
 def index(request):
     return render(request, 'index.html')
 
+def features(request):
+    return render(request, 'features.html')
+
 def demo(request):
     return render(request, os.path.join('demo', 'demo.html'))
 

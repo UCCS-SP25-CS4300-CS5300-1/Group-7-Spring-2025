@@ -15,6 +15,7 @@ router = routers.DefaultRouter()
 urlpatterns = [
     path('', views.index, name='index'),
     path('', views.index, name='login'),
+    path('features/', views.features, name='features'),
     path('testlogged/', views.loggedin, name='loggedin'),
     path('accounts/', include('django.contrib.auth.urls')),
     path('accounts/register/', views.register, name='register_page'),
@@ -28,7 +29,7 @@ urlpatterns = [
     path('chat/<int:chat_id>/delete/', views.DeleteChat.as_view(), name='chat-delete'),
 
     # Demo view
-    path('demo/', views.demo, name='demo'),
+    # path('demo/', views.demo, name='demo'),
     # path('chat-test/', views.test_chat_view, name='chat-test'),
 
     # api urls
