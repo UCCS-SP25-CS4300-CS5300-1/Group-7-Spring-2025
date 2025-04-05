@@ -5,7 +5,11 @@
     --reef: #031414;
     --alga: #042518;
 
-    --bloom: hsl(from var(--alga) h s calc(l + 6))
+    --bloom: hsl(from var(--alga) h s calc(l + 6));
+    --cyano: hsl(from var(--alga) h s calc(l + 3));
+
+    --beach: hsl(from var(--shallows) h s calc(l + 6));
+    --cove: hsl(from var(--shallows) h s calc(l + 3));
 }
 
 html, body {
@@ -166,7 +170,7 @@ html, body {
 }
 .chat-card-button:hover,
 .chat-card-button:focus {
-    background-color: var(--bloom) !important;
+    background-color: var(--cyano) !important;
 }
 .chat-card-button.active,
 .chat-card-button:active {
@@ -175,4 +179,30 @@ html, body {
 .sidebar-dropdown-menu {
     background-color: var(--reef) !important;
     /* border: 1px solid var(--bloom) !important; */
+}
+
+.btn-primary {
+    background-color: var(--shallows) !important;
+    border: 0px !important;
+}
+.btn-primary:hover,
+.btn-primary:focus {
+    background-color: var(--cove) !important;
+}
+.btn-primary.active,
+.btn-primary:active {
+    background-color: var(--beach) !important;
+}
+
+.button-chat-send {
+    background-color: var(--bs-blue) !important;
+    border: 1px solid var(--bs-blue) !important;
+}
+.button-chat-send:hover,
+.button-chat-send:focus {
+    background-color: #0b5ed7 !important;
+}
+.button-chat-send.active,
+.button-chat-send:active {
+    background-color: var(--bs-primary-text) !important;
 }
