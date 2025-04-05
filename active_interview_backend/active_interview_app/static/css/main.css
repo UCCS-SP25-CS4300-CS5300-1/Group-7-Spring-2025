@@ -2,16 +2,18 @@
 	--depths: #070737;
 
     --shallows: #4482A6;
-    --beach: hsl(from var(--shallows) h s calc(l + 6));
     --cove: hsl(from var(--shallows) h s calc(l + 3));
+    --beach: hsl(from var(--shallows) h s calc(l + 6));
 
     --abyss: #020305;
 
     --reef: #031414;
 
     --alga: #042518;
-    --bloom: hsl(from var(--alga) h s calc(l + 6));
     --cyano: hsl(from var(--alga) h s calc(l + 5));
+    --bloom: hsl(from var(--alga) h s calc(l + 6));
+    --phyto: hsl(from var(--bloom) h s calc(l + 2));
+    --chloro: hsl(from var(--bloom) h s calc(l + 4));
 }
 
 html, body {
@@ -83,12 +85,12 @@ html, body {
     width: auto;
     color: white;
     background-color: var(--shallows) !important;
-    border-radius: 1rem 0rem 1rem 1rem !important;
+    border-radius: 1rem 1rem 0rem 1rem !important;
 }
 .bot-text-bubble {
     max-width: min(500px, 80vw);
     width: auto;
-    border-radius: 0rem 1rem 1rem 1rem !important;
+    border-radius: 1rem 1rem 1rem 0rem !important;
 }
 .whiteTextOverride {
     color: white !important;
@@ -191,6 +193,18 @@ html, body {
 .sidebar-dropdown-item.active,
 .sidebar-dropdown-item:active {
     background-color: var(--bloom) !important;
+}
+.active-sidebar-dropdown {
+    background-color: var(--bloom) !important;
+    border: 0px !important;
+}
+.active-sidebar-dropdown:hover,
+.active-sidebar-dropdown:focus {
+    background-color: var(--phyto) !important;
+}
+.active-sidebar-dropdown.active,
+.active-sidebar-dropdown:active {
+    background-color: var(--chloro) !important;
 }
 
 /* Primary buttons */
