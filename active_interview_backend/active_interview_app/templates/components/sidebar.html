@@ -19,7 +19,7 @@
           </a>
           <div class="d-flex flex-shrink-0">
             <div class="btn-group dropend" data-bs-theme="dark">
-              <button type="button" class="chat-card-button sidebar-dropend btn btn-dark dropdown-toggle dropdown-toggle-split rounded-0 rounded-end" data-bs-toggle="dropdown" data-bs-popper-config='{"strategy":"fixed"}' aria-expanded="false">
+              <button type="button" class="{% if chat.id == owner_chat.id %}active-sidebar-dropdown{% else %}chat-card-button{% endif %} sidebar-dropend btn btn-dark dropdown-toggle dropdown-toggle-split rounded-0 rounded-end" data-bs-toggle="dropdown" data-bs-popper-config='{"strategy":"fixed"}' aria-expanded="false">
                 <span class="visually-hidden">Toggle Dropend</span>
               </button>
               <ul class="sidebar-dropdown-menu dropdown-menu">
