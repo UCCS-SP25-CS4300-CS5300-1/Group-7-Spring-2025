@@ -21,12 +21,18 @@
   deleteChatModal.addEventListener('show.bs.modal', function (event) {
     // Button that triggered the modal
     var button = event.relatedTarget;
-    // Get the chat id from data attribute
+    // Get the chat link from data attribute
     var chatLink = button.getAttribute('data-chat-link');
+    // Get chat title from data attribute
+    var chatTitle = button.getAttribute('data-chat-title');
     
     // Update the confirm delete link with the correct URL
     var deleteChatForm = document.getElementById('deleteChatForm');
     // Construct the URL; adjust as needed if using Django's url tag:
     deleteChatForm.action = chatLink;
+
+    // Update delete menu chat
+    var deleteChatLabel = document.getElementById('deleteChatModalLabel');
+    deleteChatLabel.textContent = 'ARE YOU SURE YOU WANT TO DELETE "' + chatTitle + '"?';
   });
 </script>

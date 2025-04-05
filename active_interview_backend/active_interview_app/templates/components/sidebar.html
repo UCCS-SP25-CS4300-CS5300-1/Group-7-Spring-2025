@@ -27,7 +27,7 @@
                 <li><a class="sidebar-dropdown-item dropdown-item" href="#">Results</a></li>
                 <li><hr class="dropdown-divider"></li>
                 <li>
-                  <a class="sidebar-dropdown-item dropdown-item text-danger" data-bs-toggle="modal" data-bs-target="#deleteChatModal" data-chat-link="{% url 'chat-delete' chat_id=owner_chat.id %}">
+                  <a class="sidebar-dropdown-item dropdown-item text-danger" data-bs-toggle="modal" data-bs-target="#deleteChatModal" data-chat-title="{{ owner_chat.title }}" data-chat-link="{% url 'chat-delete' chat_id=owner_chat.id %}">
                     Delete
                   </a>
                 </li>
