@@ -83,10 +83,12 @@ html, body {
     width: auto;
     color: white;
     background-color: var(--shallows) !important;
+    border-radius: 1rem 0rem 1rem 1rem !important;
 }
 .bot-text-bubble {
     max-width: min(500px, 80vw);
     width: auto;
+    border-radius: 0rem 1rem 1rem 1rem !important;
 }
 .whiteTextOverride {
     color: white !important;
@@ -182,6 +184,14 @@ html, body {
     background-color: var(--reef) !important;
     /* border: 1px solid var(--bloom) !important; */
 }
+.sidebar-dropdown-item:hover,
+.sidebar-dropdown-item:focus {
+    background-color: var(--cyano) !important;
+}
+.sidebar-dropdown-item.active,
+.sidebar-dropdown-item:active {
+    background-color: var(--bloom) !important;
+}
 
 /* Primary buttons */
 .btn-primary {
@@ -209,4 +219,8 @@ html, body {
 .button-chat-send.active,
 .button-chat-send:active {
     background-color: var(--bs-primary-text) !important;
+}
+
+.input-card {
+    border-radius: 0.5rem !important;
 }
