@@ -22,11 +22,11 @@
     // Button that triggered the modal
     var button = event.relatedTarget;
     // Get the chat id from data attribute
-    var chatId = button.getAttribute('data-chat-id');
+    var chatLink = button.getAttribute('data-chat-link');
     
     // Update the confirm delete link with the correct URL
     var deleteChatForm = document.getElementById('deleteChatForm');
     // Construct the URL; adjust as needed if using Django's url tag:
-    deleteChatForm.action = "/chat/" + chatId + "/delete/";
+    deleteChatForm.action = chatLink;
   });
 </script>
