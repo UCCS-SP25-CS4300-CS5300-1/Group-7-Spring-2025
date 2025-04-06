@@ -165,19 +165,18 @@ def register(request):
     if form.is_valid():
         user = form.save()
         username = form.cleaned_data.get('username')
-        group = Group.objects.get(name='manager_role')
+        group = Group.objects.get(name='average_role')
         user.groups.add(group)
         #user = User.objects.create(user=user)
         user.save()
         messages.success(request, 'Account was create for ' + username)
-        return redirect('login')
+        return redirect('login/?next=/')
     context={'form':form}
         
-    return render(request, 'register.html', context)
+    return render(request, 'registration/register.html', context)
 
 
 def logout_view(request):
-    if request.method == "POST":
-        logout(request)
-        return redirect('logout')
-    return render(request, 'logout.html')
+    logout(request)
+    return render(request, 'logged_out.html')
+

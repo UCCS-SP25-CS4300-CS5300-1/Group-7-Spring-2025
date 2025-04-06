@@ -1,7 +1,7 @@
 import os
 
 from django.urls import path, include
-from django.contrib.auth.models import User
+from django.contrib.auth import views as auth_views
 from rest_framework import routers
 
 from . import views
@@ -17,7 +17,7 @@ urlpatterns = [
     path('testlogged/', views.loggedin, name='loggedin'),
     path('accounts/', include('django.contrib.auth.urls')),
     path('accounts/register', views.register, name='register_page'),
-    path('accounts/logout/', views.logout_view, name='logout'),
+    path('accounts/logout/', auth_views.LogoutView.as_view(template_name='registration/logged_out.html'), name='logout'),
 
     # Chat views
     path('chat/', views.chat, name='chat'),
