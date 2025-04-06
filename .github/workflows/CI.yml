@@ -82,7 +82,28 @@ jobs:
       - name: Start Containers
         run: |
           set -o pipefail;
-          docker compose up -d --build
+          docker compose -f docker-compose.prod.yml up -d --build
+          
+      - name: Install Chrome
+        run: | 
+          docker exec django bash -c "
+            wget -O google-chrome.deb https://dl.google.com/linux/chrome/deb/pool/main/g/google-chrome-stable/google-chrome-stable_${CHROME_VERSION}_amd64.deb \
+            && apt-get update \
+            && apt-get install -y ./google-chrome.deb \
+            && rm google-chrome.deb"
+        env:
+          CHROME_VERSION: 135.0.7049.52-1
+          
+      - name: Install Chromedriver
+        run: | 
+          docker exec django bash -c " 
+            wget -O chromedriver.zip https://storage.googleapis.com/chrome-for-testing-public/${CHROMEDRIVER_VERSION}/linux64/chromedriver-linux64.zip \
+            && unzip chromedriver.zip \
+            && mv chromedriver-linux64/chromedriver /usr/local/bin/chromedriver \
+            && chmod +x /usr/local/bin/chromedriver \
+            && rm chromedriver.zip"
+        env:
+          CHROMEDRIVER_VERSION: 135.0.7049.52
 
       - name: Run Django Tests
         if: always()

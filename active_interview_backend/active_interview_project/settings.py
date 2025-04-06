@@ -33,7 +33,8 @@ OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get("PROD", "true").lower() == "false"
+PROD = os.environ.get("PROD", "true").lower() == "true"
+DEBUG = not PROD
 
 ALLOWED_HOSTS = ['app.activeinterviewservice.me',
                  'localhost', '127.0.0.1', 'localhost:3000', '127.0.0.1:3000',

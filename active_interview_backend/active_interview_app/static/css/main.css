@@ -1,9 +1,19 @@
 :root {
 	--depths: #070737;
+
     --shallows: #4482A6;
+    --cove: hsl(from var(--shallows) h s calc(l + 3));
+    --beach: hsl(from var(--shallows) h s calc(l + 6));
+
     --abyss: #020305;
+
     --reef: #031414;
+
     --alga: #042518;
+    --cyano: hsl(from var(--alga) h s calc(l + 5));
+    --bloom: hsl(from var(--alga) h s calc(l + 6));
+    --phyto: hsl(from var(--bloom) h s calc(l + 2));
+    --chloro: hsl(from var(--bloom) h s calc(l + 4));
 }
 
 html, body {
@@ -71,14 +81,16 @@ html, body {
     margin-right: 0.5rem;
 }
 .user-text-bubble {
-    max-width: 500px;
+    max-width: min(500px, 80vw);
     width: auto;
     color: white;
     background-color: var(--shallows) !important;
+    border-radius: 1rem 1rem 0rem 1rem !important;
 }
 .bot-text-bubble {
-    max-width: 500px;
+    max-width: min(500px, 80vw);
     width: auto;
+    border-radius: 1rem 1rem 1rem 0rem !important;
 }
 .whiteTextOverride {
     color: white !important;
@@ -94,12 +106,15 @@ html, body {
 }
 .chat-card {
     color: white;
-    background-color: var(--alga) !important;
+    border: 0px !important;
+    background-color: rgba(0.0, 0.0, 0.0, 0.0) !important;
+    /* background-color: var(--alga) !important; */
+    /* opacity: 0.5 !important; */
 }
-.chat-card-active {
+/* .chat-card-active {
     color: white;
     background-color: hsl(from var(--alga) h s calc(l - 6)) !important;
-}
+} */
 .button-card {
     color: white;
     background-color: var(--alga) !important;
@@ -115,4 +130,115 @@ html, body {
     height: 100%;
     max-height: 40px;
     /* margin: 0.1rem; */
+}
+.dropdown-menu {
+    /* Move dropdown to top */
+    z-index: 9999 !important; 
+}
+/* .chat-card-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+  min-width: 0;
+} */
+
+/* Dynamic button text */
+.full-block-link p {
+    max-width: min(310px, calc(85vw - 90px));
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin: 0;
+}
+/* bootstrap md */
+@media (min-width: 768px) and (max-width: 991.99px) {
+    .full-block-link p {
+        max-width: calc((100vw / 4) - 80px);
+    }
+}
+/* bootstrap lg+ */
+@media (min-width: 992px) {
+    .full-block-link p {
+        max-width: calc((100vw / 6) - 80px);
+    }
+}
+
+.dropdown-menu {
+    background-color: var(--abyss) !important;
+}
+
+/* Chat card buttons */
+.chat-card-button {
+    background-color: var(--alga) !important;
+    /* color:white !important; */
+    border: 0px !important;
+}
+.chat-card-button:hover,
+.chat-card-button:focus {
+    background-color: var(--cyano) !important;
+}
+.chat-card-button.active,
+.chat-card-button:active {
+    background-color: var(--bloom) !important;
+}
+.sidebar-dropdown-menu {
+    background-color: var(--reef) !important;
+    /* border: 1px solid var(--bloom) !important; */
+}
+.sidebar-dropdown-item:hover,
+.sidebar-dropdown-item:focus {
+    background-color: var(--cyano) !important;
+}
+.sidebar-dropdown-item.active,
+.sidebar-dropdown-item:active {
+    background-color: var(--bloom) !important;
+}
+.active-sidebar-dropdown {
+    background-color: var(--bloom) !important;
+    border: 0px !important;
+}
+.active-sidebar-dropdown:hover,
+.active-sidebar-dropdown:focus {
+    background-color: var(--phyto) !important;
+}
+.active-sidebar-dropdown.active,
+.active-sidebar-dropdown:active {
+    background-color: var(--chloro) !important;
+}
+
+/* Primary buttons */
+.btn-primary {
+    background-color: var(--shallows) !important;
+    border: 0px !important;
+}
+.btn-primary:hover,
+.btn-primary:focus {
+    background-color: var(--cove) !important;
+}
+.btn-primary.active,
+.btn-primary:active {
+    background-color: var(--beach) !important;
+}
+
+/* Chat send button */
+.button-chat-send {
+    background-color: var(--bs-blue) !important;
+    border: 1px solid var(--bs-blue) !important;
+}
+.button-chat-send:hover,
+.button-chat-send:focus {
+    background-color: #0b5ed7 !important;
+}
+.button-chat-send.active,
+.button-chat-send:active {
+    background-color: var(--bs-primary-text) !important;
+}
+
+.input-card {
+    border-radius: 0.5rem !important;
+}
+
+.delete-chat-content {
+    background-color: var(--abyss) !important;
 }
