@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from active_interview_app import views
 from django.conf.urls.static import static
 from django.conf import settings
-#from active_interview_app.views import UploadedFileList, UploadedFileDetail
+from active_interview_app.views import UploadedFileList, UploadedFileDetail, PastedTextView, PastedTextList, PastedTextDetail
 
 
 urlpatterns = [
@@ -18,7 +18,12 @@ urlpatterns = [
 
     path('testlogged/', views.loggedin, name='loggedin'),
     path('admin/', admin.site.urls),
+    path('api/paste-text/', PastedTextView.as_view(), name='save_pasted_text'),
+    path('paste-text/', PastedTextList.as_view(), name='pasted_text_list'),
+    path('paste-text/<int:pk>/', PastedTextDetail.as_view(), name='pasted_text_detail'),
 
-#    path('api/files/', UploadedFileList.as_view(), name='file_list'),  #List files and uploads.
-#    path('api/files/<int:pk>/', UploadedFileDetail.as_view(), name='file_detail'), #Making changes to files.
+
+    path('api/files/', UploadedFileList.as_view(), name='file_list'),  #List files and uploads.
+    path('api/files/<int:pk>/', UploadedFileDetail.as_view(), name='file_detail'), #Making changes to files.
+    path('paste-text/', PastedTextView.as_view(), name='save_pasted_text'), #For the text box input.
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

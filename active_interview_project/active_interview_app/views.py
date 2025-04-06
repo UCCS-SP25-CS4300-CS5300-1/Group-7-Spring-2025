@@ -5,15 +5,18 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from .forms import UploadFileForm, CreateUserForm  # Ensure both forms are imported
+from .forms import UploadFileForm, CreateUserForm
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from .models import UploadedFile
-from .serializers import UploadedFileSerializer
+from .serializers import *
 from rest_framework.permissions import IsAuthenticated
+from django.utils.timezone import now
+from django.conf import settings
 import filetype
 import pymupdf4llm
+import os
 
 
 # Create your views here.
@@ -41,6 +44,27 @@ def upload_file(request):
     else:
         form = UploadFileForm()
     return render(request, "index.html", {"form": form})
+
+class PastedTextView(APIView):
+    #permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        text = request.POST.get("text")
+        if not text:
+            return Response({"error": "No text provided."}, status=400)
+
+        user = request.user
+        timestamp = now().strftime("%d%m%Y_%H%M%S")
+        filename = f"{user.username}_{timestamp}.txt"
+
+        user_dir = os.path.join(settings.MEDIA_ROOT, 'pasted_texts', str(user.id))
+        os.makedirs(user_dir, exist_ok=True)
+        filepath = os.path.join(user_dir, filename)
+
+        with open(filepath, 'w', encoding='utf-8') as f:
+            f.write(text)
+
+        return redirect(request.META.get('HTTP_REFERER', '/'))
 
 #Entire CRUD stack/views for the file. User should be able to modify/read/access files. Tests. 
 
@@ -118,7 +142,6 @@ class UploadedFileDetail(APIView):
         return Response(serializer.data)
 
     def put(self, request, pk):
-        #Update file metadata.
         try:
             file = UploadedFile.objects.get(pk=pk, user=request.user)
         except UploadedFile.DoesNotExist:
@@ -140,3 +163,55 @@ class UploadedFileDetail(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
     
 
+class PastedTextList(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        """ List all pasted text entries for the authenticated user """
+        texts = PastedText.objects.filter(user=request.user)
+        serializer = PastedTextSerializer(texts, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):
+        """ Create a new pasted text entry """
+        serializer = PastedTextSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(user=request.user)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class PastedTextDetail(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, pk):
+        """ Retrieve a specific pasted text entry by id """
+        try:
+            text = PastedText.objects.get(pk=pk, user=request.user)
+        except PastedText.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        serializer = PastedTextSerializer(text)
+        return Response(serializer.data)
+
+    def put(self, request, pk):
+        """ Update a specific pasted text entry by id """
+        try:
+            text = PastedText.objects.get(pk=pk, user=request.user)
+        except PastedText.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        serializer = PastedTextSerializer(text, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk):
+        """ Delete a specific pasted text entry by id """
+        try:
+            text = PastedText.objects.get(pk=pk, user=request.user)
+        except PastedText.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        text.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
