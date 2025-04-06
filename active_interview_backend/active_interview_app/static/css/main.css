@@ -238,3 +238,7 @@ html, body {
 .input-card {
     border-radius: 0.5rem !important;
 }
+
+.delete-chat-content {
+    background-color: var(--abyss) !important;
+}
