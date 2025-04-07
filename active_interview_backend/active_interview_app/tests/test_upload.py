@@ -68,7 +68,7 @@ class FileUploadTests(TestCase):
 
     def test_upload_valid_pdf(self):
         self.client.login(username='testuser', password='testpass')
-        pdf_file = SimpleUploadedFile("test.pdf", b"%PDF-1.4 test content", content_type="application/pdf")
+        pdf_file = SimpleUploadedFile("activeinterview/testfile.pdf", b"%PDF-1.4 test content", content_type="application/pdf")
         response = self.client.post(reverse('upload_file'), {'file': pdf_file}, follow=True)
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "File uploaded successfully!")
