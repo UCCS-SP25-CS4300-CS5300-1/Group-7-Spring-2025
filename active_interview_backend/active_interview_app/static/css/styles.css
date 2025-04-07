@@ -44,6 +44,46 @@ html, body {
     color: var(--night);
 }
 
+/* "login or register" button homepage/index.html */
+.registerbutton{
+    color: #e59f71;
+    background-color: #4482a6; 
+    width: 200px;
+    height: 500px; 
+    align-self: center; 
+    border-radius: 5px; 
+    border: none;
+    font-size: large;
+    transition: 10ms;
+}
+
+.registerbutton:hover{
+    box-shadow: 0 8px 16px 0 rgba(255, 255, 255, 0.24), 0 6px 20px 0 rgba(255, 255, 255, 0.19);
+}
+
+/* index.html (homepage) getting started divs*/
+#bigcontainer{
+    margin: auto;
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    min-height: 400px;
+}
+
+.container1{
+    height: 400px; 
+    width: 30%; 
+    margin: 60px; 
+    text-align: center; 
+    border-style: solid; 
+    border-color: lightblue;
+    border-radius: 15px;
+    color: #4482a6; 
+    font-family: Verdana, Geneva, Tahoma, sans-serif; 
+    font-weight: lighter; 
+    font-size: 25px;
+}
+
 footer {
     background-color: var(--emerald);
     padding: 10px;
