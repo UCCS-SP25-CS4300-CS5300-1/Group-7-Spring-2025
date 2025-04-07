@@ -72,7 +72,9 @@
   <br>
   <br>
 
-<button class="registerbutton" href="{% url 'accounts/register'}">Log In or Register</button>
+{% if not user.is_authenticated %}
+  <a type="button" class="registerbutton text-center" href="{% url 'register_page' %}">Log In or Register</a>
+{% endif %}
 <br>
 <br>
 
