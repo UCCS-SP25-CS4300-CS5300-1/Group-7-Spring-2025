@@ -19,11 +19,11 @@ urlpatterns = [
     path('testlogged/', views.loggedin, name='loggedin'),
     path('admin/', admin.site.urls),
     path('api/paste-text/', PastedTextView.as_view(), name='save_pasted_text'),
-    path('paste-text/', PastedTextList.as_view(), name='pasted_text_list'),
     path('paste-text/<int:pk>/', PastedTextDetail.as_view(), name='pasted_text_detail'),
 
 
     path('api/files/', UploadedFileList.as_view(), name='file_list'),  #List files and uploads.
     path('api/files/<int:pk>/', UploadedFileDetail.as_view(), name='file_detail'), #Making changes to files.
-    path('paste-text/', PastedTextView.as_view(), name='save_pasted_text'), #For the text box input.
+    path('pasted-text/', PastedTextView.as_view(), name='save_pasted_text'), #For the text box input.
+    
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

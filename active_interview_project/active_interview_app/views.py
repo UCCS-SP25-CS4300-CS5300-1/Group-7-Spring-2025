@@ -27,18 +27,30 @@ def index(request):
     return render(request, "index.html")
 
 
+@login_required
 def upload_file(request):
     if request.method == "POST":
         form = UploadFileForm(request.POST, request.FILES)
         if form.is_valid():
             uploaded_file = request.FILES["file"]
-            type_of_file = filetype.guess(uploaded_file.read())
+            file_name = uploaded_file.name
 
-            if type_of_file and type_of_file.extension in allowed_types:
-                form.save()
-                markdown_text = pymupdf4llm.to_markdown(upload_file)
+
+            file_type = filetype.guess(uploaded_file.read())
+            uploaded_file.seek(0)
+
+            if file_type and file_type.extension in allowed_types:
+
+                instance = form.save(commit=False)
+                instance.user = request.user
+                instance.original_filename = file_name
+                instance.filesize = uploaded_file.size
+                instance.save()
+
+                uploaded_file_url = os.path.join(settings.MEDIA_URL, file_name)
+                markdown_text = pymupdf4llm.to_markdown(uploaded_file)
                 messages.success(request, "File uploaded successfully!")
-                return HttpResponseRedirect("/")
+                return render(request, 'index.html', {'uploaded_file_url': uploaded_file_url})
             else:
                 messages.error(request, "Invalid filetype. Please upload a .pdf.")
     else:
@@ -49,9 +61,10 @@ class PastedTextView(APIView):
     #permission_classes = [IsAuthenticated]
 
     def post(self, request):
-        text = request.POST.get("text")
+        text = request.POST.get("text", '').strip()
         if not text:
-            return Response({"error": "No text provided."}, status=400)
+            messages.error(request, "Text field cannot be empty.")
+            return redirect(request.META.get('HTTP_REFERER', '/'))
 
         user = request.user
         timestamp = now().strftime("%d%m%Y_%H%M%S")
@@ -63,30 +76,10 @@ class PastedTextView(APIView):
 
         with open(filepath, 'w', encoding='utf-8') as f:
             f.write(text)
-
+        messages.success(request, "Text uploaded successfully!")
         return redirect(request.META.get('HTTP_REFERER', '/'))
 
-#Entire CRUD stack/views for the file. User should be able to modify/read/access files. Tests. 
 
-'''
-    import filetype
-    
-    def check_file_type(file_path, allowed_types):
-        kind = filetype.guess(file_path)
-        if kind is None:
-            return False
-    
-        if kind.extension in allowed_types:
-             return True
-        return False
-    
-    allowed_types = ['txt', 'pdf', 'jpg', 'png']
-    file_path = 'example.pdf'
-    if check_file_type(file_path, allowed_types):
-        print("File type is allowed.")
-    else:
-        print("File type is not allowed.")
-        '''
 
 
 @login_required
@@ -124,28 +117,22 @@ class UploadedFileList(APIView):
 
     def post(self, request):
         serializer = UploadedFileSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save(user=request.user)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        serializer.save(user=request.user)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 class UploadedFileDetail(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, pk):
-        try:
-            file = UploadedFile.objects.get(pk=pk, user=request.user)
-        except UploadedFile.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+        file = UploadedFile.objects.get(pk=pk, user=request.user)
+
 
         serializer = UploadedFileSerializer(file)
         return Response(serializer.data)
 
     def put(self, request, pk):
-        try:
-            file = UploadedFile.objects.get(pk=pk, user=request.user)
-        except UploadedFile.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+        file = UploadedFile.objects.get(pk=pk, user=request.user)
+
 
         serializer = UploadedFileSerializer(file, data=request.data, partial=True)
         if serializer.is_valid():
@@ -154,14 +141,11 @@ class UploadedFileDetail(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk):
-        try:
-            file = UploadedFile.objects.get(pk=pk, user=request.user)
-        except UploadedFile.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
-
+        file = UploadedFile.objects.get(pk=pk, user=request.user)
         file.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
     
+
 
 class PastedTextList(APIView):
     permission_classes = [IsAuthenticated]
@@ -185,33 +169,24 @@ class PastedTextDetail(APIView):
 
     def get(self, request, pk):
         """ Retrieve a specific pasted text entry by id """
-        try:
-            text = PastedText.objects.get(pk=pk, user=request.user)
-        except PastedText.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+        text = PastedText.objects.get(pk=pk, user=request.user)
+
 
         serializer = PastedTextSerializer(text)
         return Response(serializer.data)
 
     def put(self, request, pk):
         """ Update a specific pasted text entry by id """
-        try:
-            text = PastedText.objects.get(pk=pk, user=request.user)
-        except PastedText.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+        text = PastedText.objects.get(pk=pk, user=request.user)
+
 
         serializer = PastedTextSerializer(text, data=request.data, partial=True)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        serializer.save()
+        return Response(serializer.data)
 
     def delete(self, request, pk):
         """ Delete a specific pasted text entry by id """
-        try:
-            text = PastedText.objects.get(pk=pk, user=request.user)
-        except PastedText.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+        text = PastedText.objects.get(pk=pk, user=request.user)
 
         text.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
