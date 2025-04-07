@@ -8,7 +8,7 @@
 {% block content %}
 
 {% load static %}
-<link rel="stylesheet" href="{% static 'css/styles.css' %}">
+<link rel="stylesheet" href="{% static 'css/styles.css' %}"/>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
 
 <div class="images" style="align-self: center;">
@@ -48,21 +48,29 @@
   <h1 style="font-family: Verdana, Geneva, Tahoma, sans-serif; font-weight: lighter; font-size: 25px;
     text-align: center; color: white; font-size: 40px;">Getting Started</h1>
 
-  <div id="container1">
-    <div class="container">
+  <div id="container1" style="margin: auto; display: flex; justify-content: center; align-items: center; min-height: 400px;">
+
+    <div class="container" style="height: 400px; width: 30%; margin: 60px; text-align: center; border-style: solid; border-color: lightblue; border-radius: 15px;
+    color: #4482a6; font-family: Verdana, Geneva, Tahoma, sans-serif; font-weight: lighter; font-size: 40px; font-weight: 50%;">
+        <br>
         1. Create an AIS account, or log in to an existing account
     </div>
-    <div class="container">
-        2. Upload your resume
-      
+    <div class="container" style="height: 400px; width: 30%; margin: 60px; text-align: center; border-style: solid; border-color: lightblue; border-radius: 15px;
+    color: #4482a6; font-family: Verdana, Geneva, Tahoma, sans-serif; font-weight: lighter; font-size: 40px; font-weight: 50%;">
+       <br>
+       2. Upload your resume
     </div>
-    <div class="container">
-      
+    <div class="container" style="height: 400px; width: 30%; margin: 60px; text-align: center; border-style: solid; border-color: lightblue; border-radius: 15px;
+    color: #4482a6; font-family: Verdana, Geneva, Tahoma, sans-serif; font-weight: lighter; font-size: 40px; font-weight: 50%;">
+      <br>
         3. Click Start a Chat
       
     </div>
   </div>
 
+  <br>
+  <br>
+  <br>
 
 <button class="registerbutton" href="{% url 'accounts/register'}">Log In or Register</button>
 <br>
