@@ -232,7 +232,5 @@ def register(request):
     return render(request, 'registration/register.html', context)
 
 
-def logout_view(request):
-    logout(request)
-    return render(request, 'logged_out.html')
+
 
