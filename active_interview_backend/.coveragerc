@@ -1,0 +1,9 @@
+[run]
+omit =
+    # Folders
+    */tests/*
+	*/migrations/*
+
+    # Files
+	*/__init__.py
+	*/manage.py

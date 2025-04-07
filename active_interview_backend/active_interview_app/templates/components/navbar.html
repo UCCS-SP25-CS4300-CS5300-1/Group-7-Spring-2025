@@ -1,6 +1,6 @@
 {% load static %}
 
-<nav class="navbar navbar-expand-md px-3" data-bs-theme="dark">
+<nav class="navbar navbar-expand-md px-3 fixed-top" data-bs-theme="dark">
   <!-- Navbar content -->
   <a class="navbar-brand" href="{% url "index" %}">
     <img class="logo-img" src="{% static 'images/favicon.png' %}">
@@ -28,7 +28,7 @@
       </li>
     </ul>
     {% if user.is_authenticated %}
-      <ul class="navbar-nav ms-auto">
+      <ul class="navbar-nav ms-auto" id="profile-dropdown">
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             Profile
@@ -36,14 +36,14 @@
           <ul class="dropdown-menu dropdown-menu-end">
             <li><a class="dropdown-item" href="#">View</a></li>
             <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="#">Logout</a></li>
+            <li><a class="dropdown-item" href="{% url 'logout' %}">Logout {{user}}</a></li>
           </ul>
         </li>
       </ul>
     {% else %}
       <ul class="navbar-nav ms-auto">
         <li class="nav-item">
-          <a class="nav-link" href="#">Login</a>
+          <a class="nav-link" href="{% url 'login' %}?next={{ request.path }}">Login</a>
         </li>
       </ul>
     {% endif %}

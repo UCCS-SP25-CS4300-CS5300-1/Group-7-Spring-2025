@@ -31,8 +31,10 @@ SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY",
 OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
 
 
+
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get("PROD", "true").lower() == "false"
+PROD = os.environ.get("PROD", "true").lower() == "true"
+DEBUG = not PROD
 
 ALLOWED_HOSTS = ['app.activeinterviewservice.me',
                  'localhost', '127.0.0.1', 'localhost:3000', '127.0.0.1:3000',
@@ -42,6 +44,7 @@ CSRF_TRUSTED_ORIGINS = ['https://app.activeinterviewservice.me']
 # Application definition
 
 INSTALLED_APPS = [
+    'active_interview_app',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -50,7 +53,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'bootstrap5',
     'rest_framework',
-    'active_interview_app',
+    
 ]
 
 MIDDLEWARE = [

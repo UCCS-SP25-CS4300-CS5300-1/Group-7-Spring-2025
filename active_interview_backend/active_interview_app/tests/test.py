@@ -23,7 +23,7 @@ class LoginTest(TestCase):
         User.objects.create_user(username='craig', password='1')
         login = self.client.login(username='craig', password='2')
         self.assertFalse(login)
-    
+
         
 
     

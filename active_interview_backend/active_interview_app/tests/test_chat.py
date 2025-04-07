@@ -51,7 +51,7 @@ class TestChatModel(TestCase):
         self.assertEqual(self.chat.__str__(), "Example Title")
 
 
-# === View Tests
+# === View Tests ===
 class TestChatListView(TestCase):
     def setUp(self):
         self.user = generateExampleUser()
