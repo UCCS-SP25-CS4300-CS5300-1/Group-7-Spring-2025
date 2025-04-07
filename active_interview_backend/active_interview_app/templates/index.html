@@ -19,16 +19,15 @@
   <br>
 </div>
 
-<div class="box" style="max-height: 500px; width: 100%; background-color: #0a1345;">
-  <div class="images" style="max-width: fit-content; margin-inline: auto;  width: 700px; height: 700px;">
+<div class="box" style="max-height: 400px; width: 100%; background-color: #0a1345;">
+  <div class="images" style="max-width: fit-content; margin-inline: auto;  width: 700px; height: 400px;">
     <br>
     <br>
-    <img class="chat-img" src="{% static 'images/chat_ex.png' %}" style="width: 400px; height: 400px; align-content: center; box-shadow:  12px 7px 1px rgba(0, 0, 0, 0.2);" >
+    <img class="chat-img" src="{% static 'images/chat_ex.png' %}" style="width: 300px; height: 300px; align-content: center; box-shadow:  12px 7px 1px rgba(0, 0, 0, 0.2);" >
   </div>
 </div>
 
 <div style="margin:auto;">
-  <br>
   <br>
   <br>
   <span class="box" >
@@ -42,35 +41,29 @@
   </span>
 </div>
 
-<div style="margin:auto;">
+
   <br>
   <br>
   <br>
-  <span class="box">
-    <h1 style="font-family: Verdana, Geneva, Tahoma, sans-serif; font-weight: lighter; font-size: 25px;
+  <h1 style="font-family: Verdana, Geneva, Tahoma, sans-serif; font-weight: lighter; font-size: 25px;
     text-align: center; color: white; font-size: 40px;">Getting Started</h1>
-    <span> 
-      <p style="border-radius: 15px; color: #4482a6; font-family: Verdana, Geneva, Tahoma, sans-serif; font-weight: lighter; font-size: 25px;">
-      1. Create an AIS account, or log in to an existing account
-      </p>
-    </span>
-   
-     <br>
-     <span style="border-radius: 15px; color: #4482a6;">
+
+  <div id="container1" >
+    <div>
+        1. Create an AIS account, or log in to an existing account
+    </div>
+    <div >
       <p style="border-radius: 15px; color: #4482a6; font-family: Verdana, Geneva, Tahoma, sans-serif; font-weight: lighter; font-size: 25px;">
         2. Upload your resume
       </p>
-    </span>
-    <span>
+    </div>
+    <div>
       <p style="border-radius: 15px; color: #4482a6; font-family: Verdana, Geneva, Tahoma, sans-serif; font-weight: lighter; font-size: 25px;">
         3. Click Start a Chat
       </p>
-    </span>
-     <br>
-     3. Click "Start a Chat" and get started!
-    </p>
-  </span>
-</div>
+    </div>
+  </div>
+
 
 <button class="registerbutton" href="{% url 'accounts/register'}">Log In or Register</button>
 <br>
