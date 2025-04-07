@@ -70,7 +70,7 @@ html, body {
     min-height: 400px;
 }
 
-#container1 div{
+.container{
     height: 400px; 
     width: 30%; 
     margin: 60px; 
