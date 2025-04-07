@@ -366,3 +366,6 @@ dist
 
 # staticfiles
 staticfiles/
+
+# logs
+error_log.txt
