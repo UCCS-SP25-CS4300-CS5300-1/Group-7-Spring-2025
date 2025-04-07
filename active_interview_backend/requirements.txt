@@ -23,6 +23,7 @@ idna==3.10
 jiter==0.8.2
 jsbeautifier==1.15.4
 json5==0.10.0
+logging==0.4.9.6
 Markdown==3.7
 mccabe==0.7.0
 openai==1.65.4
