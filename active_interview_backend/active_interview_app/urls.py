@@ -5,6 +5,7 @@ from django.urls import path, include
 from django.contrib.auth import views as auth_views
 
 from django.conf import settings
+from django.conf.urls.static import static
 from django.contrib.auth.models import User
 from django.urls import path, include
 from rest_framework import routers
@@ -39,7 +40,15 @@ urlpatterns = [
 
     # api urls
     path('api/', include(router.urls)),
-]
+
+    # Joel's file upload urls
+    path('upload/', views.upload_file, name='upload_file'),
+    path('api/paste-text/', views.PastedTextView.as_view(), name='save_pasted_text'),
+    path('paste-text/<int:pk>/', views.PastedTextDetail.as_view(), name='pasted_text_detail'),
+    path('api/files/', views.UploadedFileList.as_view(), name='file_list'),  #List files and uploads.
+    path('api/files/<int:pk>/', views.UploadedFileDetail.as_view(), name='file_detail'), #Making changes to files.
+    path('pasted-text/', views.PastedTextView.as_view(), name='save_pasted_text'), #For the text box input.
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 # if settings.PROD:
 #     # add these urls for production environments only

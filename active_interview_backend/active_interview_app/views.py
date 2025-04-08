@@ -1,5 +1,7 @@
 import os
+import filetype
 from openai import OpenAI
+import pymupdf4llm
 
 from django.conf import settings
 from django.contrib import messages
@@ -9,15 +11,25 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.contrib.auth.models import User
 from django.forms.models import model_to_dict
+from django.http import HttpResponseRedirect
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
+from django.utils.timezone import now
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
+
+from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
 
 from .forms import *
 from .models import *
 from .serializers import *
+
+
+allowed_types = ['pdf']
 
 
 # Init openai client
@@ -232,5 +244,152 @@ def register(request):
     return render(request, 'registration/register.html', context)
 
 
+# === Joel's file upload views ===
 
 
+@login_required
+def upload_file(request):
+    if request.method == "POST":
+        form = UploadFileForm(request.POST, request.FILES)
+        if form.is_valid():
+            uploaded_file = request.FILES["file"]
+            file_name = uploaded_file.name
+
+            file_type = filetype.guess(uploaded_file.read())
+            uploaded_file.seek(0)
+
+            if file_type and file_type.extension in allowed_types:
+                instance = form.save(commit=False)
+                instance.user = request.user
+                instance.original_filename = file_name
+                instance.filesize = uploaded_file.size
+                instance.save()
+
+                uploaded_file_url = os.path.join(settings.MEDIA_URL, file_name)
+                markdown_text = pymupdf4llm.to_markdown(uploaded_file)
+
+                messages.success(request, "File uploaded successfully!")
+                return redirect('upload_file')
+
+            else:
+                messages.error(request, "Invalid filetype")
+    else:
+        form = UploadFileForm()
+    return render(request, "index.html", {"form": form})
+
+
+
+class PastedTextView(APIView):
+    # permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        text = request.POST.get("text", '').strip()
+        if not text:
+            messages.error(request, "Text field cannot be empty.")
+            return redirect(request.META.get('HTTP_REFERER', '/'))
+
+        user = request.user
+        timestamp = now().strftime("%d%m%Y_%H%M%S")
+        filename = f"{user.username}_{timestamp}.txt"
+
+        # Create a directory for the user to store pasted text files
+        user_dir = os.path.join(settings.MEDIA_ROOT, 'pasted_texts', str(user.id))
+        os.makedirs(user_dir, exist_ok=True)
+        filepath = os.path.join(user_dir, filename)
+
+        # Save the text content to a file
+        with open(filepath, 'w', encoding='utf-8') as f:
+            f.write(text)
+
+        # Create and save the PastedText object in the database
+        pasted_text = PastedText(user=user, content=text, filepath=filepath)
+        pasted_text.save()
+
+        messages.success(request, "Text uploaded successfully!")
+        return redirect(request.META.get('HTTP_REFERER', '/'))
+
+
+class UploadedFileList(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        files = UploadedFile.objects.filter(user=request.user)
+        serializer = UploadedFileSerializer(files, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):
+        serializer = UploadedFileSerializer(data=request.data)
+        serializer.save(user=request.user)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+class UploadedFileDetail(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, pk):
+        file = UploadedFile.objects.get(pk=pk, user=request.user)
+
+
+        serializer = UploadedFileSerializer(file)
+        return Response(serializer.data)
+
+    def put(self, request, pk):
+        file = UploadedFile.objects.get(pk=pk, user=request.user)
+
+
+        serializer = UploadedFileSerializer(file, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk):
+        file = UploadedFile.objects.get(pk=pk, user=request.user)
+        file.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class PastedTextList(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        # List all pasted text entries for the authenticated user
+        texts = PastedText.objects.filter(user=request.user)
+        serializer = PastedTextSerializer(texts, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):
+        # Create a new pasted text entry
+        serializer = PastedTextSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(user=request.user)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class PastedTextDetail(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, pk):
+        # Retrieve a specific pasted text entry by id
+        text = PastedText.objects.get(pk=pk, user=request.user)
+
+
+        serializer = PastedTextSerializer(text)
+        return Response(serializer.data)
+
+    def put(self, request, pk):
+        # Update a specific pasted text entry by id
+        text = PastedText.objects.get(pk=pk, user=request.user)
+
+
+        serializer = PastedTextSerializer(text, data=request.data, partial=True)
+        serializer.save()
+        return Response(serializer.data)
+
+    def delete(self, request, pk):
+        # Delete a specific pasted text entry by id
+        text = PastedText.objects.get(pk=pk, user=request.user)
+
+        text.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)

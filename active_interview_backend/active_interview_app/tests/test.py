@@ -2,6 +2,9 @@ from django.test import TestCase
 from django.urls import reverse
 from django.contrib.auth.models import User
 
+from django.core import mail
+
+
 class LoginTest(TestCase):
     def testregister(self):
         register = User.objects.create_user(username='craig', password='1')
