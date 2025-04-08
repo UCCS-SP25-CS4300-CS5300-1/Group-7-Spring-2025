@@ -393,3 +393,7 @@ class PastedTextDetail(APIView):
 
         text.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+class DocumentList(View):
+    def get(self, request):
+        return render(request, 'documents/document-list.html')

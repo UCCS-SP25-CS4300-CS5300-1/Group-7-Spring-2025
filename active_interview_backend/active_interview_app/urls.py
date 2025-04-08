@@ -42,6 +42,7 @@ urlpatterns = [
     path('api/', include(router.urls)),
 
     # Joel's file upload urls
+    path('document/', views.DocumentList.as_view(), name='document-list'),
     path('upload/', views.upload_file, name='upload_file'),
     path('api/paste-text/', views.PastedTextView.as_view(), name='save_pasted_text'),
     path('paste-text/<int:pk>/', views.PastedTextDetail.as_view(), name='pasted_text_detail'),
