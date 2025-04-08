@@ -1,5 +1,9 @@
 import os
 
+
+from django.urls import path, include
+from django.contrib.auth import views as auth_views
+
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.urls import path, include
@@ -13,22 +17,25 @@ router = routers.DefaultRouter()
 
 
 urlpatterns = [
+    # Misc. urls
     path('', views.index, name='index'),
-    path('', views.index, name='login'),
     path('features/', views.features, name='features'),
+
+    # Auth urls
+    path('', views.index, name='login'),
     path('testlogged/', views.loggedin, name='loggedin'),
     path('accounts/', include('django.contrib.auth.urls')),
     path('accounts/register/', views.register, name='register_page'),
-    path('accounts/logout/', views.logout_view, name='logout'),
+    path('accounts/logout/', auth_views.LogoutView.as_view(template_name='registration/logged_out.html'), name='logout'),
 
-    # Chat views
+    # Chat urls
     path('chat/', views.chat_list, name='chat-list'),
     path('chat/create/', views.CreateChat.as_view(), name='chat-create'),
     path('chat/<int:chat_id>/', views.ChatView.as_view(), name='chat-view'),
     path('chat/<int:chat_id>/edit/', views.EditChat.as_view(), name='chat-edit'),
     path('chat/<int:chat_id>/delete/', views.DeleteChat.as_view(), name='chat-delete'),
 
-    # Demo view
+    # Demo urls
     # path('demo/', views.demo, name='demo'),
     # path('chat-test/', views.test_chat_view, name='chat-test'),
 

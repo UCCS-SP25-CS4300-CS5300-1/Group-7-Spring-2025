@@ -14,7 +14,7 @@
 9. Export these environment variables to your local machine
    - Windows(Powershell)
       - `$env:PROD = "false"`
-      - `$env:DANGO_SECRET_KEY = "<your secret key>"`
+      - `$env:DJANGO_SECRET_KEY = "<your secret key>"`
       - `$env:OPENAI_API_KEY = "<your api key>"`
    - Linux/Mac
       - `export PROD=false`
@@ -30,6 +30,20 @@
 4. Navigate to the active_interview_backend/ folder
 5. <ins>(if you changed a static file like **CSS** or **images**)</ins> Delete the folder active_interview_backend/staticfiles/: `rm -Rf staticfiles`
 6. Run the server manually: `python3 manage.py runserver`
+
+
+#### Registering Accounts
+In order to allow people to register accounts from the page, permission levels must be set.
+1. Activate your virtual environement
+2. use the command 'python manage.py createsuperuser' to create an admin
+3. launch the django project
+4. Access through the means of the wep page or any other access point into the admin site 'http://127.0.0.1:8000/admin'
+5. Go to groups
+6. Add group called average_role and select permission levels
+7. save the group
+Now you should be able to register accounts on the page.
+
+
 
 #### Accessing
 `http://127.0.0.1:8000`
