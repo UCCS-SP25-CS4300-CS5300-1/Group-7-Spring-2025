@@ -8,6 +8,9 @@
 {% block content %}
 
 {% load static %}
+<link rel="stylesheet" href="{% static 'css/styles.css' %}"/>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+
 <div class="images" style="align-self: center;">
   <br>
   <br>
@@ -16,22 +19,21 @@
   <br>
 </div>
 
-<div class="box" style="max-height: 500px; width: 100%; background-color: #0a1345;">
-  <div class="images" style="max-width: fit-content; margin-inline: auto;  width: 700px; height: 700px;">
+<div class="box" style="max-height: 400px; width: 100%; background-color: #0a1345;">
+  <div class="images" style="max-width: fit-content; margin-inline: auto;  width: 700px; height: 400px;">
     <br>
     <br>
-    <img class="chat-img" src="{% static 'images/chat_ex.png' %}" style="width: 400px; max-width: 100vw; align-content: center; box-shadow:  12px 7px 1px rgba(0, 0, 0, 0.2);" >
+    <img class="chat-img" src="{% static 'images/chat_ex.png' %}" style="width: 300px; max-width: 100vw; align-content: center; box-shadow:  12px 7px 1px rgba(0, 0, 0, 0.2);" >
   </div>
 </div>
 
-<div class="container" >
+<div style="margin:auto;">
   <br>
   <br>
-  <br>
-  <span class="box">
+  <span class="box" >
     <p style="border-width:3px; border-style:solid; border-color:lightblue; padding: 1em;
       border-radius: 15px; color: #4482a6; font-family: Verdana, Geneva, Tahoma, sans-serif; font-weight: lighter; font-size: 25px;
-      text-align: center;">
+      text-align: center; max-width: 700px;">
       Welcome to the Active Interview Service! Active Interview is designed to help 
       anyone prepare for an upcoming interview. AIS can use your resume and info about the job you are 
       applying for to create customized, specific interview questions to simulate a real interview.
@@ -39,27 +41,73 @@
   </span>
 </div>
 
-<div class="container" >
+
   <br>
   <br>
   <br>
-  <span class="box">
-    <h1 style="font-family: Verdana, Geneva, Tahoma, sans-serif; font-weight: lighter; font-size: 25px;
+  <h1 style="font-family: Verdana, Geneva, Tahoma, sans-serif; font-weight: lighter; font-size: 25px;
     text-align: center; color: white; font-size: 40px;">Getting Started</h1>
-    <p style="border-radius: 15px; color: #4482a6; font-family: Verdana, Geneva, Tahoma, sans-serif; font-weight: lighter; font-size: 25px;">
-     1. Create an AIS account, or log in to an existing account
-     <br>
-     2. Upload your resume - make sure it is text only (no images) and in .pdf or .docx form 
-     <br>
-     3. Click "Start a Chat" and get started!
-    </p>
-  </span>
+
+
+<div class="row">
+    <div class="col" style="height: 70%; 
+    width: 30%; 
+    margin: 5%; 
+
+    text-align: center; 
+    border-style: solid; 
+    border-color: lightblue;
+    border-radius: 15px;
+    color: #4482a6; 
+    font-family: Verdana, Geneva, Tahoma, sans-serif; 
+    font-weight: normal; 
+    font-size: 25px;">
+        <br>
+        1. Create an AIS account, or log in to an existing account
+    </div>
+    <div class="col" style="height: 70%; 
+    width: 30%; 
+    margin: 5%; 
+   
+    text-align: center; 
+    border-style: solid; 
+    border-color: lightblue;
+    border-radius: 15px;
+    color: #4482a6; 
+    font-family: Verdana, Geneva, Tahoma, sans-serif; 
+    font-weight: normal; 
+    font-size: 25px;">
+       <br>
+       2. Upload your resume
+    </div>
+    <div class="col" style="height: 70%; 
+    width: 30%; 
+    margin: 5%; 
+   
+    text-align: center;
+    text-size-adjust: auto; 
+    border-style: solid; 
+    border-color: lightblue;
+    border-radius: 15px;
+    color: #4482a6; 
+    font-family: Verdana, Geneva, Tahoma, sans-serif; 
+    font-weight: normal; 
+    font-size: 25px;">
+      <br>
+        3. Click Start a Chat
+      
+    </div>
 </div>
 
+  <br>
+  <br>
+  <br>
+
 {% if not user.is_authenticated %}
-<a type="button" class="p-1" style="color: #e59f71; background-color: #4482a6; 
-  max-width: 300px; max-height: 250px; align-self: center; border-radius: 5px;" href="{% url 'login' %}?next={{ request.path }}">Log In or Register</a>
+  <a type="button" class="registerbutton text-center" href="{% url 'register_page' %}" 
+  style="position:relative; left: 0%; margin-top:50%;">Log In or Register</a>
 {% endif %}
+
 <br>
 <br>
 

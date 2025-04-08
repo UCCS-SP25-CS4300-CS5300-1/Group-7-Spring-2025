@@ -225,14 +225,12 @@ def register(request):
         user.groups.add(group)
         #user = User.objects.create(user=user)
         user.save()
-        messages.success(request, 'Account was create for ' + username)
-        return redirect('login/?next=/')
+        messages.success(request, 'Account was created for ' + username)
+        return redirect('/accounts/login/?next=/')
     context={'form':form}
         
     return render(request, 'registration/register.html', context)
 
 
-def logout_view(request):
-    logout(request)
-    return render(request, 'logged_out.html')
+
 
