@@ -32,6 +32,7 @@ class PastedText(models.Model):
     filename = models.CharField(max_length=255)
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
+    filepath = models.CharField(max_length=255, null=True, blank=True)
 
     def __str__(self):
         return self.filename

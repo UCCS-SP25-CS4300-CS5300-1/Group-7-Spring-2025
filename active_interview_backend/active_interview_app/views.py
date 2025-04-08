@@ -23,6 +23,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+
 from .forms import *
 from .models import *
 from .serializers import *
@@ -244,6 +245,8 @@ def register(request):
 
 
 # === Joel's file upload views ===
+
+
 @login_required
 def upload_file(request):
     if request.method == "POST":
@@ -252,12 +255,10 @@ def upload_file(request):
             uploaded_file = request.FILES["file"]
             file_name = uploaded_file.name
 
-
             file_type = filetype.guess(uploaded_file.read())
             uploaded_file.seek(0)
 
             if file_type and file_type.extension in allowed_types:
-
                 instance = form.save(commit=False)
                 instance.user = request.user
                 instance.original_filename = file_name
@@ -266,17 +267,20 @@ def upload_file(request):
 
                 uploaded_file_url = os.path.join(settings.MEDIA_URL, file_name)
                 markdown_text = pymupdf4llm.to_markdown(uploaded_file)
+
                 messages.success(request, "File uploaded successfully!")
-                return render(request, 'index.html', {'uploaded_file_url': uploaded_file_url})
+                return redirect('upload_file')
+
             else:
-                messages.error(request, "Invalid filetype. Please upload a .pdf.")
+                messages.error(request, "Invalid filetype")
     else:
         form = UploadFileForm()
     return render(request, "index.html", {"form": form})
 
 
+
 class PastedTextView(APIView):
-    #permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
 
     def post(self, request):
         text = request.POST.get("text", '').strip()
@@ -288,12 +292,19 @@ class PastedTextView(APIView):
         timestamp = now().strftime("%d%m%Y_%H%M%S")
         filename = f"{user.username}_{timestamp}.txt"
 
+        # Create a directory for the user to store pasted text files
         user_dir = os.path.join(settings.MEDIA_ROOT, 'pasted_texts', str(user.id))
         os.makedirs(user_dir, exist_ok=True)
         filepath = os.path.join(user_dir, filename)
 
+        # Save the text content to a file
         with open(filepath, 'w', encoding='utf-8') as f:
             f.write(text)
+
+        # Create and save the PastedText object in the database
+        pasted_text = PastedText(user=user, content=text, filepath=filepath)
+        pasted_text.save()
+
         messages.success(request, "Text uploaded successfully!")
         return redirect(request.META.get('HTTP_REFERER', '/'))
 
@@ -342,13 +353,13 @@ class PastedTextList(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        """ List all pasted text entries for the authenticated user """
+        # List all pasted text entries for the authenticated user
         texts = PastedText.objects.filter(user=request.user)
         serializer = PastedTextSerializer(texts, many=True)
         return Response(serializer.data)
 
     def post(self, request):
-        """ Create a new pasted text entry """
+        # Create a new pasted text entry
         serializer = PastedTextSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save(user=request.user)
@@ -360,7 +371,7 @@ class PastedTextDetail(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, pk):
-        """ Retrieve a specific pasted text entry by id """
+        # Retrieve a specific pasted text entry by id
         text = PastedText.objects.get(pk=pk, user=request.user)
 
 
@@ -368,7 +379,7 @@ class PastedTextDetail(APIView):
         return Response(serializer.data)
 
     def put(self, request, pk):
-        """ Update a specific pasted text entry by id """
+        # Update a specific pasted text entry by id
         text = PastedText.objects.get(pk=pk, user=request.user)
 
 
@@ -377,7 +388,7 @@ class PastedTextDetail(APIView):
         return Response(serializer.data)
 
     def delete(self, request, pk):
-        """ Delete a specific pasted text entry by id """
+        # Delete a specific pasted text entry by id
         text = PastedText.objects.get(pk=pk, user=request.user)
 
         text.delete()
