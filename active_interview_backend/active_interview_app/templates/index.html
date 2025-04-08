@@ -52,7 +52,7 @@
 <div class="row">
     <div class="col" style="height: 70%; 
     width: 30%; 
-    margin: 60px; 
+    margin: 5%; 
 
     text-align: center; 
     border-style: solid; 
@@ -67,7 +67,7 @@
     </div>
     <div class="col" style="height: 70%; 
     width: 30%; 
-    margin: 60px; 
+    margin: 5%; 
    
     text-align: center; 
     border-style: solid; 
@@ -82,7 +82,7 @@
     </div>
     <div class="col" style="height: 70%; 
     width: 30%; 
-    margin: 60px; 
+    margin: 5%; 
    
     text-align: center;
     text-size-adjust: auto; 
@@ -97,15 +97,17 @@
         3. Click Start a Chat
       
     </div>
-  </div>
+</div>
 
   <br>
   <br>
   <br>
 
 {% if not user.is_authenticated %}
-  <a type="button" class="registerbutton text-center" href="{% url 'register_page' %}">Log In or Register</a>
+  <a type="button" class="registerbutton text-center" href="{% url 'register_page' %}" 
+  style="position:relative; left: 0%; margin-top:50%;">Log In or Register</a>
 {% endif %}
+
 <br>
 <br>
 
