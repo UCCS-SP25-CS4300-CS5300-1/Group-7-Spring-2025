@@ -62,14 +62,7 @@ html, body {
 }
 
 /* index.html (homepage) getting started divs*/
-#bigcontainer{
-    margin: auto;
-    display: flex; 
-    justify-content: center; 
-    align-items: center; 
-    min-height: 400px;
-}
-
+/*
 .col{
     height: 50%; 
     width: 30%; 
@@ -85,7 +78,7 @@ html, body {
     font-size: 25px;
 
 }
-
+*/
 footer {
     background-color: var(--emerald);
     padding: 10px;
