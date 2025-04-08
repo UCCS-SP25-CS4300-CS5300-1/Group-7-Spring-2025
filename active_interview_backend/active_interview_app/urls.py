@@ -20,8 +20,10 @@ router = routers.DefaultRouter()
 urlpatterns = [
     # Misc. urls
     path('', views.index, name='index'),
+    path('features/', views.features, name='features'),
 
     # Auth urls
+    # path('', views.index, name='login'),
     path('testlogged/', views.loggedin, name='loggedin'),
     path('accounts/', include('django.contrib.auth.urls')),
     path('accounts/register/', views.register, name='register_page'),
