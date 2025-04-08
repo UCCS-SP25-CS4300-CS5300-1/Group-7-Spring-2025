@@ -43,6 +43,9 @@ def index(request):
 # def demo(request):
 #     return render(request, os.path.join('demo', 'demo.html'))
 
+def features(request):
+    return render(request, 'features.html')
+
 
 # @login_required
 # def chat_view(request):
@@ -393,3 +396,7 @@ class PastedTextDetail(APIView):
 
         text.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+class DocumentList(View):
+    def get(self, request):
+        return render(request, 'documents/document-list.html')
