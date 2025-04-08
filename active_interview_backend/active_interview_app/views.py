@@ -31,6 +31,9 @@ def index(request):
 # def demo(request):
 #     return render(request, os.path.join('demo', 'demo.html'))
 
+def features(request):
+    return render(request, 'features.html')
+
 
 # @login_required
 # def chat_view(request):
