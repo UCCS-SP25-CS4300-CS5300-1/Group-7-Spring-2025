@@ -24,6 +24,17 @@ class LoginTest(TestCase):
         login = self.client.login(username='craig', password='2')
         self.assertFalse(login)
 
+
+class TestFeaturesPage(TestCase):
+    def testGETFeaturesPage(self):
+        # Call the view with a response
+        response = self.client.get(reverse('features'))
+
+        # Validate that the view is valid
+        self.assertEqual(response.status_code, 200)
+
+        # Validate that the index template was used
+        self.assertTemplateUsed(response,'base.html')
         
 
     
