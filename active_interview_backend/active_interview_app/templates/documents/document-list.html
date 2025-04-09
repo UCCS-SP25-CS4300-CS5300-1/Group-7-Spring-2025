@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <style>
+    body {
+      color: white;
+    }
+    label, textarea, input, button, h2 {
+      color: white;
+    }
+    input, textarea {
+      background-color: #333;
+      border: 1px solid #777;
+    }
+    button {
+      background-color: #555;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      margin-top: 8px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #777;
+    }
+    .messages li.success { color: lightgreen; }
+    .messages li.error { color: red; }
+  </style>
+
+  {% if messages %}
+    <ul class="messages">
+      {% for message in messages %}
+        <li class="{{ message.tags }}">{{ message }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+
+  <h2>Upload Your Resume</h2>
+  <form action="{% url 'upload_file' %}" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <label for="file">Upload your resume (PDF or Word):</label>
+    <input type="file" name="file" id="file" required>
+    <button type="submit">Upload</button>
+</form>
+
+
+  <hr>
+
+  <h2>Or Paste Your Job Listing Text</h2>
+
+  <form method="POST" action="{% url 'save_pasted_text' %}">
+    {% csrf_token %}
+    <textarea name="paste-text" rows="10" cols="50" placeholder="Paste your text here..."></textarea><br>
+    <button type="submit">Submit</button>
+</form>
+
+
+{% if markdown_text %}
+    <h2>Converted Markdown</h2>
+    <div>{{ markdown_text|safe }}</div>
+{% endif %}
+
+
+{% endblock %}

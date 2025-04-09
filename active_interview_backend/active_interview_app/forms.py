@@ -19,23 +19,19 @@ class ChatForm(ModelForm):
 
 #Defines a Django form for handling file uploads.
 class UploadFileForm(ModelForm):
+
+    # Pretty sure you asked me not to do these, but I forgot and did them. Commented them out just in case you wanted something different.
+    
+    #job_listing = forms.ModelChoiceField(queryset=UploadedJobListing.objects.all(), required=False)
+    #resume = forms.ModelChoiceField(queryset=UploadedResume.objects.all(), required=False)
+
     class Meta:
-        model = UploadedFile
+        model = UploadedResume
         fields = ["file"]
 
     def clean_file(self):
         allowed_types = ['txt', 'pdf', 'jpg', 'png']
         uploaded_file = self.cleaned_data.get("file")
-        #if uploaded_file:
-            #Checks for PDF, Word documents, etc.
-            #allowed_types = [
-            #    "application/pdf",
-            #    "application/msword",
-            #    "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-            #]
-            #Display error message if incorrect filetype.
-            #if uploaded_file.content_type not in allowed_types:
-             #   raise forms.ValidationError("Only PDF and Word documents (.doc, .docx) are allowed.")
         return uploaded_file
 
 

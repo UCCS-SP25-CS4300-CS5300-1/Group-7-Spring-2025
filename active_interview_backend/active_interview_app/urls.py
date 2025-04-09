@@ -20,8 +20,10 @@ router = routers.DefaultRouter()
 urlpatterns = [
     # Misc. urls
     path('', views.index, name='index'),
+    path('features/', views.features, name='features'),
 
     # Auth urls
+    # path('', views.index, name='login'),
     path('testlogged/', views.loggedin, name='loggedin'),
     path('accounts/', include('django.contrib.auth.urls')),
     path('accounts/register/', views.register, name='register_page'),
@@ -42,12 +44,13 @@ urlpatterns = [
     path('api/', include(router.urls)),
 
     # Joel's file upload urls
-    path('upload/', views.upload_file, name='upload_file'),
-    path('api/paste-text/', views.PastedTextView.as_view(), name='save_pasted_text'),
-    path('paste-text/<int:pk>/', views.PastedTextDetail.as_view(), name='pasted_text_detail'),
-    path('api/files/', views.UploadedFileList.as_view(), name='file_list'),  #List files and uploads.
-    path('api/files/<int:pk>/', views.UploadedFileDetail.as_view(), name='file_detail'), #Making changes to files.
-    path('pasted-text/', views.PastedTextView.as_view(), name='save_pasted_text'), #For the text box input.
+    path('document/', views.upload_file, name='document-list'),
+    path('upload-file/', views.upload_file, name='upload_file'),
+    path('api/paste-text/', views.UploadedJobListingView.as_view(), name='save_pasted_text'),
+    path('paste-text/<int:pk>/', views.UploadedJobListingView.as_view(), name='pasted_text_detail'),
+    path('api/files/', views.UploadedResumeView.as_view(), name='file_list'),  #List files and uploads.
+    path('api/files/<int:pk>/', views.UploadedResumeDetail.as_view(), name='file_detail'), #Making changes to files.
+    path('pasted-text/', views.UploadedJobListingView.as_view(), name='save_pasted_text'), #For the text box input.
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 # if settings.PROD:

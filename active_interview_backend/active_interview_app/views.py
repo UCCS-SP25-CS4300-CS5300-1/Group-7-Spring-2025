@@ -2,6 +2,7 @@ import os
 import filetype
 from openai import OpenAI
 import pymupdf4llm
+import markdown
 
 from django.conf import settings
 from django.contrib import messages
@@ -17,6 +18,8 @@ from django.shortcuts import render, redirect
 from django.utils.timezone import now
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
+from django.http import HttpResponse
+
 
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
@@ -42,6 +45,9 @@ def index(request):
 
 # def demo(request):
 #     return render(request, os.path.join('demo', 'demo.html'))
+
+def features(request):
+    return render(request, 'features.html')
 
 
 # @login_required
@@ -249,44 +255,60 @@ def register(request):
 
 @login_required
 def upload_file(request):
+    print("POST request received")
     if request.method == "POST":
+        print("method qualifies as post.")
         form = UploadFileForm(request.POST, request.FILES)
         if form.is_valid():
+            print("form is valid.")
             uploaded_file = request.FILES["file"]
             file_name = uploaded_file.name
 
             file_type = filetype.guess(uploaded_file.read())
             uploaded_file.seek(0)
 
+            allowed_types = ['pdf', 'docx']  # Define allowed file types (for example)
+
             if file_type and file_type.extension in allowed_types:
+                print("it's in allow types,")
+                # Create instance but don't commit to the database yet
                 instance = form.save(commit=False)
                 instance.user = request.user
                 instance.original_filename = file_name
                 instance.filesize = uploaded_file.size
                 instance.save()
 
+                # Optionally convert the file to markdown if needed
                 uploaded_file_url = os.path.join(settings.MEDIA_URL, file_name)
                 markdown_text = pymupdf4llm.to_markdown(uploaded_file)
 
+                # Show success message and redirect
                 messages.success(request, "File uploaded successfully!")
-                return redirect('upload_file')
-
+                return redirect('document-list')  # Redirect to document list page after successful upload
             else:
-                messages.error(request, "Invalid filetype")
+                messages.error(request, "Invalid file type.")
+        else:
+            messages.error(request, "There was an issue with the form.")
     else:
         form = UploadFileForm()
-    return render(request, "index.html", {"form": form})
+
+    return render(request, "documents/document-list.html", {"form": form})
 
 
 
-class PastedTextView(APIView):
+class UploadedJobListingView(APIView):
     # permission_classes = [IsAuthenticated]
 
     def post(self, request):
-        text = request.POST.get("text", '').strip()
+        # Get the text from the request
+        text = request.POST.get("paste-text", '').strip()
+        print(request.POST)
+
+
+        # Check if the text is empty
         if not text:
             messages.error(request, "Text field cannot be empty.")
-            return redirect(request.META.get('HTTP_REFERER', '/'))
+            return HttpResponse("Invalid request: Text cannot be empty", status=400)
 
         user = request.user
         timestamp = now().strftime("%d%m%Y_%H%M%S")
@@ -297,19 +319,24 @@ class PastedTextView(APIView):
         os.makedirs(user_dir, exist_ok=True)
         filepath = os.path.join(user_dir, filename)
 
+        # Convert the text to Markdown
+        markdown_text = markdown.markdown(text)
+
         # Save the text content to a file
         with open(filepath, 'w', encoding='utf-8') as f:
             f.write(text)
 
-        # Create and save the PastedText object in the database
-        pasted_text = PastedText(user=user, content=text, filepath=filepath)
-        pasted_text.save()
+        # Create and save the UploadedJobListing object in the database
+        job_listing = UploadedJobListing(user=user, content=text, filepath=filepath)
+        job_listing.save()
 
+        # Show success message and render the converted markdown
         messages.success(request, "Text uploaded successfully!")
-        return redirect(request.META.get('HTTP_REFERER', '/'))
+        return render(request, 'documents/document-list.html', {'markdown_text': markdown_text})
 
 
-class UploadedFileList(APIView):
+
+class UploadedResumeView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
@@ -323,7 +350,7 @@ class UploadedFileList(APIView):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
-class UploadedFileDetail(APIView):
+class UploadedResumeDetail(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, pk):
@@ -349,7 +376,7 @@ class UploadedFileDetail(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-class PastedTextList(APIView):
+class JobListingList(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
@@ -367,7 +394,7 @@ class PastedTextList(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class PastedTextDetail(APIView):
+class JobListingDetail(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, pk):
@@ -393,3 +420,7 @@ class PastedTextDetail(APIView):
 
         text.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+class DocumentList(View):
+    def get(self, request):
+        return render(request, 'documents/document-list.html')

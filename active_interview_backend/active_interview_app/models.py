@@ -10,13 +10,18 @@ class Chat(models.Model):
     # TODO: mandatory foreignkey to job listing object
     # TODO: optional foreignkey to resume object
 
+    #create object itself, not the field
+    #pasted-text url on new site
+    #all templates for documents in /documents/
+    #thing that returns all user files is at views,
+
     modified_date = models.DateTimeField(auto_now=True) # date last modified
 
     def __str__(self):
         return self.title
 
 
-class UploadedFile(models.Model):
+class UploadedResume(models.Model):  # Renamed from UploadedFile
     file = models.FileField(upload_to='uploads/')  # Will be saved under media/uploads/
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     uploaded_at = models.DateTimeField(auto_now_add=True)
@@ -27,7 +32,7 @@ class UploadedFile(models.Model):
         return f'{self.file.name} uploaded by {self.user}'
 
 
-class PastedText(models.Model):
+class UploadedJobListing(models.Model):  # Renamed from PastedText
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     filename = models.CharField(max_length=255)
     content = models.TextField()
