@@ -292,7 +292,7 @@ def upload_file(request):
             file_type = filetype.guess(uploaded_file.read())
             uploaded_file.seek(0)
 
-            allowed_types = ['pdf', 'docx', 'txt']  # Define allowed file types (for example)
+
 
             if file_type and file_type.extension in allowed_types:
                 print("it's in allow types,")
@@ -363,6 +363,7 @@ class UploadedJobListingView(APIView):
 
 
 
+
 class UploadedResumeView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -373,26 +374,24 @@ class UploadedResumeView(APIView):
 
     def post(self, request):
         serializer = UploadedResumeSerializer(data=request.data)
-        serializer.save(user=request.user)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        if serializer.is_valid():
+            serializer.save(user=request.user)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-
-#probably relative file path, which is causing the error
 class UploadedResumeDetail(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, pk):
-        file = UploadedResume.objects.get(pk=pk, user=request.user)
-
-
+        # Use get_object_or_404 to return 404 when the object is not found
+        file = get_object_or_404(UploadedResume, pk=pk, user=request.user)
         serializer = UploadedResumeSerializer(file)
         return Response(serializer.data)
 
     def put(self, request, pk):
-        file = UploadedResume.objects.get(pk=pk, user=request.user)
-
-
+        # Use get_object_or_404 to return 404 when the object is not found
+        file = get_object_or_404(UploadedResume, pk=pk, user=request.user)
         serializer = UploadedResumeSerializer(file, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
@@ -400,7 +399,8 @@ class UploadedResumeDetail(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk):
-        file = UploadedResume.objects.get(pk=pk, user=request.user)
+        # Use get_object_or_404 to return 404 when the object is not found
+        file = get_object_or_404(UploadedResume, pk=pk, user=request.user)
         file.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
@@ -427,28 +427,26 @@ class JobListingDetail(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, pk):
-        # Retrieve a specific pasted text entry by id
-        text = UploadedJobListing.objects.get(pk=pk, user=request.user)
-
-
+        # Use get_object_or_404 to return 404 when the object is not found
+        text = get_object_or_404(UploadedJobListing, pk=pk, user=request.user)
         serializer = UploadedJobListingSerializer(text)
         return Response(serializer.data)
 
     def put(self, request, pk):
-        # Update a specific pasted text entry by id
-        text = UploadedJobListing.objects.get(pk=pk, user=request.user)
-
-
+        # Use get_object_or_404 to return 404 when the object is not found
+        text = get_object_or_404(UploadedJobListing, pk=pk, user=request.user)
         serializer = UploadedJobListingSerializer(text, data=request.data, partial=True)
-        serializer.save()
-        return Response(serializer.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk):
-        # Delete a specific pasted text entry by id
-        text = PUploadedJobListing.objects.get(pk=pk, user=request.user)
-
+        # Use get_object_or_404 to return 404 when the object is not found
+        text = get_object_or_404(UploadedJobListing, pk=pk, user=request.user)
         text.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
 
 class DocumentList(View):
     def get(self, request):
