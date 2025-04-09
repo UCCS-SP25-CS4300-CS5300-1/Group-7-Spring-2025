@@ -49,6 +49,9 @@ def index(request):
 def features(request):
     return render(request, 'features.html')
 
+def features(request):
+    return render(request, 'features.html')
+
 
 # @login_required
 # def chat_view(request):
@@ -130,6 +133,28 @@ class CreateChat(LoginRequiredMixin, View):
                         "content": "You are a helpful assistant."
                     },
                 ]
+
+                # Get the job listing and resume from the form 
+                job_listing_id = request.POST.get('job_listing')  # Assuming the form includes this field
+                resume_id = request.POST.get('resume')  # Assuming the form includes this field
+
+                # If a job listing is selected, set the foreign key
+                if job_listing_id:
+                    try:
+                        job_listing = UploadedJobListing.objects.get(id=job_listing_id)
+                        chat.job_listing = job_listing
+                    except UploadedJobListing.DoesNotExist:
+                        # Handle case where the job listing doesn't exist
+                        pass
+
+                # If a resume is selected, set the foreign key
+                if resume_id:
+                    try:
+                        resume = UploadedResume.objects.get(id=resume_id)
+                        chat.resume = resume
+                    except UploadedResume.DoesNotExist:
+                        # Handle case where the resume doesn't exist
+                        pass                
 
                 chat.save()
 
