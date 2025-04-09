@@ -7,10 +7,7 @@ class UploadedResumeSerializer(serializers.ModelSerializer):
         fields = ['id', 'file', 'user', 'uploaded_at']
 
 
-class UploadedJobListingSerializer(serializers.Serializer):
-    text = serializers.CharField()
-
+class UploadedJobListingSerializer(serializers.ModelSerializer):
     class Meta:
         model = UploadedJobListing
         fields = ['id', 'user', 'filename', 'content', 'created_at']
-        

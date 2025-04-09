@@ -292,7 +292,7 @@ def upload_file(request):
             file_type = filetype.guess(uploaded_file.read())
             uploaded_file.seek(0)
 
-            allowed_types = ['pdf', 'docx']  # Define allowed file types (for example)
+            allowed_types = ['pdf', 'docx', 'txt']  # Define allowed file types (for example)
 
             if file_type and file_type.extension in allowed_types:
                 print("it's in allow types,")
@@ -311,7 +311,7 @@ def upload_file(request):
                 messages.success(request, "File uploaded successfully!")
                 return render(request, 'documents/document-list.html', {'markdown_text': markdown_text})  # Redirect to document list page after successful upload
             else:
-                messages.error(request, "Invalid file type.")
+                messages.error(request, "Invalid filetype.")
         else:
             messages.error(request, "There was an issue with the form.")
     else:
@@ -333,7 +333,8 @@ class UploadedJobListingView(APIView):
         # Check if the text is empty
         if not text:
             messages.error(request, "Text field cannot be empty.")
-            return HttpResponse("Invalid request: Text cannot be empty", status=400)
+            return redirect('document-list')
+
 
         user = request.user
         timestamp = now().strftime("%d%m%Y_%H%M%S")
@@ -352,8 +353,9 @@ class UploadedJobListingView(APIView):
             f.write(text)
 
         # Create and save the UploadedJobListing object in the database
-        #job_listing = UploadedJobListing(user=user, content=text, filepath=filepath)
-        #job_listing.save()
+        job_listing = UploadedJobListing(user=user, content=text, filepath=filepath)
+        job_listing.save()
+
 
         # Show success message and render the converted markdown
         messages.success(request, "Text uploaded successfully!")
@@ -365,7 +367,7 @@ class UploadedResumeView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        files = UploadedFile.objects.filter(user=request.user)
+        files = UploadedResume.objects.filter(user=request.user)
         serializer = UploadedResumeSerializer(files, many=True)
         return Response(serializer.data)
 
@@ -381,14 +383,14 @@ class UploadedResumeDetail(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, pk):
-        file = UploadedFile.objects.get(pk=pk, user=request.user)
+        file = UploadedResume.objects.get(pk=pk, user=request.user)
 
 
         serializer = UploadedResumeSerializer(file)
         return Response(serializer.data)
 
     def put(self, request, pk):
-        file = UploadedFile.objects.get(pk=pk, user=request.user)
+        file = UploadedResume.objects.get(pk=pk, user=request.user)
 
 
         serializer = UploadedResumeSerializer(file, data=request.data, partial=True)
@@ -398,7 +400,7 @@ class UploadedResumeDetail(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk):
-        file = UploadedFile.objects.get(pk=pk, user=request.user)
+        file = UploadedResume.objects.get(pk=pk, user=request.user)
         file.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
@@ -408,7 +410,7 @@ class JobListingList(APIView):
 
     def get(self, request):
         # List all pasted text entries for the authenticated user
-        texts = PastedText.objects.filter(user=request.user)
+        texts = UploadedJobListing.objects.filter(user=request.user)
         serializer = UploadedJobListingSerializer(texts, many=True)
         return Response(serializer.data)
 
@@ -426,7 +428,7 @@ class JobListingDetail(APIView):
 
     def get(self, request, pk):
         # Retrieve a specific pasted text entry by id
-        text = PastedText.objects.get(pk=pk, user=request.user)
+        text = UploadedJobListing.objects.get(pk=pk, user=request.user)
 
 
         serializer = UploadedJobListingSerializer(text)
@@ -434,7 +436,7 @@ class JobListingDetail(APIView):
 
     def put(self, request, pk):
         # Update a specific pasted text entry by id
-        text = PastedText.objects.get(pk=pk, user=request.user)
+        text = UploadedJobListing.objects.get(pk=pk, user=request.user)
 
 
         serializer = UploadedJobListingSerializer(text, data=request.data, partial=True)
@@ -443,7 +445,7 @@ class JobListingDetail(APIView):
 
     def delete(self, request, pk):
         # Delete a specific pasted text entry by id
-        text = PastedText.objects.get(pk=pk, user=request.user)
+        text = PUploadedJobListing.objects.get(pk=pk, user=request.user)
 
         text.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
