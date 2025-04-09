@@ -40,7 +40,7 @@
     {% csrf_token %}
     <label for="file">Upload your resume (PDF or Word):</label>
     <input type="file" name="file" id="file" required>
-    <button type="submit">Upload</button>
+    <button name="submit">Upload</button>
 </form>
 
 
@@ -51,7 +51,7 @@
   <form method="POST" action="{% url 'save_pasted_text' %}">
     {% csrf_token %}
     <textarea name="paste-text" rows="10" cols="50" placeholder="Paste your text here..."></textarea><br>
-    <button type="submit">Submit</button>
+    <button type="submit" name="submit">Upload</button>
 </form>
 
 

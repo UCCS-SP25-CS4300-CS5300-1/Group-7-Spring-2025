@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.urls import reverse
-from active_interview_app.models import UploadedFile, PastedText
+from active_interview_app.models import UploadedJobListing, UploadedResume
 from django.test import TestCase, Client
 from django.contrib.messages import get_messages
 from django.contrib import messages
@@ -26,9 +26,9 @@ class FileUploadTestCase(TestCase):
         # This checks for a successful redirect, which indicates that the POST was successful.
         self.assertEqual(response.status_code, 302)
         # This verifies that the file was properly saved.
-        self.assertEqual(UploadedFile.objects.count(), 1)
+        self.assertEqual(UploadedResume.objects.count(), 1)
         # This ensures the name of the uploaded file matches.
-        uploaded_file = UploadedFile.objects.first()
+        uploaded_file = UploadedResume.objects.first()
         self.assertEqual(uploaded_file.file.name, "uploads/testfile.txt")
 
 
@@ -50,7 +50,7 @@ class PastedTextUploadTestCase(TestCase):
         self.assertTrue(any("Text uploaded successfully!" in str(m) for m in messages_list))
 
         # Check the created object
-        pasted = PastedText.objects.first()
+        pasted = JobListingList.objects.first()
         self.assertEqual(pasted.content, 'This is a test paste.')
         self.assertEqual(pasted.user, self.user)
 
@@ -61,7 +61,7 @@ class PastedTextUploadTestCase(TestCase):
 
         # Should redirect with error, but not save
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(PastedText.objects.count(), 0)
+        self.assertEqual(UploadedJobListing.objects.count(), 0)
 
 
 class FileUploadTests(TestCase):

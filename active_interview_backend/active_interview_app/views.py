@@ -309,7 +309,7 @@ def upload_file(request):
 
                 # Show success message and redirect
                 messages.success(request, "File uploaded successfully!")
-                return redirect('document-list')  # Redirect to document list page after successful upload
+                return render(request, 'documents/document-list.html', {'markdown_text': markdown_text})  # Redirect to document list page after successful upload
             else:
                 messages.error(request, "Invalid file type.")
         else:
@@ -352,8 +352,8 @@ class UploadedJobListingView(APIView):
             f.write(text)
 
         # Create and save the UploadedJobListing object in the database
-        job_listing = UploadedJobListing(user=user, content=text, filepath=filepath)
-        job_listing.save()
+        #job_listing = UploadedJobListing(user=user, content=text, filepath=filepath)
+        #job_listing.save()
 
         # Show success message and render the converted markdown
         messages.success(request, "Text uploaded successfully!")
@@ -366,15 +366,17 @@ class UploadedResumeView(APIView):
 
     def get(self, request):
         files = UploadedFile.objects.filter(user=request.user)
-        serializer = UploadedFileSerializer(files, many=True)
+        serializer = UploadedResumeSerializer(files, many=True)
         return Response(serializer.data)
 
     def post(self, request):
-        serializer = UploadedFileSerializer(data=request.data)
+        serializer = UploadedResumeSerializer(data=request.data)
         serializer.save(user=request.user)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
+
+#probably relative file path, which is causing the error
 class UploadedResumeDetail(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -382,14 +384,14 @@ class UploadedResumeDetail(APIView):
         file = UploadedFile.objects.get(pk=pk, user=request.user)
 
 
-        serializer = UploadedFileSerializer(file)
+        serializer = UploadedResumeSerializer(file)
         return Response(serializer.data)
 
     def put(self, request, pk):
         file = UploadedFile.objects.get(pk=pk, user=request.user)
 
 
-        serializer = UploadedFileSerializer(file, data=request.data, partial=True)
+        serializer = UploadedResumeSerializer(file, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
@@ -407,12 +409,12 @@ class JobListingList(APIView):
     def get(self, request):
         # List all pasted text entries for the authenticated user
         texts = PastedText.objects.filter(user=request.user)
-        serializer = PastedTextSerializer(texts, many=True)
+        serializer = UploadedJobListingSerializer(texts, many=True)
         return Response(serializer.data)
 
     def post(self, request):
         # Create a new pasted text entry
-        serializer = PastedTextSerializer(data=request.data)
+        serializer = UploadedJobListingSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save(user=request.user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -427,7 +429,7 @@ class JobListingDetail(APIView):
         text = PastedText.objects.get(pk=pk, user=request.user)
 
 
-        serializer = PastedTextSerializer(text)
+        serializer = UploadedJobListingSerializer(text)
         return Response(serializer.data)
 
     def put(self, request, pk):
@@ -435,7 +437,7 @@ class JobListingDetail(APIView):
         text = PastedText.objects.get(pk=pk, user=request.user)
 
 
-        serializer = PastedTextSerializer(text, data=request.data, partial=True)
+        serializer = UploadedJobListingSerializer(text, data=request.data, partial=True)
         serializer.save()
         return Response(serializer.data)
 
