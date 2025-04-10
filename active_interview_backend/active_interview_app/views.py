@@ -151,10 +151,7 @@ class CreateChat(LoginRequiredMixin, View):
                         
                         # Job Listing:
                         \"\"\"{listing}\"\"\"
-                        
-                        # Resume
-                        \"\"\"{resume}\"\"\"
-                    """).format(listing=chat.job_listing.content, resume=chat.resume.content)
+                    """).format(listing=chat.job_listing.content)
 
 
                 chat.messages = [
