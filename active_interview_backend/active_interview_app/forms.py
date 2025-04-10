@@ -1,4 +1,4 @@
-from django.forms import ModelForm
+from django.forms import ModelForm, ModelChoiceField
 from .models import *
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
@@ -11,7 +11,24 @@ class CreateUserForm(UserCreationForm):
         fields = ['username', 'email', 'password1', 'password2']
 
 
-class ChatForm(ModelForm):
+class CreateChatForm(ModelForm):
+    listing_choice = ModelChoiceField(queryset=UploadedJobListing.objects.none())
+    resume_choice = ModelChoiceField(queryset=UploadedResume.objects.none(), required=False)
+
+    class Meta:
+        model = Chat
+        fields = ["title"]
+    
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        super().__init__(*args, **kwargs) # ensure parent object is initialized
+        
+        if user is not None:
+            self.fields['listing_choice'].queryset = UploadedJobListing.objects.filter(user=user)
+            self.fields['resume_choice'].queryset = UploadedResume.objects.filter(user=user)
+
+
+class EditChatForm(ModelForm):
     class Meta:
         model = Chat
         fields = ["title"]
@@ -19,23 +36,19 @@ class ChatForm(ModelForm):
 
 #Defines a Django form for handling file uploads.
 class UploadFileForm(ModelForm):
+
+    # Pretty sure you asked me not to do these, but I forgot and did them. Commented them out just in case you wanted something different.
+    
+    #job_listing = forms.ModelChoiceField(queryset=UploadedJobListing.objects.all(), required=False)
+    #resume = forms.ModelChoiceField(queryset=UploadedResume.objects.all(), required=False)
+
     class Meta:
-        model = UploadedFile
-        fields = ["file"]
+        model = UploadedResume
+        fields = ["file", "title"]
 
     def clean_file(self):
         allowed_types = ['txt', 'pdf', 'jpg', 'png']
         uploaded_file = self.cleaned_data.get("file")
-        #if uploaded_file:
-            #Checks for PDF, Word documents, etc.
-            #allowed_types = [
-            #    "application/pdf",
-            #    "application/msword",
-            #    "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-            #]
-            #Display error message if incorrect filetype.
-            #if uploaded_file.content_type not in allowed_types:
-             #   raise forms.ValidationError("Only PDF and Word documents (.doc, .docx) are allowed.")
         return uploaded_file
 
 
