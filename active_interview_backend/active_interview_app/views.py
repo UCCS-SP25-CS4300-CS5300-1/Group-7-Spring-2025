@@ -112,7 +112,7 @@ class CreateChat(LoginRequiredMixin, View):
     def get(self, request):
         owner_chats = Chat.objects.filter(owner=request.user).order_by('-modified_date')
         
-        form = ChatForm(user=request.user) # Pass user into chatform
+        form = CreateChatForm(user=request.user) # Pass user into chatform
 
         context = {}
         context['owner_chats'] = owner_chats
@@ -122,7 +122,7 @@ class CreateChat(LoginRequiredMixin, View):
 
     def post(self, request):
         if 'create' in request.POST:
-            form = ChatForm(request.POST, user=request.user)
+            form = CreateChatForm(request.POST, user=request.user)
             
             if form.is_valid():
                 chat = form.save(commit=False)
@@ -228,7 +228,7 @@ class EditChat(LoginRequiredMixin, UserPassesTestMixin, View):
         chat = Chat.objects.get(id=chat_id)
         owner_chats = Chat.objects.filter(owner=request.user).order_by('-modified_date')
         
-        form = ChatForm(initial=model_to_dict(chat), instance=chat)
+        form = EditChatForm(initial=model_to_dict(chat), instance=chat)
 
         context = {}
         context['chat'] = chat
@@ -241,7 +241,7 @@ class EditChat(LoginRequiredMixin, UserPassesTestMixin, View):
         chat = Chat.objects.get(id=chat_id)
 
         if 'update' in request.POST:
-            form = ChatForm(request.POST, instance=chat)
+            form = EditChatForm(request.POST, instance=chat)
             
             if form.is_valid():
                 chat = form.save(commit=False)

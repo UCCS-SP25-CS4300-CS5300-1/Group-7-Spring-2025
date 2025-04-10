@@ -11,7 +11,7 @@ class CreateUserForm(UserCreationForm):
         fields = ['username', 'email', 'password1', 'password2']
 
 
-class ChatForm(ModelForm):
+class CreateChatForm(ModelForm):
     listing_choice = ModelChoiceField(queryset=UploadedJobListing.objects.none())
     resume_choice = ModelChoiceField(queryset=UploadedResume.objects.none(), required=False)
 
@@ -26,6 +26,12 @@ class ChatForm(ModelForm):
         if user is not None:
             self.fields['listing_choice'].queryset = UploadedJobListing.objects.filter(user=user)
             self.fields['resume_choice'].queryset = UploadedResume.objects.filter(user=user)
+
+
+class EditChatForm(ModelForm):
+    class Meta:
+        model = Chat
+        fields = ["title"]
 
 
 #Defines a Django form for handling file uploads.
