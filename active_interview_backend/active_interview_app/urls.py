@@ -1,6 +1,11 @@
 import os
 
+
+from django.urls import path, include
+from django.contrib.auth import views as auth_views
+
 from django.conf import settings
+from django.conf.urls.static import static
 from django.contrib.auth.models import User
 from django.urls import path, include
 from rest_framework import routers
@@ -13,27 +18,42 @@ router = routers.DefaultRouter()
 
 
 urlpatterns = [
+    # Misc. urls
     path('', views.index, name='index'),
-    path('', views.index, name='login'),
+    path('features/', views.features, name='features'),
+    path('features/', views.features, name='features'),
+
+    # Auth urls
+    # path('', views.index, name='login'),
+    # path('', views.index, name='login'),
     path('testlogged/', views.loggedin, name='loggedin'),
     path('accounts/', include('django.contrib.auth.urls')),
     path('accounts/register/', views.register, name='register_page'),
-    path('accounts/logout/', views.logout_view, name='logout'),
+    path('accounts/logout/', auth_views.LogoutView.as_view(template_name='registration/logged_out.html'), name='logout'),
 
-    # Chat views
+    # Chat urls
     path('chat/', views.chat_list, name='chat-list'),
     path('chat/create/', views.CreateChat.as_view(), name='chat-create'),
     path('chat/<int:chat_id>/', views.ChatView.as_view(), name='chat-view'),
     path('chat/<int:chat_id>/edit/', views.EditChat.as_view(), name='chat-edit'),
     path('chat/<int:chat_id>/delete/', views.DeleteChat.as_view(), name='chat-delete'),
 
-    # Demo view
-    path('demo/', views.demo, name='demo'),
+    # Demo urls
+    # path('demo/', views.demo, name='demo'),
     # path('chat-test/', views.test_chat_view, name='chat-test'),
 
     # api urls
     path('api/', include(router.urls)),
-]
+
+    # Joel's file upload urls
+    path('document/', views.upload_file, name='document-list'),
+    path('upload-file/', views.upload_file, name='upload_file'),
+    path('api/paste-text/', views.UploadedJobListingView.as_view(), name='save_pasted_text'),
+    path('paste-text/<int:pk>/', views.UploadedJobListingView.as_view(), name='pasted_text_detail'),
+    path('api/files/', views.UploadedResumeView.as_view(), name='file_list'),  #List files and uploads.
+    #path('api/files/<int:pk>/', views.UploadedResumeDetail.as_view(), name='file_detail'), #Making changes to files.
+    path('pasted-text/', views.UploadedJobListingView.as_view(), name='save_pasted_text'), #For the text box input.
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 # if settings.PROD:
 #     # add these urls for production environments only

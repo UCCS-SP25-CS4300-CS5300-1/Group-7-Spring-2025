@@ -1,5 +1,8 @@
 import os
+import filetype
 from openai import OpenAI
+import pymupdf4llm
+import markdown
 
 from django.conf import settings
 from django.contrib import messages
@@ -9,15 +12,27 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.contrib.auth.models import User
 from django.forms.models import model_to_dict
+from django.http import HttpResponseRedirect
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
+from django.utils.timezone import now
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
+from django.http import HttpResponse
+
+
+from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
 
 from .forms import *
 from .models import *
 from .serializers import *
+
+
+
 
 
 # Init openai client
@@ -28,8 +43,14 @@ client = OpenAI(api_key=settings.OPENAI_API_KEY)
 def index(request):
     return render(request, 'index.html')
 
-def demo(request):
-    return render(request, os.path.join('demo', 'demo.html'))
+# def demo(request):
+#     return render(request, os.path.join('demo', 'demo.html'))
+
+def features(request):
+    return render(request, 'features.html')
+
+def features(request):
+    return render(request, 'features.html')
 
 
 # @login_required
@@ -112,6 +133,28 @@ class CreateChat(LoginRequiredMixin, View):
                         "content": "You are a helpful assistant."
                     },
                 ]
+
+                # Get the job listing and resume from the form 
+                job_listing_id = request.POST.get('job_listing')  # Assuming the form includes this field
+                resume_id = request.POST.get('resume')  # Assuming the form includes this field
+
+                # If a job listing is selected, set the foreign key
+                if job_listing_id:
+                    try:
+                        job_listing = UploadedJobListing.objects.get(id=job_listing_id)
+                        chat.job_listing = job_listing
+                    except UploadedJobListing.DoesNotExist:
+                        # Handle case where the job listing doesn't exist
+                        pass
+
+                # If a resume is selected, set the foreign key
+                if resume_id:
+                    try:
+                        resume = UploadedResume.objects.get(id=resume_id)
+                        chat.resume = resume
+                    except UploadedResume.DoesNotExist:
+                        # Handle case where the resume doesn't exist
+                        pass                
 
                 chat.save()
 
@@ -221,19 +264,206 @@ def register(request):
     if form.is_valid():
         user = form.save()
         username = form.cleaned_data.get('username')
-        group = Group.objects.get(name='manager_role')
+        group = Group.objects.get(name='average_role')
         user.groups.add(group)
         #user = User.objects.create(user=user)
         user.save()
-        messages.success(request, 'Account was create for ' + username)
-        return redirect('login')
+        messages.success(request, 'Account was created for ' + username)
+        return redirect('/accounts/login/?next=/')
     context={'form':form}
         
-    return render(request, 'register.html', context)
+    return render(request, 'registration/register.html', context)
 
 
-def logout_view(request):
+# === Joel's file upload views ===
+
+
+@login_required
+def upload_file(request):
+    allowed_types = ['pdf']
+
     if request.method == "POST":
-        logout(request)
-        return redirect('logout')
-    return render(request, 'logout.html')
+        form = UploadFileForm(request.POST, request.FILES)
+        if form.is_valid():
+            uploaded_file = request.FILES["file"]
+            file_name = uploaded_file.name
+            title = request.POST.get("title", '').strip()
+
+            file_type = filetype.guess(uploaded_file.read())  # Detect file type
+            uploaded_file.seek(0)  # Reset file pointer after reading
+
+            if file_type and file_type.extension in allowed_types:
+                # Save the file temporarily to a location
+                temp_file_path = os.path.join(settings.MEDIA_ROOT, 'temp', file_name)
+                os.makedirs(os.path.dirname(temp_file_path), exist_ok=True)
+
+                # Save the uploaded file to the temporary path
+                with open(temp_file_path, 'wb') as temp_file:
+                    for chunk in uploaded_file.chunks():
+                        temp_file.write(chunk)
+
+                # Now process the file with pymupdf
+                try:
+                    markdown_text = pymupdf4llm.to_markdown(temp_file_path)
+
+                    # Optionally, save the file in the database if needed
+                    instance = form.save(commit=False)
+                    instance.user = request.user
+                    instance.original_filename = file_name
+                    instance.filesize = uploaded_file.size
+                    instance.content = markdown_text
+                    instance.title = title
+                    instance.save()
+
+                    # Show success message and render
+                    messages.success(request, "File uploaded successfully!")
+                    return render(request, 'documents/document-list.html', {'markdown_text': markdown_text})
+                except Exception as e:
+                    messages.error(request, f"Error processing the file: {e}")
+                    return render(request, 'documents/document-list.html', {"form": form})
+
+            else:
+                messages.error(request, "Invalid filetype. Only PDF files are allowed.")
+        else:
+            messages.error(request, "There was an issue with the form.")
+    else:
+        form = UploadFileForm()
+
+    return render(request, "documents/document-list.html", {"form": form})
+
+
+class UploadedJobListingView(APIView):
+    # permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        # Get the text from the request
+        text = request.POST.get("paste-text", '').strip()
+        title = request.POST.get("title", '').strip()
+        print(request.POST)
+
+
+        # Check if the text is empty
+        if not text:
+            messages.error(request, "Text field cannot be empty.")
+            return redirect('document-list')
+
+        if not title:
+            messages.error(request, "Title field cannot be empty.")
+            return redirect('document-list')
+
+
+        user = request.user
+        timestamp = now().strftime("%d%m%Y_%H%M%S")
+        filename = f"{user.username}_{timestamp}.txt"
+
+        # Create a directory for the user to store pasted text files
+        user_dir = os.path.join(settings.MEDIA_ROOT, 'pasted_texts', str(user.id))
+        os.makedirs(user_dir, exist_ok=True)
+        filepath = os.path.join(user_dir, filename)
+
+        # Convert the text to Markdown
+        markdown_text = markdown.markdown(text)
+
+        # Save the text content to a file
+        with open(filepath, 'w', encoding='utf-8') as f:
+            f.write(text)
+
+        # Create and save the UploadedJobListing object in the database
+        job_listing = UploadedJobListing(user=user, content=text, filepath=filepath, title=title)
+        job_listing.save()
+
+
+        # Show success message and render the converted markdown
+        messages.success(request, "Text uploaded successfully!")
+        return render(request, 'documents/document-list.html', {'markdown_text': markdown_text})
+
+
+
+
+class UploadedResumeView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        files = UploadedResume.objects.filter(user=request.user)
+        serializer = UploadedResumeSerializer(files, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):
+        serializer = UploadedResumeSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(user=request.user)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+#class UploadedResumeDetail(APIView):
+#    permission_classes = [IsAuthenticated]
+
+#    def get(self, request, pk):
+#        # Use get_object_or_404 to return 404 when the object is not found
+#        file = get_object_or_404(UploadedResume, pk=pk, user=request.user)
+#        serializer = UploadedResumeSerializer(file)
+#        return Response(serializer.data)
+
+#    def put(self, request, pk):
+#        # Use get_object_or_404 to return 404 when the object is not found
+#        file = get_object_or_404(UploadedResume, pk=pk, user=request.user)
+#        serializer = UploadedResumeSerializer(file, data=request.data, partial=True)
+#        if serializer.is_valid():
+#            serializer.save()
+#            return Response(serializer.data)
+#        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+#    def delete(self, request, pk):
+#        # Use get_object_or_404 to return 404 when the object is not found
+#        file = get_object_or_404(UploadedResume, pk=pk, user=request.user)
+#        file.delete()
+#        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class JobListingList(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        # List all pasted text entries for the authenticated user
+        texts = UploadedJobListing.objects.filter(user=request.user)
+        serializer = UploadedJobListingSerializer(texts, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):
+        # Create a new pasted text entry
+        serializer = UploadedJobListingSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(user=request.user)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+#class JobListingDetail(APIView):
+#    permission_classes = [IsAuthenticated]
+
+#    def get(self, request, pk):
+        # Use get_object_or_404 to return 404 when the object is not found
+#        text = get_object_or_404(UploadedJobListing, pk=pk, user=request.user)
+#        serializer = UploadedJobListingSerializer(text)
+#        return Response(serializer.data)
+
+#    def put(self, request, pk):
+#        # Use get_object_or_404 to return 404 when the object is not found
+#        text = get_object_or_404(UploadedJobListing, pk=pk, user=request.user)
+#        serializer = UploadedJobListingSerializer(text, data=request.data, partial=True)
+#        if serializer.is_valid():
+#            serializer.save()
+#            return Response(serializer.data)
+#        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+#    def delete(self, request, pk):
+        # Use get_object_or_404 to return 404 when the object is not found
+#        text = get_object_or_404(UploadedJobListing, pk=pk, user=request.user)
+#        text.delete()
+#        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class DocumentList(View):
+    def get(self, request):
+        return render(request, 'documents/document-list.html')

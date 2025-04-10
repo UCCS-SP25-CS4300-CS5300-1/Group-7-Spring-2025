@@ -18,6 +18,10 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# media paths 
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
@@ -29,6 +33,7 @@ SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY",
                                 else None)
 
 OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
+
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -43,6 +48,7 @@ CSRF_TRUSTED_ORIGINS = ['https://app.activeinterviewservice.me']
 # Application definition
 
 INSTALLED_APPS = [
+    'active_interview_app',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -51,7 +57,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'bootstrap5',
     'rest_framework',
-    'active_interview_app',
+    'filetype',
+    
 ]
 
 MIDDLEWARE = [
@@ -139,3 +146,23 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # mimetypes
 mimetypes.add_type("text/css", ".css", True)
+
+# logging
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'ERROR',
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(BASE_DIR, 'error_log.txt'),
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+    },
+}

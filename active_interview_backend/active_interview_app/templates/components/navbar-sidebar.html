@@ -22,9 +22,12 @@
         <li class="nav-item">
           <a class="nav-link" href="{% url "chat-list" %}">Chat</a>
         </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url "document-list" %}">Documents</a>
+        </li>
       {% endif %}
       <li class="nav-item">
-        <a class="nav-link" href="#">Features</a>
+        <a class="nav-link" href="{% url "features" %}">Features</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="#">Pricing</a>
@@ -39,14 +42,14 @@
           <ul class="dropdown-menu dropdown-menu-end">
             <li><a class="dropdown-item" href="#">View</a></li>
             <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="#">Logout</a></li>
+            <li><a class="dropdown-item" href="{% url 'logout' %}">Logout {{user}}</a></li>
           </ul>
         </li>
       </ul>
     {% else %}
       <ul class="navbar-nav ms-auto">
         <li class="nav-item">
-          <a class="nav-link" href="#" id="login-button">Login</a>
+          <a class="nav-link" href="{% url 'login' %}?next={{ request.path }}">Login</a>
         </li>
       </ul>
     {% endif %}

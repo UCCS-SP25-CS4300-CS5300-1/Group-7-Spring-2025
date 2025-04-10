@@ -8,6 +8,7 @@ services:
     container_name: django
     volumes:
       - static_volume:/app/staticfiles # shared staticfiles volume
+      - media_volume:/app/media
       - ./active_interview_backend:/app
       - db_data:/app/db
       #    ports:
@@ -37,6 +38,7 @@ services:
       - "80:80"
     volumes:
       - static_volume:/app/staticfiles # shared staticfiles volume
+      - media_volume:/app/media # shared media volume
       - ./nginx.local.conf:/etc/nginx/nginx.conf:ro
     depends_on:
       - django
@@ -47,5 +49,6 @@ services:
 
 volumes:
   static_volume:
+  media_volume:
   db_data:
 

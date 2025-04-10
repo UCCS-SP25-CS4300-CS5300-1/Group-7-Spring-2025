@@ -19,7 +19,7 @@
           </a>
           <div class="d-flex flex-shrink-0">
             <div class="btn-group dropend" data-bs-theme="dark">
-              <button type="button" class="chat-card-button sidebar-dropend btn btn-dark dropdown-toggle dropdown-toggle-split rounded-0 rounded-end" data-bs-toggle="dropdown" data-bs-popper-config='{"strategy":"fixed"}' aria-expanded="false">
+              <button type="button" class="{% if chat.id == owner_chat.id %}active-sidebar-dropdown{% else %}chat-card-button{% endif %} sidebar-dropend btn btn-dark dropdown-toggle dropdown-toggle-split rounded-0 rounded-end" data-bs-toggle="dropdown" data-bs-popper-config='{"strategy":"fixed"}' aria-expanded="false">
                 <span class="visually-hidden">Toggle Dropend</span>
               </button>
               <ul class="sidebar-dropdown-menu dropdown-menu">
@@ -27,7 +27,7 @@
                 <li><a class="sidebar-dropdown-item dropdown-item" href="#">Results</a></li>
                 <li><hr class="dropdown-divider"></li>
                 <li>
-                  <a class="sidebar-dropdown-item dropdown-item text-danger" data-bs-toggle="modal" data-bs-target="#deleteChatModal" data-chat-link="{% url 'chat-delete' chat_id=owner_chat.id %}">
+                  <a class="sidebar-dropdown-item dropdown-item text-danger" data-bs-toggle="modal" data-bs-target="#deleteChatModal" data-chat-title="{{ owner_chat.title }}" data-chat-link="{% url 'chat-delete' chat_id=owner_chat.id %}">
                     Delete
                   </a>
                 </li>

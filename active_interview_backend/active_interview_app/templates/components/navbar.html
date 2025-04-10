@@ -1,6 +1,6 @@
 {% load static %}
 
-<nav class="navbar navbar-expand-md px-3" data-bs-theme="dark">
+<nav class="navbar navbar-expand-md px-3 fixed-top" data-bs-theme="dark">
   <!-- Navbar content -->
   <a class="navbar-brand" href="{% url "index" %}">
     <img class="logo-img" src="{% static 'images/favicon.png' %}">
@@ -19,9 +19,12 @@
         <li class="nav-item">
           <a class="nav-link" href="{% url "chat-list" %}">Chat</a>
         </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url "document-list" %}">Documents</a>
+        </li>
       {% endif %}
       <li class="nav-item">
-        <a class="nav-link" href="#">Features</a>
+        <a class="nav-link" href="{% url "features" %}">Features</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="#">Pricing</a>
@@ -36,14 +39,14 @@
           <ul class="dropdown-menu dropdown-menu-end">
             <li><a class="dropdown-item" href="#">View</a></li>
             <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="#">Logout</a></li>
+            <li><a class="dropdown-item" href="{% url 'logout' %}">Logout {{user}}</a></li>
           </ul>
         </li>
       </ul>
     {% else %}
       <ul class="navbar-nav ms-auto">
         <li class="nav-item">
-          <a class="nav-link" href="#">Login</a>
+          <a class="nav-link" href="{% url 'login' %}?next={{ request.path }}">Login</a>
         </li>
       </ul>
     {% endif %}

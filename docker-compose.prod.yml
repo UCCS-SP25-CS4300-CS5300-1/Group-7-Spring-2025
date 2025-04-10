@@ -8,6 +8,7 @@ services:
     container_name: django
     volumes:
       - static_volume:/app/staticfiles # shared staticfiles volume
+      - media_volume:/app/media # shared media volume
       - ./active_interview_backend:/app
       - db_data:/app/db
       #    ports:
@@ -36,6 +37,7 @@ services:
       - "443:443"
     volumes:
       - static_volume:/app/staticfiles # shared staticfiles volume
+      - media_volume:/app/media # shared media volume
       - ./nginx.prod.conf:/etc/nginx/nginx.conf:ro
       - /etc/letsencrypt:/etc/letsencrypt:ro # shared the certs from host
     depends_on:
@@ -43,5 +45,6 @@ services:
 
 volumes:
   static_volume:
+  media_volume:
   db_data:
 
