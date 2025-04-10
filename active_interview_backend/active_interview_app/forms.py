@@ -1,4 +1,4 @@
-from django.forms import ModelForm
+from django.forms import ModelForm, ModelChoiceField
 from .models import *
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
@@ -11,7 +11,24 @@ class CreateUserForm(UserCreationForm):
         fields = ['username', 'email', 'password1', 'password2']
 
 
-class ChatForm(ModelForm):
+class CreateChatForm(ModelForm):
+    listing_choice = ModelChoiceField(queryset=UploadedJobListing.objects.none())
+    resume_choice = ModelChoiceField(queryset=UploadedResume.objects.none(), required=False)
+
+    class Meta:
+        model = Chat
+        fields = ["title"]
+    
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        super().__init__(*args, **kwargs) # ensure parent object is initialized
+        
+        if user is not None:
+            self.fields['listing_choice'].queryset = UploadedJobListing.objects.filter(user=user)
+            self.fields['resume_choice'].queryset = UploadedResume.objects.filter(user=user)
+
+
+class EditChatForm(ModelForm):
     class Meta:
         model = Chat
         fields = ["title"]
