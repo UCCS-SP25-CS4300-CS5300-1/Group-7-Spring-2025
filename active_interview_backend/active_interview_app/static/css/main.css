@@ -246,3 +246,7 @@ html, body {
 .create-button-or-spinner {
     height: 45px;
 }
+
+.table.borderless tbody tr td, .table.borderless thead tr th {
+  border: none;
+}
