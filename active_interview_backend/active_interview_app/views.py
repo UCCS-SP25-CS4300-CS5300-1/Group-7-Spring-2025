@@ -304,11 +304,13 @@ def register(request):
     context={'form':form}
         
     return render(request, 'registration/register.html', context)
+
+
 @login_required
 def profile(request):
-    owner = UploadedResume.objects.filter(user = request.user)
-    jobs = UploadedJobListing.objects.filter(user = request.user)
-    return render(request, 'profile.html', {'owner':owner, 'jobs':jobs})
+    resumes = UploadedResume.objects.filter(user = request.user)
+    job_listings = UploadedJobListing.objects.filter(user = request.user)
+    return render(request, 'profile.html', {'resumes':resumes, 'job_listings':job_listings})
 
 
 # === Joel's file upload views ===

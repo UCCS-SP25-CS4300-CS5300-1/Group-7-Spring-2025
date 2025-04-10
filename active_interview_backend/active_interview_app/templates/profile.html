@@ -1,71 +1,91 @@
 {% extends 'base.html' %}
+
+{% block title %}
+  AIS - Profile
+{% endblock %}
+
 {% block content %}
+  <style>
+    .profile-page {
+      display: flex;
+      flex-direction: column; 
+      justify-content: center;
+      color: white;
+    }
+      
+    p {
+      font-size: 20px;
+      text-align: center;
+    }
+    td {
+      font-size: 20px;
+    }
+    h1{
+      font-size: 40px;
+      text-align: center;
+    }
+    h2{
+      text-align: center;
+    }
+    ul {
+      list-style-position: inside;
+    }
+    .card {
+      background-color: var(--shallows) !important;
+      border-radius: 2rem;
+    }
+  </style>
 
-<style>
-  .profile-page {
-     background-color: #dcd9e2;
-     background-size: 10%;
-     display: flex;
-     flex-direction: column; 
-     justify-content: center;
-     
-     border: 13px solid grey;
-     
-  }
-    
-  p {
-    font-size: 20px;
-    text-align: center;
-  }
-  td {
-    font-size: 20px;
-  }
-  h1{
-    font-size: 40px;
-    text-align: center;
-  }
-  h2{
-    text-align: center;
-  }
-  
-  
- 
- </style>
+  <div class="centered-container">
+    <div class="card p-3 my-5">
+      <div class="profile-page">
+        <div class="row mb-3">
+          <h1>Profile</h1>
+        </div>
 
- <div class="container">
-   <div class="profile-page">
-    <div class="row mb-3">
-  <h1>Profile</h1>
+        <!-- Manually render each form field -->
+        <div class="row">
+          <h2>{{user}}</h2> 
+        </div>
+
+        <hr class="white-break">
+
+        <div class="row mb-3">
+          <h3>Uploaded Resumes</h3>
+          {% if resumes|length == 0 %}
+            <center><h5>No Resumes Uploaded</h5></center>
+          {% else %}
+            <ul>
+              {% for document in resumes %}
+                {% if document.title and document.title != "1" %}
+                  <li style="font-size: 23px;">{{document.title}}</li>
+                {% elif document.file %}
+                  <li style="font-size: 23px;">{{document.original_filename}}</li>
+                {% endif %}
+              {% endfor %}
+            </ul>
+          {% endif %}
+        </div>
+
+        <hr class="white-break">
+
+        <div class="row mb-3">
+          <h3>Uploaded Job Listings</h3>
+          {% if job_listings|length == 0 %}
+            <center><h5>No Job Listings Uploaded</h5></center>
+          {% else %}
+            <ul>
+              {% for job in job_listings %}
+                {% if job.title %}
+                  <li style="font-size: 23px;">{{job.title}}</li>
+                {% else %}
+                  <li style="font-size: 23px;">No Title</li>
+                {% endif %}
+              {% endfor %}
+            </ul>
+          {% endif %}
+        </div>
+      </div>
     </div>
-
-  
-  <!-- Manually render each form field -->
-  <div class="row mb-3">
-
-   <h2>{{user}}</h2> 
   </div>
-  <div class="row mb-3">
-    
-
-   <h3>Uploaded Documents</h3>
-  {% for document in owner %}
-  {% if document.file %}
-  <li style="font-size: 23px;">{{document.original_filename}}</li>
-  {%else%}
-  <center><p> No Files </p></center>
-  {% endif %}
-  {% endfor %}
-  </div>
-
-  <div class="row mb-3">
-<h3>Job Listings</h3>
-{% for job in jobs %}
-{% if job.title %}
-<li style="font-size: 23px;">{{job.title}}</li>
-{%else%}
-<p> No Job Listings </p>
-{% endif %}
-{% endfor %}
-  </div>
-</div>
 {% endblock %}
