@@ -1,4 +1,4 @@
-from django.forms import ModelForm
+from django.forms import ModelForm, ModelChoiceField
 from .models import *
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
@@ -12,9 +12,20 @@ class CreateUserForm(UserCreationForm):
 
 
 class ChatForm(ModelForm):
+    listing_choices = ModelChoiceField(queryset=UploadedJobListing.objects.none())
+    resume_choices = ModelChoiceField(queryset=UploadedResume.objects.none())
+
     class Meta:
         model = Chat
         fields = ["title"]
+    
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        super().__init__(*args, **kwargs) # ensure parent object is initialized
+        
+        if user is not None:
+            self.fields['listing_choices'].queryset = UploadedJobListing.objects.filter(user=user)
+            self.fields['resume_choices'].queryset = UploadedResume.objects.filter(user=user)
 
 
 #Defines a Django form for handling file uploads.

@@ -111,7 +111,7 @@ class CreateChat(LoginRequiredMixin, View):
     def get(self, request):
         owner_chats = Chat.objects.filter(owner=request.user).order_by('-modified_date')
         
-        form = ChatForm()
+        form = ChatForm(user=request.user) # Pass user into chatform
 
         context = {}
         context['owner_chats'] = owner_chats

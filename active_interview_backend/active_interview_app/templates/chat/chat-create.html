@@ -15,8 +15,16 @@
         {% csrf_token %}
         <div>
           <div class="d-flex">
-            <h5 class="whiteTextOverride me-2">Title:</h5>
+            <h5 class="whiteTextOverride me-2">Title*:</h5>
             {{ form.title }}
+          </div>
+          <div class="d-flex">
+            <h5 class="whiteTextOverride me-2">Job Listing*:</h5>
+            {{ form.listing_choices }}
+          </div>
+          <div class="d-flex">
+            <h5 class="whiteTextOverride me-2">Resume:</h5>
+            {{ form.resume_choices }}
           </div>
         </div>
         <br>
