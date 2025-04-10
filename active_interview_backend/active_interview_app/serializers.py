@@ -1,16 +1,13 @@
 from rest_framework import serializers
 from .models import *
 
-class UploadedFileSerializer(serializers.ModelSerializer):
+class UploadedResumeSerializer(serializers.ModelSerializer):
     class Meta:
-        model = UploadedFile
+        model = UploadedResume
         fields = ['id', 'file', 'user', 'uploaded_at']
 
 
-class PastedTextSerializer(serializers.Serializer):
-    text = serializers.CharField()
-
+class UploadedJobListingSerializer(serializers.ModelSerializer):
     class Meta:
-        model = PastedText
+        model = UploadedJobListing
         fields = ['id', 'user', 'filename', 'content', 'created_at']
-        

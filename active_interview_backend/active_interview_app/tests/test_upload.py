@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.urls import reverse
-from active_interview_app.models import UploadedFile, PastedText
+from active_interview_app.models import UploadedJobListing, UploadedResume
 from django.test import TestCase, Client
 from django.contrib.messages import get_messages
 from django.contrib import messages
@@ -15,7 +15,7 @@ import unittest
 
 #Run using python3 manage.py test active_interview_app.tests.test_upload
 
-class FileUploadTestCase(TestCase):
+class ResumeUploadTestCase(TestCase):
     def test_file_upload(self):
 
         # This creates a text file to test for the upload functionality.
@@ -26,70 +26,70 @@ class FileUploadTestCase(TestCase):
         # This checks for a successful redirect, which indicates that the POST was successful.
         self.assertEqual(response.status_code, 302)
         # This verifies that the file was properly saved.
-        self.assertEqual(UploadedFile.objects.count(), 1)
+        self.assertEqual(UploadedResume.objects.count(), 1)
         # This ensures the name of the uploaded file matches.
-        uploaded_file = UploadedFile.objects.first()
+        uploaded_file = UploadedResume.objects.first()
         self.assertEqual(uploaded_file.file.name, "uploads/testfile.txt")
 
 
-class PastedTextUploadTestCase(TestCase):
+class UploadedJobListingUploadTestCase(TestCase):
     def setUp(self):
         self.client = APIClient()
         self.user = User.objects.create_user(username="testuser", password="testpass")
         self.client.login(username="testuser", password="testpass")
 
-    def test_pasted_text_upload(self):
-        # Simulate POST request to paste-text API endpoint
-        response = self.client.post(reverse('save_pasted_text'), {
-            'text': 'This is a test paste.'
-        })
+def test_pasted_text_upload(self):
+    response = self.client.post(reverse('save_pasted_text'), {
+        'paste-text': 'This is a test paste.',
+        'title': 'Sample Title'
+    }, follow=True)  # Follow the redirect to get messages
 
-        # Redirect expected after success (302 to previous page)
-        self.assertEqual(response.status_code, 302)
-        messages_list = list(messages.get_messages(response.wsgi_request))
-        self.assertTrue(any("Text uploaded successfully!" in str(m) for m in messages_list))
+    self.assertEqual(response.status_code, 200)
+
+    messages_list = list(messages.get_messages(response.wsgi_request))
+    self.assertTrue(any("Text uploaded successfully!" in str(m) for m in messages_list))
+
 
         # Check the created object
-        pasted = PastedText.objects.first()
-        self.assertEqual(pasted.content, 'This is a test paste.')
-        self.assertEqual(pasted.user, self.user)
+    pasted = UploadedJobListing.objects.first()
+    self.assertEqual(pasted.content, 'This is a test paste.')
+    self.assertEqual(pasted.user, self.user)
 
     def test_pasted_text_upload_blank(self):
         response = self.client.post(reverse('save_pasted_text'), {
-            'text': ''
+            'paste-text': ''
         })
 
         # Should redirect with error, but not save
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(PastedText.objects.count(), 0)
+        self.assertEqual(UploadedJobListing.objects.count(), 0)
 
 
-class FileUploadTests(TestCase):
+class ResumeUploadTests(TestCase):
     def setUp(self):
         self.client = Client()
         self.user = User.objects.create_user(username='testuser', password='testpass')
 
     def test_upload_valid_pdf(self):
         print(f"Current working directory: {os.getcwd()}")
-        # Use the absolute path to your pre-existing test PDF file
         pdf_path = os.path.join(os.getcwd(), 'active_interview_app', 'tests', 'test.pdf')
 
-
-        # Check that the file exists before proceeding
         self.assertTrue(os.path.exists(pdf_path), f"Test PDF file not found at {pdf_path}")
 
-        # Open the test PDF file
         with open(pdf_path, 'rb') as pdf_file:
-            # Create a SimpleUploadedFile from the PDF
             uploaded_pdf = SimpleUploadedFile('test.pdf', pdf_file.read(), content_type='application/pdf')
 
-        # Simulate logging in a user
         self.client.login(username='testuser', password='testpass')
 
-        # Post the PDF file to the upload endpoint
-        response = self.client.post(reverse('upload_file'), {'file': uploaded_pdf}, follow=True)
+        response = self.client.post(
+            reverse('upload_file'),
+            {
+                'file': uploaded_pdf,
+                'title': 'Test Resume PDF'  # 👈 Required title field
+            },
+            follow=True
+        )
 
-        # Assert that the file upload is successful
         self.assertEqual(response.status_code, 200)
         messages = list(get_messages(response.wsgi_request))
         self.assertTrue(any("File uploaded successfully!" in str(m) for m in messages))
@@ -97,31 +97,41 @@ class FileUploadTests(TestCase):
     def test_upload_invalid_filetype(self):
         self.client.login(username='testuser', password='testpass')
         txt_file = SimpleUploadedFile("test.txt", b"Just some text", content_type="text/plain")
-        response = self.client.post(reverse('upload_file'), {'file': txt_file}, follow=True)
+        
+        response = self.client.post(
+            reverse('upload_file'),
+            {
+                'file': txt_file,
+                'title': 'Test Invalid File' 
+            },
+            follow=True
+        )
 
         messages = list(get_messages(response.wsgi_request))
         self.assertTrue(any("Invalid filetype" in str(m) for m in messages))
 
 
-class PastedTextViewTests(TestCase):
+class UploadedJobListingViewTests(TestCase):
     def setUp(self):
         self.client = APIClient()
         self.user = User.objects.create_user(username='testuser', password='testpass')
 
-    def test_post_valid_text(self):
-        self.client.login(username='testuser', password='testpass')
-        response = self.client.post(reverse('save_pasted_text'), {'text': 'This is a pasted test.'}, follow=True)
-        
-        # Check status code
-        self.assertEqual(response.status_code, 200)
-        
-        # Check for the success message in messages
-        messages_list = list(messages.get_messages(response.wsgi_request))
-        self.assertTrue(any("Text uploaded successfully!" in str(m) for m in messages_list))
+def test_post_valid_text(self):
+    self.client.login(username='testuser', password='testpass')
+    response = self.client.post(
+        reverse('save_pasted_text'),
+        {'paste-text': 'This is a pasted test.', 'title': 'Test Title'},
+        follow=True 
+    )
+
+    self.assertEqual(response.status_code, 200)
+    messages_list = list(messages.get_messages(response.wsgi_request))
+    self.assertTrue(any("Text uploaded successfully!" in str(m) for m in messages_list))
+
 
     def test_post_empty_text(self):
         self.client.login(username='testuser', password='testpass')
-        response = self.client.post(reverse('save_pasted_text'), {'text': ''}, follow=True)
+        response = self.client.post(reverse('save_pasted_text'), {'paste-text': ''}, follow=True)
         
         # Check status code
         self.assertEqual(response.status_code, 200)
@@ -143,7 +153,7 @@ class IndexViewTest(TestCase):
         self.assertTemplateUsed(response, 'index.html')
 
 
-class FileUploadTestCase(TestCase):
+class ResumeUploadTestCase(TestCase):
     def test_file_upload_form_instantiation(self):
 
         user = User.objects.create_user(username='testuser', password='password')
@@ -160,7 +170,7 @@ class FileUploadTestCase(TestCase):
 
 # Tests to be implemented at a later date.
 
-#class UploadedFileListTests(unittest.TestCase):
+#class UploadedResumeListTests(unittest.TestCase):
 #    def setUp(self):
 #        self.client = APIClient()
 #        self.user = User.objects.create_user(username="testuser", password="testpass")
@@ -168,7 +178,7 @@ class FileUploadTestCase(TestCase):
 #
 #    def test_get_uploaded_file_list(self):
 #        # Create an uploaded file for the user
-#        UploadedFile.objects.create(user=self.user, file="testfile.txt")
+#        UploadedResume.objects.create(user=self.user, file="testfile.txt")
 #
 #        # Send GET request to list uploaded files
 #        response = self.client.get(reverse('uploaded_file_list'))
@@ -180,12 +190,12 @@ class FileUploadTestCase(TestCase):
 #        self.assertEqual(response.data[0]['file'], 'testfile.txt')
 
 
-#class UploadedFileDetailTests(unittest.TestCase):
+#class UploadedResumeDetailTests(unittest.TestCase):
 #    def setUp(self):
 #        self.client = APIClient()
 #        self.user = User.objects.create_user(username="testuser", password="testpass")
 #        self.client.login(username="testuser", password="testpass")
-#        self.uploaded_file = UploadedFile.objects.create(user=self.user, file="testfile.txt")
+#        self.uploaded_file = UploadedResume.objects.create(user=self.user, file="testfile.txt")
 
     #Feature that shows users uploaded file details not ready yet. Test commented out for the time being.
     #def test_get_uploaded_file(self):
@@ -194,7 +204,7 @@ class FileUploadTestCase(TestCase):
     #    self.assertEqual(response.data['file'], 'testfile.txt')
 
 
-#class PastedTextListTests(unittest.TestCase):
+#class UploadedJobListingListTests(unittest.TestCase):
 #    def setUp(self):
 #        self.client = APIClient()
 #        self.user = User.objects.create_user(username="testuser", password="testpass")
@@ -202,7 +212,7 @@ class FileUploadTestCase(TestCase):
 #
 #    def test_get_pasted_text_list(self):
 #        # Create a pasted text entry
-#        PastedText.objects.create(user=self.user, content="Test paste")
+#        UploadedJobListing.objects.create(user=self.user, content="Test paste")
 #
 #        # Send GET request to list pasted texts
 #        response = self.client.get(reverse('pasted_text_list'))
@@ -214,12 +224,12 @@ class FileUploadTestCase(TestCase):
 #        self.assertEqual(response.data[0]['content'], 'Test paste')
 
 
-#class PastedTextDetailTests(unittest.TestCase):
+#class UploadedJobListingDetailTests(unittest.TestCase):
 #    def setUp(self):
 #        self.client = APIClient()
 #        self.user = User.objects.create_user(username="testuser", password="testpass")
 #        self.client.login(username="testuser", password="testpass")
-#        self.pasted_text = PastedText.objects.create(user=self.user, content="Test paste")
+#        self.pasted_text = UploadedJobListing.objects.create(user=self.user, content="Test paste")
 
 #    def test_get_pasted_text(self):
 #        response = self.client.get(reverse('pasted_text_detail', kwargs={'pk': self.pasted_text.pk}))
@@ -227,7 +237,7 @@ class FileUploadTestCase(TestCase):
 #        self.assertEqual(response.data['content'], 'Test paste')
 
 
-#class UploadedFileListTests(TestCase):
+#class UploadedResumeListTests(TestCase):
 #    def setUp(self):
 #        self.client = Client()
 #        self.user = User.objects.create_user(username='testuser', password='testpass')
@@ -280,7 +290,7 @@ class FileUploadTestCase(TestCase):
     #    self.assertEqual(UploadedFile.objects.count(), 0)
 
 
-#class PastedTextListTests(TestCase):
+#class UploadedJobListingListTests(TestCase):
 #    def setUp(self):
 #        self.client = Client()
 #        self.user = User.objects.create_user(username='testuser', password='testpass')
@@ -288,7 +298,7 @@ class FileUploadTestCase(TestCase):
 
     #Feature that shows users paste text list not ready yet. Test commented out for the time being.
     #def test_get_pasted_text_list(self):
-    #    pasted_text = PastedText.objects.create(user=self.user, content='Test paste')
+    #    pasted_text = UploadedJobListing.objects.create(user=self.user, content='Test paste')
 
     #    response = self.client.get(reverse('pasted_text_list'))
 
@@ -299,17 +309,17 @@ class FileUploadTestCase(TestCase):
     #    response = self.client.post(reverse('pasted_text_list'), {'content': 'Another test paste'}, follow=True)
 
     #    self.assertEqual(response.status_code, 200)
-    #    self.assertEqual(PastedText.objects.count(), 1)
-    #    pasted_text = PastedText.objects.first()
+    #    self.assertEqual(UploadedJobListing.objects.count(), 1)
+    #    pasted_text = UploadedJobListing.objects.first()
     #    self.assertEqual(pasted_text.content, 'Another test paste')
 
 
-#class PastedTextDetailTests(TestCase):
+#class UploadedJobListingDetailTests(TestCase):
 #    def setUp(self):
 #        self.client = Client()
 #        self.user = User.objects.create_user(username='testuser', password='testpass')
 #        self.client.login(username='testuser', password='testpass')
-#        self.pasted_text = PastedText.objects.create(user=self.user, content='Test paste')
+#        self.pasted_text = UploadedJobListing.objects.create(user=self.user, content='Test paste')
 
 #    def test_get_pasted_text_detail(self):
 #        response = self.client.get(reverse('pasted_text_detail', kwargs={'pk': self.pasted_text.pk}))
@@ -326,4 +336,4 @@ class FileUploadTestCase(TestCase):
 #    def test_delete_pasted_text(self):
 #        response = self.client.delete(reverse('pasted_text_detail', kwargs={'pk': self.pasted_text.pk}))
 #        self.assertEqual(response.status_code, 204)
-#        self.assertEqual(PastedText.objects.count(), 0)
+#        self.assertEqual(UploadedJobListing.objects.count(), 0)
