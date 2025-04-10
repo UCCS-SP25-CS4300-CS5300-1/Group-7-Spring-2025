@@ -38,7 +38,7 @@ from .serializers import *
 
 # Init openai client
 client = OpenAI(api_key=settings.OPENAI_API_KEY)
-MAX_TOKENS = 5000
+MAX_TOKENS = 15000
 
 
 # Create your views here.
