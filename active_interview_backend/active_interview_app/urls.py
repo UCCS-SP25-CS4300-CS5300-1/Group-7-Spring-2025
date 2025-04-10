@@ -20,7 +20,7 @@ router = routers.DefaultRouter()
 urlpatterns = [
     # Misc. urls
     path('', views.index, name='index'),
-    path('features/', views.features, name='features'),
+    path('about-us/', views.aboutus, name='about-us'),
     path('features/', views.features, name='features'),
 
     # Auth urls

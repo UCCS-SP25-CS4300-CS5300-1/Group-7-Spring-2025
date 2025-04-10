@@ -45,6 +45,9 @@ MAX_TOKENS = 5000
 def index(request):
     return render(request, 'index.html')
 
+def aboutus(request):
+    return render(request, 'about-us.html')
+
 # def demo(request):
 #     return render(request, os.path.join('demo', 'demo.html'))
 
