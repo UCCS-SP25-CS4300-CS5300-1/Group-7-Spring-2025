@@ -134,23 +134,33 @@ class CreateChat(LoginRequiredMixin, View):
                 system_prompt = "An error has occurred.  Please notify the user about this." # Default message.  Should only show up if something went wrong.
                 if chat.resume: # if resume is present
                     system_prompt = textwrap.dedent("""\
-                        You are a professional interviewer for a company.  Please review the following job listing and
-                        resume surrounded in triple quotes(\"\"\") to prepare.  Keep in mind that the resume in specific
-                        was scanned in using a flawed file reader, so ignore formatting errors in it.
+                        You are a professional interviewer for a company preparing for a candidate’s interview.
+                        You will act as the interviewer and engage in a roleplaying session with the candidate.
+                        
+                        Please review the job listing and resume below:
                         
                         # Job Listing:
                         \"\"\"{listing}\"\"\"
                         
-                        # Resume
+                        # Candidate Resume:
                         \"\"\"{resume}\"\"\"
+                        
+                        Ignore any formatting issues in the resume, and focus on its content. 
+                        Begin the session by greeting the candidate and asking an introductory question about their background, 
+                        then move on to deeper, role-related questions based on the job listing and resume.
                     """).format(listing=chat.job_listing.content, resume=chat.resume.content)
                 else: # if no resume
                     system_prompt = textwrap.dedent("""\
-                        You are a professional interviewer for a company.  Please review the following job listing 
-                        surrounded in triple quotes(\"\"\") to prepare.
+                        You are a professional interviewer for a company preparing for a candidate’s interview.
+                        You will act as the interviewer and engage in a roleplaying session with the candidate.
+                        
+                        Please review the job listing below:
                         
                         # Job Listing:
                         \"\"\"{listing}\"\"\"
+                        
+                        Begin the session by greeting the candidate and asking an introductory question about their background, 
+                        then move on to role-specific questions based on the job listing.
                     """).format(listing=chat.job_listing.content)
 
 
