@@ -19,7 +19,7 @@
   <br>
 </div>
 
-<div class="box" style="max-height: 400px; width: 100%; background-color: #0a1345;">
+<div class="flex-container" style="max-height: 400px; max-width: 100%; background-color: #0a1345;">
   <div class="images" style="max-width: fit-content; margin-inline: auto;  width: 700px; height: 400px;">
     <br>
     <br>
@@ -50,10 +50,9 @@
 
 
 <div class="row">
-    <div class="col" style="height: 70%; 
+    <div class="col" style="max-height: 80%; 
     width: 30%; 
     margin: 5%; 
-
     text-align: center; 
     border-style: solid; 
     border-color: lightblue;
@@ -62,8 +61,8 @@
     font-family: Verdana, Geneva, Tahoma, sans-serif; 
     font-weight: normal; 
     font-size: 25px;">
-        <br>
-        1. Create an AIS account, or log in to an existing account
+      <br>
+      <p style="max-height: 65%;">1. Create an AIS account, or log in to an existing account</p>
     </div>
     <div class="col" style="height: 70%; 
     width: 30%; 
@@ -99,13 +98,10 @@
     </div>
 </div>
 
-  <br>
-  <br>
-  <br>
 
 {% if not user.is_authenticated %}
   <a type="button" class="registerbutton text-center" href="{% url 'register_page' %}" 
-  style="position:relative; left: 0%; margin-top:50%;">Log In or Register</a>
+  style="position:relative; left: 0%; margin-top: 70%;">Log In or Register</a>
 {% endif %}
 
 <br>

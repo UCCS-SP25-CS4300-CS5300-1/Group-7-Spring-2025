@@ -19,6 +19,7 @@ router = routers.DefaultRouter()
 urlpatterns = [
     # Misc. urls
     path('', views.index, name='index'),
+    path('about-us/', views.aboutus, name='about-us'),
 
     # Auth urls
     path('testlogged/', views.loggedin, name='loggedin'),
