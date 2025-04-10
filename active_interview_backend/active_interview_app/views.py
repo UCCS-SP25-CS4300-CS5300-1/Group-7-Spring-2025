@@ -38,6 +38,7 @@ from .serializers import *
 
 # Init openai client
 client = OpenAI(api_key=settings.OPENAI_API_KEY)
+MAX_TOKENS = 5000
 
 
 # Create your views here.
@@ -175,7 +176,7 @@ class CreateChat(LoginRequiredMixin, View):
                 response = client.chat.completions.create(
                     model="gpt-4o",
                     messages=chat.messages,
-                    max_tokens=500
+                    max_tokens=MAX_TOKENS
                 )
                 ai_message = response.choices[0].message.content
                 chat.messages.append({"role": "assistant", "content": ai_message})
@@ -215,7 +216,7 @@ class ChatView(LoginRequiredMixin, UserPassesTestMixin, View):
         response = client.chat.completions.create(
             model="gpt-4o",
             messages=new_messages,
-            max_tokens=500
+            max_tokens=MAX_TOKENS
         )
         ai_message = response.choices[0].message.content
         new_messages.append({"role": "assistant", "content": ai_message})
