@@ -32,7 +32,7 @@ from .models import *
 from .serializers import *
 
 
-allowed_types = ['pdf']
+
 
 
 # Init openai client
@@ -280,45 +280,53 @@ def register(request):
 
 @login_required
 def upload_file(request):
-    print("POST request received")
+    allowed_types = ['pdf']
+
     if request.method == "POST":
-        print("method qualifies as post.")
         form = UploadFileForm(request.POST, request.FILES)
         if form.is_valid():
-            print("form is valid.")
             uploaded_file = request.FILES["file"]
             file_name = uploaded_file.name
 
-            file_type = filetype.guess(uploaded_file.read())
-            uploaded_file.seek(0)
-
-
+            file_type = filetype.guess(uploaded_file.read())  # Detect file type
+            uploaded_file.seek(0)  # Reset file pointer after reading
 
             if file_type and file_type.extension in allowed_types:
-                print("it's in allow types,")
-                # Create instance but don't commit to the database yet
-                instance = form.save(commit=False)
-                instance.user = request.user
-                instance.original_filename = file_name
-                instance.filesize = uploaded_file.size
-                instance.save()
+                # Save the file temporarily to a location
+                temp_file_path = os.path.join(settings.MEDIA_ROOT, 'temp', file_name)
+                os.makedirs(os.path.dirname(temp_file_path), exist_ok=True)
 
-                # Optionally convert the file to markdown if needed
-                uploaded_file_url = os.path.join(settings.MEDIA_URL, file_name)
-                markdown_text = pymupdf4llm.to_markdown(uploaded_file)
+                # Save the uploaded file to the temporary path
+                with open(temp_file_path, 'wb') as temp_file:
+                    for chunk in uploaded_file.chunks():
+                        temp_file.write(chunk)
 
-                # Show success message and redirect
-                messages.success(request, "File uploaded successfully!")
-                return render(request, 'documents/document-list.html', {'markdown_text': markdown_text})  # Redirect to document list page after successful upload
+                # Now process the file with pymupdf
+                try:
+                    markdown_text = pymupdf4llm.to_markdown(temp_file_path)
+
+                    # Optionally, save the file in the database if needed
+                    instance = form.save(commit=False)
+                    instance.user = request.user
+                    instance.original_filename = file_name
+                    instance.filesize = uploaded_file.size
+                    instance.save()
+
+                    # Show success message and render
+                    messages.success(request, "File uploaded and converted successfully!")
+                    return render(request, 'documents/document-list.html', {'markdown_text': markdown_text})
+                except Exception as e:
+                    messages.error(request, f"Error processing the file: {e}")
+                    return render(request, 'documents/document-list.html', {"form": form})
+
             else:
-                messages.error(request, "Invalid filetype.")
+                messages.error(request, "Invalid file type. Only PDF files are allowed.")
         else:
             messages.error(request, "There was an issue with the form.")
     else:
         form = UploadFileForm()
 
     return render(request, "documents/document-list.html", {"form": form})
-
 
 
 class UploadedJobListingView(APIView):

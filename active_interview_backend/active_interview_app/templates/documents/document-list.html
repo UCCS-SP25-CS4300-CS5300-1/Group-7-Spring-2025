@@ -57,7 +57,7 @@
 
 {% if markdown_text %}
     <h2>Converted Markdown</h2>
-    <div>{{ markdown_text|safe }}</div>
+    <div>{{ markdown_text|safe|linebreaksbr }}</div>
 {% endif %}
 
 

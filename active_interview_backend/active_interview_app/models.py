@@ -14,6 +14,7 @@ class UploadedResume(models.Model):  # Renamed from UploadedFile
         return f'{self.file.name} uploaded by {self.user}'
 
 
+#need title for the job listing
 class UploadedJobListing(models.Model):  # Renamed from PastedText
     file = models.FileField(upload_to='uploads/')
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -21,6 +22,7 @@ class UploadedJobListing(models.Model):  # Renamed from PastedText
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     filepath = models.CharField(max_length=255, null=True, blank=True)
+    title = models.CharField(max_length=255, null=True, blank=True)
 
     def __str__(self):
         return self.filename
