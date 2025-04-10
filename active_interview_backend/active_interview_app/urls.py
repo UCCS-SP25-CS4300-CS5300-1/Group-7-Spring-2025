@@ -51,7 +51,7 @@ urlpatterns = [
     path('api/paste-text/', views.UploadedJobListingView.as_view(), name='save_pasted_text'),
     path('paste-text/<int:pk>/', views.UploadedJobListingView.as_view(), name='pasted_text_detail'),
     path('api/files/', views.UploadedResumeView.as_view(), name='file_list'),  #List files and uploads.
-    path('api/files/<int:pk>/', views.UploadedResumeDetail.as_view(), name='file_detail'), #Making changes to files.
+    #path('api/files/<int:pk>/', views.UploadedResumeDetail.as_view(), name='file_detail'), #Making changes to files.
     path('pasted-text/', views.UploadedJobListingView.as_view(), name='save_pasted_text'), #For the text box input.
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

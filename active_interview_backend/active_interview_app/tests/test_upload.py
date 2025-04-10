@@ -38,21 +38,22 @@ class UploadedJobListingUploadTestCase(TestCase):
         self.user = User.objects.create_user(username="testuser", password="testpass")
         self.client.login(username="testuser", password="testpass")
 
-    def test_pasted_text_upload(self):
-        # Simulate POST request to paste-text API endpoint
-        response = self.client.post(reverse('save_pasted_text'), {
-            'paste-text': 'This is a test paste.'
-        })
+def test_pasted_text_upload(self):
+    response = self.client.post(reverse('save_pasted_text'), {
+        'paste-text': 'This is a test paste.',
+        'title': 'Sample Title'
+    }, follow=True)  # Follow the redirect to get messages
 
-        # Redirect expected after success (302 to previous page)
-        self.assertEqual(response.status_code, 200)
-        messages_list = list(messages.get_messages(response.wsgi_request))
-        self.assertTrue(any("Text uploaded successfully!" in str(m) for m in messages_list))
+    self.assertEqual(response.status_code, 200)
+
+    messages_list = list(messages.get_messages(response.wsgi_request))
+    self.assertTrue(any("Text uploaded successfully!" in str(m) for m in messages_list))
+
 
         # Check the created object
-        pasted = UploadedJobListing.objects.first()
-        self.assertEqual(pasted.content, 'This is a test paste.')
-        self.assertEqual(pasted.user, self.user)
+    pasted = UploadedJobListing.objects.first()
+    self.assertEqual(pasted.content, 'This is a test paste.')
+    self.assertEqual(pasted.user, self.user)
 
     def test_pasted_text_upload_blank(self):
         response = self.client.post(reverse('save_pasted_text'), {
@@ -108,16 +109,19 @@ class UploadedJobListingViewTests(TestCase):
         self.client = APIClient()
         self.user = User.objects.create_user(username='testuser', password='testpass')
 
-    def test_post_valid_text(self):
-        self.client.login(username='testuser', password='testpass')
-        response = self.client.post(reverse('save_pasted_text'), {'paste-text': 'This is a pasted test.'}, follow=True)
-        
-        # Check status code
-        self.assertEqual(response.status_code, 200)
-        
-        # Check for the success message in messages
-        messages_list = list(messages.get_messages(response.wsgi_request))
-        self.assertTrue(any("Text uploaded successfully!" in str(m) for m in messages_list))
+def test_post_valid_text(self):
+    self.client.login(username='testuser', password='testpass')
+    response = self.client.post(
+        reverse('save_pasted_text'),
+        {'paste-text': 'This is a pasted test.', 'title': 'Test Title'},
+        follow=True 
+    )
+
+    self.assertEqual(response.status_code, 200)
+
+    messages_list = list(messages.get_messages(response.wsgi_request))
+    self.assertTrue(any("Text uploaded successfully!" in str(m) for m in messages_list))
+
 
     def test_post_empty_text(self):
         self.client.login(username='testuser', password='testpass')
