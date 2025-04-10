@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+  AIS - Upload
+{% endblock %}
+
+
+{% block content %}
+  <form action="{% url 'upload_file' %}" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <label for="file">Upload your resume (PDF or Word):</label>
+    {{ form.as_p }}
+    <button type="submit">Upload</button>
+  </form>
+{% endblock %}
+
+{% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+            <li class="{{ message.tags }}">{{ message }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
+
