@@ -171,6 +171,15 @@ class CreateChat(LoginRequiredMixin, View):
                     },
                 ]
 
+                # Make ai speak first
+                response = client.chat.completions.create(
+                    model="gpt-4o",
+                    messages=chat.messages,
+                    max_tokens=500
+                )
+                ai_message = response.choices[0].message.content
+                chat.messages.append({"role": "assistant", "content": ai_message})
+
                 chat.save()
 
                 return redirect("chat-view", chat_id=chat.id)
