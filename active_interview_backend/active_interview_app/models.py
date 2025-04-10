@@ -12,7 +12,8 @@ class UploadedResume(models.Model):  # Renamed from UploadedFile
     title = models.CharField(max_length=255)
 
     def __str__(self):
-        return f'{self.file.name} uploaded by {self.user}'
+        # return f'{self.file.name} uploaded by {self.user}'
+        return self.title
 
 
 #need title for the job listing
@@ -26,13 +27,14 @@ class UploadedJobListing(models.Model):  # Renamed from PastedText
     title = models.CharField(max_length=255, null=True, blank=True)
 
     def __str__(self):
-        return self.filename
+        # return self.filename
+        return self.title
 
 class Chat(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
     messages = models.JSONField() # Json of the messages object
-    job_listing = models.ForeignKey(UploadedJobListing, null=True, blank=True, on_delete=models.SET_NULL)
+    job_listing = models.ForeignKey(UploadedJobListing, null=True, on_delete=models.SET_NULL)
     resume = models.ForeignKey(UploadedResume, null=True, blank=True, on_delete=models.SET_NULL)
 
     #create object itself, not the field

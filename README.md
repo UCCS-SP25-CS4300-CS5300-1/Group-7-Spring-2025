@@ -96,6 +96,8 @@ I have created an linux/mac script that should make cleanly restarting local dep
 4. The E2E authentication script is adapted from a ChatGPT response
 5. The chrome and chromedriver install scripts in CI.yml are adapted from ChatGPT responses
 6. The jQuery/Ajax script in chat-view.html is adapted from a ChatGPT response
+7. ChatGPT was used to rewrite system prompts for greater clarity
+8. The chat creation button hiding script was adapted from a ChatGPT response.
 
 ## Technologies
 1. Django
@@ -108,3 +110,4 @@ I have created an linux/mac script that should make cleanly restarting local dep
 8. Ajax
 9. jQuery
 10. DOMPurify
+11. pymupdf

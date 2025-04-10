@@ -242,3 +242,11 @@ html, body {
 .delete-chat-content {
     background-color: var(--abyss) !important;
 }
+
+.create-button-or-spinner {
+    height: 45px;
+}
+
+.table.borderless tbody tr td, .table.borderless thead tr th {
+  border: none;
+}

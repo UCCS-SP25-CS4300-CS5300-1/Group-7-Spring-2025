@@ -1,5 +1,9 @@
 {% extends "base.html" %}
 
+{% block title %}
+  AIS - Documents
+{% endblock %}
+
 {% block content %}
   <style>
     body {
@@ -27,47 +31,47 @@
     .messages li.error { color: red; }
   </style>
 
-  {% if messages %}
-    <ul class="messages">
-      {% for message in messages %}
-        <li class="{{ message.tags }}">{{ message }}</li>
-      {% endfor %}
-    </ul>
-  {% endif %}
-  
-  <h2>Upload Your Resume</h2>
-  <form action="{% url 'upload_file' %}" method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
+  <div class="centered-container flex-grow-1 d-flex flex-column p-2">
+    {% if messages %}
+      <ul class="messages">
+        {% for message in messages %}
+          <li class="{{ message.tags }}">{{ message }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
     
-    <label for="title">Resume Title:</label>
-    <input type="text" name="title" id="resume-title" placeholder="Enter a title for your resume" required><br><br>
-  
-    <label for="file">Upload your resume (PDF or Word):</label>
-    <input type="file" name="file" id="file" required>
+    <h2>Upload Your Resume</h2>
+    <form action="{% url 'upload_file' %}" method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+      
+      <label for="title">Resume Title:</label>
+      <input type="text" name="title" id="resume-title" placeholder="Enter a title for your resume" required><br><br>
     
-    <button name="submit">Upload</button>
-  </form>
+      <label for="file">Upload your resume (PDF or Word):</label>
+      <input type="file" name="file" id="file" required>
+      
+      <button name="submit">Upload</button>
+    </form>
 
-  <hr>
+    <hr class="white-break">
 
-  <h2>Or Paste Your Job Listing Text</h2>
+    <h2>Or Paste Your Job Listing Text</h2>
+    <form method="POST" action="{% url 'save_pasted_text' %}">
+      {% csrf_token %}
 
-  <form method="POST" action="{% url 'save_pasted_text' %}">
-    {% csrf_token %}
+      <label for="title">Job Listing Title:</label>
+      <input type="text" name="title" id="title" placeholder="Enter the title for your job listing" required><br><br>
 
+      <textarea name="paste-text" rows="10" cols="50" placeholder="Paste your text here..." style="max-width: 95vw;"></textarea><br>
+      
+      <button type="submit" name="submit">Upload</button>
+    </form>
 
-    <label for="title">Job Listing Title:</label>
-    <input type="text" name="title" id="title" placeholder="Enter the title for your job listing" required><br><br>
-
-
-    <textarea name="paste-text" rows="10" cols="50" placeholder="Paste your text here..."></textarea><br>
-    
-    <button type="submit" name="submit">Upload</button>
-  </form>
-
-  {% if markdown_text %}
-    <h2>Converted Markdown</h2>
-    <div>{{ markdown_text|safe|linebreaksbr }}</div>
-  {% endif %}
+    {% if markdown_text %}
+      <hr class="white-break">
+      <h2>Converted Markdown</h2>
+      <div>{{ markdown_text|safe|linebreaksbr }}</div>
+    {% endif %}
+  </div>
 
 {% endblock %}
