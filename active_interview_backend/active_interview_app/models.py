@@ -34,7 +34,7 @@ class Chat(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
     messages = models.JSONField() # Json of the messages object
-    job_listing = models.ForeignKey(UploadedJobListing, null=True, blank=True, on_delete=models.SET_NULL)
+    job_listing = models.ForeignKey(UploadedJobListing, null=True, on_delete=models.SET_NULL)
     resume = models.ForeignKey(UploadedResume, null=True, blank=True, on_delete=models.SET_NULL)
 
     #create object itself, not the field

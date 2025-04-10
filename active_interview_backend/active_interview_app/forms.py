@@ -12,8 +12,8 @@ class CreateUserForm(UserCreationForm):
 
 
 class ChatForm(ModelForm):
-    listing_choices = ModelChoiceField(queryset=UploadedJobListing.objects.none())
-    resume_choices = ModelChoiceField(queryset=UploadedResume.objects.none())
+    listing_choice = ModelChoiceField(queryset=UploadedJobListing.objects.none())
+    resume_choice = ModelChoiceField(queryset=UploadedResume.objects.none(), required=False)
 
     class Meta:
         model = Chat
@@ -24,8 +24,8 @@ class ChatForm(ModelForm):
         super().__init__(*args, **kwargs) # ensure parent object is initialized
         
         if user is not None:
-            self.fields['listing_choices'].queryset = UploadedJobListing.objects.filter(user=user)
-            self.fields['resume_choices'].queryset = UploadedResume.objects.filter(user=user)
+            self.fields['listing_choice'].queryset = UploadedJobListing.objects.filter(user=user)
+            self.fields['resume_choice'].queryset = UploadedResume.objects.filter(user=user)
 
 
 #Defines a Django form for handling file uploads.
