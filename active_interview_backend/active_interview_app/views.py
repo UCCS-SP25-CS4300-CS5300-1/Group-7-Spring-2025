@@ -2,6 +2,7 @@ import os
 import filetype
 from openai import OpenAI
 import pymupdf4llm
+import textwrap
 import markdown
 
 from django.conf import settings
@@ -125,15 +126,41 @@ class CreateChat(LoginRequiredMixin, View):
             
             if form.is_valid():
                 chat = form.save(commit=False)
-                
+
                 chat.job_listing = form.cleaned_data['listing_choice']
                 chat.resume = form.cleaned_data.get('resume_choice')
                 chat.owner = request.user
 
+                system_prompt = "An error has occurred.  Please notify the user about this." # Default message.  Should only show up if something went wrong.
+                if chat.resume: # if resume is present
+                    system_prompt = textwrap.dedent("""\
+                        You are a professional interviewer for a company.  Please review the following job listing and
+                        resume surrounded in triple quotes(\"\"\") to prepare.  Keep in mind that the resume in specific
+                        was scanned in using a flawed file reader, so ignore formatting errors in it.
+                        
+                        # Job Listing:
+                        \"\"\"{listing}\"\"\"
+                        
+                        # Resume
+                        \"\"\"{resume}\"\"\"
+                    """).format(listing=chat.job_listing.content, resume=chat.resume.content)
+                else: # if no resume
+                    system_prompt = textwrap.dedent("""\
+                        You are a professional interviewer for a company.  Please review the following job listing 
+                        surrounded in triple quotes(\"\"\") to prepare.
+                        
+                        # Job Listing:
+                        \"\"\"{listing}\"\"\"
+                        
+                        # Resume
+                        \"\"\"{resume}\"\"\"
+                    """).format(listing=chat.job_listing.content, resume=chat.resume.content)
+
+
                 chat.messages = [
                     {
                         "role": "system", 
-                        "content": "You are a helpful assistant."
+                        "content": system_prompt
                     },
                 ]
 
