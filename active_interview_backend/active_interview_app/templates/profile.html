@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+  .profile-page {
+     background-color: #dcd9e2;
+     background-size: 10%;
+     display: flex;
+     flex-direction: column; 
+     justify-content: center;
+     
+     border: 13px solid grey;
+     li{
+    font-size: 20px;
+  }
+  }  
+  p {
+    font-size: 20px;
+  }
+  td {
+    font-size: 20px;
+  }
+  h1{
+    font-size: 40px
+  }
+  
+ 
+ </style>
+
+ <div class="container">
+   <div class="profile-page">
+    <div class="row mb-3">
+  <center><h1>Profile</h1></center>
+    </div>
+<form method="post">
+  
+  <!-- Manually render each form field -->
+  <div class="row mb-3">
+
+   <center><h2>{{user}}</h2></center> 
+  </div>
+  <div class="row mb-3">
+   <h3>Uploaded Documents</h3>
+  {% for document in owner %}
+  {% if document.file %}
+  <li>{{document.original_filename}}</li>
+  {%else%}
+  <center><p> No Files </p></center>
+  {% endif %}
+  {% endfor %}
+  </div>
+
+  <div class="row mb-3">
+<h3>Job Listings</h3>
+{% for job in jobs %}
+{% if job.title %}
+<li>{{job.title}}</li>
+{%else%}
+<center><p> No Job Listings </p></center>
+{% endif %}
+{% endfor %}
+  </div>
+</div>
+{% endblock %}
