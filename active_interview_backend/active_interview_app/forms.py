@@ -27,7 +27,7 @@ class UploadFileForm(ModelForm):
 
     class Meta:
         model = UploadedResume
-        fields = ["file"]
+        fields = ["file", "title"]
 
     def clean_file(self):
         allowed_types = ['txt', 'pdf', 'jpg', 'png']

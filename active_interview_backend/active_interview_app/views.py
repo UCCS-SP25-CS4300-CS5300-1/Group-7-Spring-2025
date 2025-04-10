@@ -287,6 +287,7 @@ def upload_file(request):
         if form.is_valid():
             uploaded_file = request.FILES["file"]
             file_name = uploaded_file.name
+            title = request.POST.get("title", '').strip()
 
             file_type = filetype.guess(uploaded_file.read())  # Detect file type
             uploaded_file.seek(0)  # Reset file pointer after reading
@@ -311,6 +312,7 @@ def upload_file(request):
                     instance.original_filename = file_name
                     instance.filesize = uploaded_file.size
                     instance.content = markdown_text
+                    instance.title = title
                     instance.save()
 
                     # Show success message and render

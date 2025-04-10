@@ -34,12 +34,17 @@
       {% endfor %}
     </ul>
   {% endif %}
-
+  
   <h2>Upload Your Resume</h2>
   <form action="{% url 'upload_file' %}" method="POST" enctype="multipart/form-data">
     {% csrf_token %}
+    
+    <label for="title">Resume Title:</label>
+    <input type="text" name="title" id="resume-title" placeholder="Enter a title for your resume" required><br><br>
+  
     <label for="file">Upload your resume (PDF or Word):</label>
     <input type="file" name="file" id="file" required>
+    
     <button name="submit">Upload</button>
   </form>
 
@@ -50,11 +55,11 @@
   <form method="POST" action="{% url 'save_pasted_text' %}">
     {% csrf_token %}
 
-    <!-- Title Input Field -->
+
     <label for="title">Job Listing Title:</label>
     <input type="text" name="title" id="title" placeholder="Enter the title for your job listing" required><br><br>
 
-    <!-- Textarea for Pasting Text -->
+
     <textarea name="paste-text" rows="10" cols="50" placeholder="Paste your text here..."></textarea><br>
     
     <button type="submit" name="submit">Upload</button>

@@ -72,25 +72,24 @@ class ResumeUploadTests(TestCase):
 
     def test_upload_valid_pdf(self):
         print(f"Current working directory: {os.getcwd()}")
-        # Use the absolute path to your pre-existing test PDF file
         pdf_path = os.path.join(os.getcwd(), 'active_interview_app', 'tests', 'test.pdf')
 
-
-        # Check that the file exists before proceeding
         self.assertTrue(os.path.exists(pdf_path), f"Test PDF file not found at {pdf_path}")
 
-        # Open the test PDF file
         with open(pdf_path, 'rb') as pdf_file:
-            # Create a SimpleUploadedFile from the PDF
             uploaded_pdf = SimpleUploadedFile('test.pdf', pdf_file.read(), content_type='application/pdf')
 
-        # Simulate logging in a user
         self.client.login(username='testuser', password='testpass')
 
-        # Post the PDF file to the upload endpoint
-        response = self.client.post(reverse('upload_file'), {'file': uploaded_pdf}, follow=True)
+        response = self.client.post(
+            reverse('upload_file'),
+            {
+                'file': uploaded_pdf,
+                'title': 'Test Resume PDF'  # 👈 Required title field
+            },
+            follow=True
+        )
 
-        # Assert that the file upload is successful
         self.assertEqual(response.status_code, 200)
         messages = list(get_messages(response.wsgi_request))
         self.assertTrue(any("File uploaded successfully!" in str(m) for m in messages))
@@ -98,7 +97,15 @@ class ResumeUploadTests(TestCase):
     def test_upload_invalid_filetype(self):
         self.client.login(username='testuser', password='testpass')
         txt_file = SimpleUploadedFile("test.txt", b"Just some text", content_type="text/plain")
-        response = self.client.post(reverse('upload_file'), {'file': txt_file}, follow=True)
+        
+        response = self.client.post(
+            reverse('upload_file'),
+            {
+                'file': txt_file,
+                'title': 'Test Invalid File' 
+            },
+            follow=True
+        )
 
         messages = list(get_messages(response.wsgi_request))
         self.assertTrue(any("Invalid filetype" in str(m) for m in messages))
@@ -118,7 +125,6 @@ def test_post_valid_text(self):
     )
 
     self.assertEqual(response.status_code, 200)
-
     messages_list = list(messages.get_messages(response.wsgi_request))
     self.assertTrue(any("Text uploaded successfully!" in str(m) for m in messages_list))
 
