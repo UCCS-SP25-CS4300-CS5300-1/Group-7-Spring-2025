@@ -132,6 +132,7 @@ class CreateChat(LoginRequiredMixin, View):
                 chat.resume = form.cleaned_data.get('resume_choice')
                 chat.owner = request.user
 
+                # Prompts are edited by ChatGPT after being written by a human developer
                 system_prompt = "An error has occurred.  Please notify the user about this." # Default message.  Should only show up if something went wrong.
                 if chat.resume: # if resume is present
                     system_prompt = textwrap.dedent("""\
