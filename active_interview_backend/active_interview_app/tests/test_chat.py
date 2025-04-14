@@ -4,8 +4,8 @@ from django.contrib.auth.models import User
 from django.test import TestCase
 from django.urls import reverse
 
-from ..forms import ChatForm
-from ..models import Chat
+from ..forms import CreateChatForm, EditChatForm
+from ..models import Chat, UploadedJobListing, UploadedResume
 
 
 # === Helper Fucntions ===
@@ -39,6 +39,24 @@ def generateExampleChat(owner):
     )
 
     return chat
+
+def generateExampleJobListing(user):
+    job_listing = UploadedJobListing.objects.create(
+        user=user,
+        title="Example Listing",
+        content="# Example Content\n\nmwahahaha"
+    )
+
+    return job_listing
+
+def generateExampleResume(user):
+    resume = UploadedResume.objects.create(
+        user=user,
+        title="Example Resume",
+        content="# Example Content 2\n\nnononono"
+    )
+
+    return resume
 
 
 # === Model Tests ===
@@ -90,6 +108,8 @@ class TestCreateChatView(TestCase):
         response = self.client.post(reverse('chat-create'), 
             {
                 "title": "Example Title Strikes Back",
+                "listing_choice": generateExampleJobListing(self.user).id,
+                "resume_choice": generateExampleResume(self.user).id,
                 "create": "create"
             }
         )

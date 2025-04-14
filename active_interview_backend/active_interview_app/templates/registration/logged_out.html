@@ -1,6 +1,10 @@
 {% extends 'base.html' %}
+
+{% block title %}
+  AIS - Logged Out
+{% endblock %}
+
 {% block content %}
-<body>
   <style>
     .logout-page {
        background-color: #dcd9e2;
@@ -13,18 +17,18 @@
     }
     p {
       font-size: 30px;
+      color: white !important;
     }
     td {
       font-size: 20px;
     }
-   
-   </style>
+  </style>
  
-   <div class="container">
-     <div class="login-page">
-  <p>Logged out!</p>
-  <a href="{% url 'login' %}?next={% url 'index' %}">Click here to login again.</a>
+  <div class="centered-container">
+    <div class="login-page">
+      <p>Logged out!</p>
+      <a href="{% url 'login' %}?next={% url 'index' %}">Click here to login again.</a>
+    </div>
   </div>
-  </div>
-</body>
+
 {% endblock %}

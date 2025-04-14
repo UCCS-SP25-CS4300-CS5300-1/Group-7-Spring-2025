@@ -27,9 +27,6 @@
         <a class="nav-link" href="{% url "features" %}">Features</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="#">Pricing</a>
-      </li>
-      <li class="nav-item">
         <a class="nav-link" href="{% url "about-us" %}">About Us</a>
       </li>
     </ul>
@@ -40,7 +37,7 @@
             Profile
           </a>
           <ul class="dropdown-menu dropdown-menu-end">
-            <li><a class="dropdown-item" href="#">View</a></li>
+            <li><a class="dropdown-item" href="{% url 'profile' %}">View</a></li>
             <li><hr class="dropdown-divider"></li>
             <li><a class="dropdown-item" href="{% url 'logout' %}">Logout {{user}}</a></li>
           </ul>

@@ -2,6 +2,7 @@ import os
 import filetype
 from openai import OpenAI
 import pymupdf4llm
+import textwrap
 import markdown
 
 from django.conf import settings
@@ -37,6 +38,7 @@ from .serializers import *
 
 # Init openai client
 client = OpenAI(api_key=settings.OPENAI_API_KEY)
+MAX_TOKENS = 15000
 
 
 # Create your views here.
@@ -114,7 +116,7 @@ class CreateChat(LoginRequiredMixin, View):
     def get(self, request):
         owner_chats = Chat.objects.filter(owner=request.user).order_by('-modified_date')
         
-        form = ChatForm()
+        form = CreateChatForm(user=request.user) # Pass user into chatform
 
         context = {}
         context['owner_chats'] = owner_chats
@@ -124,44 +126,70 @@ class CreateChat(LoginRequiredMixin, View):
 
     def post(self, request):
         if 'create' in request.POST:
-            form = ChatForm(request.POST)
+            form = CreateChatForm(request.POST, user=request.user)
             
             if form.is_valid():
                 chat = form.save(commit=False)
 
+                chat.job_listing = form.cleaned_data['listing_choice']
+                chat.resume = form.cleaned_data.get('resume_choice')
                 chat.owner = request.user
+
+                # Prompts are edited by ChatGPT after being written by a human developer
+                system_prompt = "An error has occurred.  Please notify the user about this." # Default message.  Should only show up if something went wrong.
+                if chat.resume: # if resume is present
+                    system_prompt = textwrap.dedent("""\
+                        You are a professional interviewer for a company preparing for a candidate’s interview.
+                        You will act as the interviewer and engage in a roleplaying session with the candidate.
+                        
+                        Please review the job listing and resume below:
+                        
+                        # Job Listing:
+                        \"\"\"{listing}\"\"\"
+                        
+                        # Candidate Resume:
+                        \"\"\"{resume}\"\"\"
+                        
+                        Ignore any formatting issues in the resume, and focus on its content. 
+                        Begin the session by greeting the candidate and asking an introductory question about their background, 
+                        then move on to deeper, role-related questions based on the job listing and resume.
+                    """).format(listing=chat.job_listing.content, resume=chat.resume.content)
+                else: # if no resume
+                    system_prompt = textwrap.dedent("""\
+                        You are a professional interviewer for a company preparing for a candidate’s interview.
+                        You will act as the interviewer and engage in a roleplaying session with the candidate.
+                        
+                        Please review the job listing below:
+                        
+                        # Job Listing:
+                        \"\"\"{listing}\"\"\"
+                        
+                        Begin the session by greeting the candidate and asking an introductory question about their background, 
+                        then move on to role-specific questions based on the job listing.
+                    """).format(listing=chat.job_listing.content)
+
+
                 chat.messages = [
                     {
                         "role": "system", 
-                        "content": "You are a helpful assistant."
+                        "content": system_prompt
                     },
                 ]
 
-                # Get the job listing and resume from the form 
-                job_listing_id = request.POST.get('job_listing')  # Assuming the form includes this field
-                resume_id = request.POST.get('resume')  # Assuming the form includes this field
-
-                # If a job listing is selected, set the foreign key
-                if job_listing_id:
-                    try:
-                        job_listing = UploadedJobListing.objects.get(id=job_listing_id)
-                        chat.job_listing = job_listing
-                    except UploadedJobListing.DoesNotExist:
-                        # Handle case where the job listing doesn't exist
-                        pass
-
-                # If a resume is selected, set the foreign key
-                if resume_id:
-                    try:
-                        resume = UploadedResume.objects.get(id=resume_id)
-                        chat.resume = resume
-                    except UploadedResume.DoesNotExist:
-                        # Handle case where the resume doesn't exist
-                        pass                
+                # Make ai speak first
+                response = client.chat.completions.create(
+                    model="gpt-4o",
+                    messages=chat.messages,
+                    max_tokens=MAX_TOKENS
+                )
+                ai_message = response.choices[0].message.content
+                chat.messages.append({"role": "assistant", "content": ai_message})
 
                 chat.save()
 
                 return redirect("chat-view", chat_id=chat.id)
+            # else:
+            #     print("chat form invalid")
 
 
 class ChatView(LoginRequiredMixin, UserPassesTestMixin, View):
@@ -192,7 +220,7 @@ class ChatView(LoginRequiredMixin, UserPassesTestMixin, View):
         response = client.chat.completions.create(
             model="gpt-4o",
             messages=new_messages,
-            max_tokens=500
+            max_tokens=MAX_TOKENS
         )
         ai_message = response.choices[0].message.content
         new_messages.append({"role": "assistant", "content": ai_message})
@@ -214,7 +242,7 @@ class EditChat(LoginRequiredMixin, UserPassesTestMixin, View):
         chat = Chat.objects.get(id=chat_id)
         owner_chats = Chat.objects.filter(owner=request.user).order_by('-modified_date')
         
-        form = ChatForm(initial=model_to_dict(chat), instance=chat)
+        form = EditChatForm(initial=model_to_dict(chat), instance=chat)
 
         context = {}
         context['chat'] = chat
@@ -227,7 +255,7 @@ class EditChat(LoginRequiredMixin, UserPassesTestMixin, View):
         chat = Chat.objects.get(id=chat_id)
 
         if 'update' in request.POST:
-            form = ChatForm(request.POST, instance=chat)
+            form = EditChatForm(request.POST, instance=chat)
             
             if form.is_valid():
                 chat = form.save(commit=False)
@@ -276,6 +304,13 @@ def register(request):
     context={'form':form}
         
     return render(request, 'registration/register.html', context)
+
+
+@login_required
+def profile(request):
+    resumes = UploadedResume.objects.filter(user = request.user)
+    job_listings = UploadedJobListing.objects.filter(user = request.user)
+    return render(request, 'profile.html', {'resumes':resumes, 'job_listings':job_listings})
 
 
 # === Joel's file upload views ===
