@@ -2,8 +2,8 @@ import os
 import filetype
 from openai import OpenAI
 import pymupdf4llm
-import textwrap
 import markdown
+import tempfile
 
 from django.conf import settings
 from django.contrib import messages
@@ -31,6 +31,7 @@ from rest_framework.views import APIView
 from .forms import *
 from .models import *
 from .serializers import *
+
 
 
 
@@ -316,6 +317,7 @@ def profile(request):
 # === Joel's file upload views ===
 
 
+
 @login_required
 def upload_file(request):
     allowed_types = ['pdf']
@@ -327,38 +329,37 @@ def upload_file(request):
             file_name = uploaded_file.name
             title = request.POST.get("title", '').strip()
 
-            file_type = filetype.guess(uploaded_file.read())  # Detect file type
-            uploaded_file.seek(0)  # Reset file pointer after reading
+            file_type = filetype.guess(uploaded_file.read())
+            uploaded_file.seek(0)
 
+            # Due to how pymupdf4llm works, we have to save a file for it, because the .to_markdown() function accepts a file path, and not the file object itself.
+            # Therefore, a file is temporarily created so there's a filepath, and deleted once everything is converted.
             if file_type and file_type.extension in allowed_types:
-                # Save the file temporarily to a location
-                temp_file_path = os.path.join(settings.MEDIA_ROOT, 'temp', file_name)
-                os.makedirs(os.path.dirname(temp_file_path), exist_ok=True)
-
-                # Save the uploaded file to the temporary path
-                with open(temp_file_path, 'wb') as temp_file:
-                    for chunk in uploaded_file.chunks():
-                        temp_file.write(chunk)
-
-                # Now process the file with pymupdf
                 try:
+                    with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as temp_file:
+                        for chunk in uploaded_file.chunks():
+                            temp_file.write(chunk)
+                        temp_file_path = temp_file.name
+
                     markdown_text = pymupdf4llm.to_markdown(temp_file_path)
 
-                    # Optionally, save the file in the database if needed
                     instance = form.save(commit=False)
                     instance.user = request.user
                     instance.original_filename = file_name
                     instance.filesize = uploaded_file.size
                     instance.content = markdown_text
                     instance.title = title
+                    # This is marked "None", because it stops it from being saved to /media/uploads.
+                    instance.file = None
                     instance.save()
 
-                    # Show success message and render
+
                     messages.success(request, "File uploaded successfully!")
-                    return render(request, 'documents/document-list.html', {'markdown_text': markdown_text})
+                    return redirect('document-list')
+
                 except Exception as e:
                     messages.error(request, f"Error processing the file: {e}")
-                    return render(request, 'documents/document-list.html', {"form": form})
+                    return redirect('document-list')
 
             else:
                 messages.error(request, "Invalid filetype. Only PDF files are allowed.")
@@ -367,7 +368,7 @@ def upload_file(request):
     else:
         form = UploadFileForm()
 
-    return render(request, "documents/document-list.html", {"form": form})
+    return redirect('document-list')
 
 
 class UploadedJobListingView(APIView):
