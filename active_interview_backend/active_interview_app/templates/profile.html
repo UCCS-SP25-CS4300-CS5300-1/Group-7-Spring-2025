@@ -45,7 +45,7 @@
 
         <!-- Manually render each form field -->
         <div class="row">
-          <h2>{{user}}</h2> 
+          <h2>{{ user }}</h2> 
         </div>
 
         <hr class="white-break">
@@ -58,9 +58,13 @@
             <ul>
               {% for document in resumes %}
                 {% if document.title and document.title != "1" %}
-                  <li style="font-size: 23px;">{{document.title}}</li>
+                  <li style="font-size: 23px;">
+                    <a href="{% url 'resume_detail' resume_id=document.id %}">{{ document.title }}</a>
+                  </li>
                 {% elif document.file %}
-                  <li style="font-size: 23px;">{{document.original_filename}}</li>
+                  <li style="font-size: 23px;">
+                    <a href="{% url 'resume_detail' resume_id=document.id %}">{{ document.original_filename }}</a>
+                  </li>
                 {% endif %}
               {% endfor %}
             </ul>
@@ -77,7 +81,7 @@
             <ul>
               {% for job in job_listings %}
                 {% if job.title %}
-                  <li style="font-size: 23px;">{{job.title}}</li>
+                  <li style="font-size: 23px;">{{ job.title }}</li>
                 {% else %}
                   <li style="font-size: 23px;">No Title</li>
                 {% endif %}

@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}
+  {{ resume.title }} - Resume Details
+{% endblock %}
+
+{% block content %}
+  <div class="resume-detail">
+    <h1>{{ resume.title }}</h1>
+    <div>
+      <!-- Render the content as markdown -->
+      <div>{{ resume.content }}</div>
+    </div>
+  </div>
+{% endblock %}
+
+

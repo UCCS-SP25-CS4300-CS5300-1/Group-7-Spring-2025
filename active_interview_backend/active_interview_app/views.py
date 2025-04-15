@@ -15,7 +15,7 @@ from django.contrib.auth.models import User
 from django.forms.models import model_to_dict
 from django.http import HttpResponseRedirect
 from django.http import JsonResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.timezone import now
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
@@ -309,14 +309,19 @@ def register(request):
 
 @login_required
 def profile(request):
-    resumes = UploadedResume.objects.filter(user = request.user)
-    job_listings = UploadedJobListing.objects.filter(user = request.user)
-    return render(request, 'profile.html', {'resumes':resumes, 'job_listings':job_listings})
+    resumes = UploadedResume.objects.filter(user=request.user)
+    job_listings = UploadedJobListing.objects.filter(user=request.user)
+
+    
+    return render(request, 'profile.html', {'resumes': resumes, 'job_listings': job_listings})
 
 
 # === Joel's file upload views ===
 
-
+@login_required
+def resume_detail(request, resume_id):
+    resume = get_object_or_404(UploadedResume, pk=resume_id)
+    return render(request, 'resume_detail.html', {'resume': resume})
 
 @login_required
 def upload_file(request):
@@ -433,6 +438,10 @@ class UploadedResumeView(APIView):
             serializer.save(user=request.user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
 
 
 #class UploadedResumeDetail(APIView):
