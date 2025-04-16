@@ -1,0 +1,46 @@
+<div class="chat-sidebar d-flex flex-column flex-grow-1">
+  <div class="overflow-y-auto vh-100 px-3 w-100">
+    {% comment %} <a href="{% url "chat-create" %}" class="full-block-link">
+      <div class="button-card card mb-3 mt-3">
+        <div class="card-body">
+          <p class="card-text">New Interview</p>
+        </div>
+      </div>
+    </a> {% endcomment %}
+    <a role="button" class="btn btn-primary w-100 mt-3" href="{% url 'chat-create' %}">
+      New Interview
+    </a>
+    <hr class="white-break">
+    {% for owner_chat in owner_chats %}
+      <div class="chat-card card mb-3 mt-3">
+        <div class="d-flex">
+          <a role="button" class="chat-card-button full-block-link btn btn-dark flex-grow-1 rounded-0 rounded-start {% if chat.id == owner_chat.id %}active{% endif %}" href="{% url 'chat-view' chat_id=owner_chat.id %}">
+            <p class="chat-card-text card-text text-start m-0">{{ owner_chat.title }}</p>
+          </a>
+          <div class="d-flex flex-shrink-0">
+            <div class="btn-group dropend" data-bs-theme="dark">
+              <button type="button" class="{% if chat.id == owner_chat.id %}active-sidebar-dropdown{% else %}chat-card-button{% endif %} sidebar-dropend btn btn-dark dropdown-toggle dropdown-toggle-split rounded-0 rounded-end" data-bs-toggle="dropdown" data-bs-popper-config='{"strategy":"fixed"}' aria-expanded="false">
+                <span class="visually-hidden">Toggle Dropend</span>
+              </button>
+              <ul class="sidebar-dropdown-menu dropdown-menu">
+                <li><a class="sidebar-dropdown-item dropdown-item" href="{% url 'chat-edit' chat_id=owner_chat.id %}">Edit</a></li>
+                {% comment %} <li><a class="sidebar-dropdown-item dropdown-item" href="#">Results</a></li> {% endcomment %}
+                <li><hr class="dropdown-divider"></li>
+                {% comment %} <li>
+                  <a class="sidebar-dropdown-item dropdown-item text-danger" href="#">
+                    Restart
+                  </a>
+                </li> {% endcomment %}
+                <li>
+                  <a class="sidebar-dropdown-item dropdown-item text-danger" data-bs-toggle="modal" data-bs-target="#deleteChatModal" data-chat-title="{{ owner_chat.title }}" data-chat-link="{% url 'chat-delete' chat_id=owner_chat.id %}">
+                    Delete
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>

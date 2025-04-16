@@ -43,7 +43,8 @@ jobs:
             fi
           elif [[ "${GITHUB_EVENT_NAME}" == "pull_request" ]]; then
             git diff "${{ github.event.pull_request.base.sha }}" "${{ github.event.pull_request.head.sha }}" > "${{ runner.temp }}/changes.diff"
-          fi
+          fi;
+          cat "${RUNNER_TEMP}/changes.diff"
       
       - name: Run AI Code Review
         run: |
@@ -73,28 +74,54 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Start Django Container
+      - name: Configure Environment
         run: |
-          docker compose up -d
+          echo 'DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }}' > .env;
+          echo 'OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}' >> .env;
 
-      - name: Configure Shell
+      - name: Start Containers
         run: |
-          set -o pipefail # make the pipe exist status carry non-zero values
+          set -o pipefail;
+          docker compose -f docker-compose.prod.yml up -d --build
+          
+      - name: Install Chrome
+        run: | 
+          docker exec django bash -c "
+            wget -O google-chrome.deb https://dl.google.com/linux/chrome/deb/pool/main/g/google-chrome-stable/google-chrome-stable_${CHROME_VERSION}_amd64.deb \
+            && apt-get update \
+            && apt-get install -y ./google-chrome.deb \
+            && rm google-chrome.deb"
+        env:
+          CHROME_VERSION: 135.0.7049.52-1
+          
+      - name: Install Chromedriver
+        run: | 
+          docker exec django bash -c " 
+            wget -O chromedriver.zip https://storage.googleapis.com/chrome-for-testing-public/${CHROMEDRIVER_VERSION}/linux64/chromedriver-linux64.zip \
+            && unzip chromedriver.zip \
+            && mv chromedriver-linux64/chromedriver /usr/local/bin/chromedriver \
+            && chmod +x /usr/local/bin/chromedriver \
+            && rm chromedriver.zip"
+        env:
+          CHROMEDRIVER_VERSION: 135.0.7049.52
 
       - name: Run Django Tests
         if: always()
         run: |
+          set -o pipefail;
           docker exec django coverage run manage.py test -v 2 | tee dj_test_out.txt;
 
       - name: Run Coverage Report
         if: always()
         run: |
+          set -o pipefail;
           docker exec django coverage report -m | tee coverage_report.txt;
 
       - name: Check Coverage >= 80%
         run: |
+          set -o pipefail;
           chmod +x ./scripts/check-coverage.sh;
-          ./scripts/check-coverage.sh coverage_out.txt | tee coverage_verdict.txt
+          ./scripts/check-coverage.sh coverage_report.txt | tee coverage_verdict.txt
 
       - name: Create Step Summary
         if: always()
@@ -142,13 +169,13 @@ jobs:
         if: always()
         run: |
           echo -e '# Python Lint Ouput\n```' >> $GITHUB_STEP_SUMMARY;
-          flake8 active_interview_project/ | tee -a $GITHUB_STEP_SUMMARY;
+          flake8 active_interview_backend/ | tee -a $GITHUB_STEP_SUMMARY;
           echo -e '\n```' >> $GITHUB_STEP_SUMMARY
 
       - name: Lint Templates
         if: always()
         run: |
           echo -e '# Template Lint Ouput\n```' >> $GITHUB_STEP_SUMMARY;
-          djlint active_interview_project/active_interview_app/templates/ --lint | tee -a $GITHUB_STEP_SUMMARY;
+          djlint active_interview_backend/active_interview_app/templates/ --lint | tee -a $GITHUB_STEP_SUMMARY;
           echo -e '\n```' >> $GITHUB_STEP_SUMMARY
 

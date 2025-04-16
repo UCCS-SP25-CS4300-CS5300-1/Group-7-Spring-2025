@@ -1,0 +1,92 @@
+:root {
+	--buff: #e59f71;
+	--sinopia: #BA5A31;
+	--night: #0C0C0C;
+	--emerald: #69DC9E;
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+.sidebar {
+    background-color: var(--buff);
+}
+
+.sidebar p {
+    color: var(--night);
+    padding: 10px 15px;
+    text-decoration: none;
+    display: block;
+}
+
+.content {
+    /* margin-left: 250px; */
+    padding: 20px;
+    min-height: calc(100vh - 75px); /* To ensure content takes full height minus footer */
+}
+
+.textbox {
+	background-color: var(--emerald);
+    align-self: flex-end;
+    text-align: center;
+    min-height: 75px;
+    /* width: 100%; */
+}
+
+.textbox p {
+    text-align: left;
+    width: 100%;
+}
+
+.nav-text {
+    color: var(--night);
+}
+
+/* "login or register" button homepage/index.html */
+.registerbutton{
+    color: #e59f71;
+    background-color: #4482a6; 
+    width: 200px;
+    height: 500px; 
+    align-self: center; 
+    border-radius: 5px; 
+    border: none;
+    font-size: large;
+    transition: 10ms;
+}
+
+.registerbutton:hover{
+    box-shadow: 0 8px 16px 0 rgba(255, 255, 255, 0.24), 0 6px 20px 0 rgba(255, 255, 255, 0.19);
+}
+
+/* index.html (homepage) getting started divs*/
+/*
+.col{
+    height: 50%; 
+    width: 30%; 
+    margin: 60px; 
+    float: center;
+    text-align: center; 
+    border-style: solid; 
+    border-color: lightblue;
+    border-radius: 15px;
+    color: #4482a6; 
+    font-family: Verdana, Geneva, Tahoma, sans-serif; 
+    font-weight: light; 
+    font-size: 25px;
+
+}
+*/
+
+
+footer {
+    background-color: var(--emerald);
+    padding: 10px;
+    text-align: right;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+    margin-top: auto; /* Ensure footer stays at the bottom of content */
+}

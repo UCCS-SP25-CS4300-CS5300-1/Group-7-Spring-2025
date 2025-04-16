@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block title %}
+  AIS - Login
+{% endblock %}
+
+{% block content %}
+<body>
+  <style>
+   .login-page {
+      display: flex;
+      flex-direction: column; 
+      justify-content: center;
+      align-items: center;
+      color: white;
+   }  
+   p {
+     font-size: 30px;
+   }
+   td {
+     font-size: 20px;
+   }
+  
+  </style>
+
+  <div class="container">
+    <div class="login-page">
+      {% for message in messages %}
+        <div class="row mb-3">
+          <p>{{ message }}</p>
+        </div>
+      {% endfor %}
+
+      {% if form.errors %}
+        <div class="row mb-3">
+          <p>Your username and password didn't match. Please try again.</p>
+        </div>
+      {% endif %}
+
+      {% if next %}
+        <div class="row mb-3">
+          {% if user.is_authenticated %}
+            <p>Your account doesn't have access to this page. To proceed, please login with an account that has access.</p>
+          {% else %}
+            <p>Please login to see this page.</p>
+          {% endif %}
+        </div>
+      {% endif %}
+  
+      <form method="post" action="{% url 'login' %}">
+        
+          {% csrf_token %}
+          <div class="row mb-3">
+              
+              <td>Username: {{ form.username }}</td>
+          </div>
+          <div class="row mb-3">
+              
+              <td>Password: {{ form.password }}</td>
+          </div>
+          
+        
+        <div class="row mb-3">
+          <input type="submit" value="Login" id="submit" class="btn btn-primary">
+        </div>
+        <input type="hidden" name="next" value="{{ next }}">
+      </form>
+
+      <div class="row mb-3">
+        <td><a href="{% url 'register_page' %}">Register</a></td>
+      </div>
+    </div>
+  </div>
+</body>
+{% endblock %}

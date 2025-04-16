@@ -1,0 +1,50 @@
+services:
+  backend:
+    build: active_interview_backend/.
+    environment:
+      - PROD=true
+    env_file:
+      - .env
+    container_name: django
+    volumes:
+      - static_volume:/app/staticfiles # shared staticfiles volume
+      - media_volume:/app/media # shared media volume
+      - ./active_interview_backend:/app
+      - db_data:/app/db
+      #    ports:
+      #      - "8000:8000"
+    expose:
+      - "8000"  # Exposed internally
+    command: bash ./start.sh
+    # network_mode: "host"
+
+#   react:
+#     build: black_dashboard_react/.
+#     container_name: react
+#     volumes:
+#       - ./black_dashboard_react:/app
+#     ports:
+#       - "3000:3000"
+#     # network_mode: "host"
+
+  nginx:
+    image: nginx:alpine
+    container_name: nginx
+    expose:
+      - "80"
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - static_volume:/app/staticfiles # shared staticfiles volume
+      - media_volume:/app/media # shared media volume
+      - ./nginx.prod.conf:/etc/nginx/nginx.conf:ro
+      - /etc/letsencrypt:/etc/letsencrypt:ro # shared the certs from host
+    depends_on:
+      - backend
+
+volumes:
+  static_volume:
+  media_volume:
+  db_data:
+

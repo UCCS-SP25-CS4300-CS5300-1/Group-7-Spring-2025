@@ -1,10 +1,54 @@
 services:
   django:
-    build: active_interview_project/.
+    build: active_interview_backend/.
+    environment:
+      - PROD=false
+    env_file:
+      - .env
     container_name: django
     volumes:
-      - ./active_interview_project:/app
+      - static_volume:/app/staticfiles # shared staticfiles volume
+      - media_volume:/app/media
+      - ./active_interview_backend:/app
+      - db_data:/app/db
+      #    ports:
+      #      - "8000:8000"
+    expose:
+      - "8000"  # Exposed internally
+    command: bash ./start.sh
+#     network_mode: "host"
+#     networks:
+#       - ext_network
+
+#   react:
+#     build: black_dashboard_react/.
+#     container_name: react
+#     volumes:
+#       - ./black_dashboard_react:/app
+#     ports:
+#       - "3000:3000"
+#     # network_mode: "host"
+
+  nginx:
+    image: nginx:alpine
+    container_name: nginx
+    expose:
+      - "80"
     ports:
-      - "127.0.0.1:3000:3000"
-    # command: python3 manage.py runserver 0.0.0.0:3000
+      - "80:80"
+    volumes:
+      - static_volume:/app/staticfiles # shared staticfiles volume
+      - media_volume:/app/media # shared media volume
+      - ./nginx.local.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - django
+
+# networks:
+#   ext_network:
+#     driver: bridge
+
+volumes:
+  static_volume:
+  media_volume:
+  db_data:
 

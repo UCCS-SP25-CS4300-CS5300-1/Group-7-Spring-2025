@@ -1,0 +1,163 @@
+{% extends "base-sidebar.html" %}
+
+
+{% block title %}
+  AIS - {{ chat.title }}
+{% endblock %}
+
+
+{% block content %}
+  {% load static %}
+  <div class="centered-container flex-grow-1 d-flex flex-column">
+    <h3 class="whiteTextOverride px-3 pt-3">{{ chat.title }}</h3>
+    <div id="chat-scroll" class="d-flex flex-column-reverse flex-grow-1 overflow-y-auto overflow-x-hidden pe-0">
+      <div class="row" style="flex-direction: column-reverse;">
+        <div id="chat-messages">
+          {% comment %} Pre-populate existing messages here {% endcomment %}
+          {% comment %} Ignore system message in list {% endcomment %}
+          {% for message in chat.messages|slice:"1:" %}
+            {% if message.role == 'user' %}
+              <div class="col user-text-container">
+                <div class="card user-text-bubble">
+                  <div class="card-body">
+                    <p class="card-text">{{ message.content|linebreaksbr }}</p>
+                  </div>
+                </div>
+              </div>
+            {% else %}
+              <div class="col bot-text-container">
+                <div class="card bot-text-bubble">
+                  <div class="card-body">
+                    <p class="card-text">{{ message.content|linebreaksbr }}</p>
+                  </div>
+                </div>
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+    <div class="input-card card mb-3 mt-3">
+      <div class="card-body">
+        <div class="d-flex">
+          <textarea id="user-input" class="chat-input flex-grow-1 border-0 p-2" placeholder="Enter text here..." style="resize: none;"></textarea>
+          <button class="button-chat-send btn btn-primary ms-2" type="button" onclick="sendMessage()">Send</button>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+
+{% block scripts %}
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.2.4/purify.min.js" integrity="sha512-Y1p/STLW/B+l+MPJ5K5OdILMwJa2gMFXXmC/qsyDuGH9uc1MZMUo6/8YQUg9Ut4ns8KGCrCtt+58UwmNFFiVvA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script>
+    // Move the chat scroll to the bottom
+    function updateScroll(){
+      var element = document.getElementById("chat-scroll");
+      element.scrollTop = element.scrollHeight;
+    }
+
+    {% comment %} $(document).ready(function() {
+      updateScroll();
+    }); {% endcomment %}
+    
+
+    const chatInput = document.getElementById('user-input');
+    chatInput.addEventListener('input', function() {
+      // Reset height to recalc scrollHeight
+      this.style.height = 'auto';
+      // Set the height based on the scrollHeight, which grows as needed
+      var scrollHeight = this.scrollHeight
+      
+      // Conditionally increase the size of the textarea
+      if (scrollHeight < 200) {
+        this.style.height = scrollHeight + 'px';
+      } else {
+        this.style.height = '200px';
+      }
+    });
+    
+
+    {% comment %} Jquery script adpated from chatgpt {% endcomment %}
+    function sendMessage() {
+      var userInput = $('#user-input').val();
+      if (userInput.trim() !== '') {
+        formattedUserInput = DOMPurify.sanitize(userInput.replace(/(?:\r\n|\r|\n)/g, '<br>'));
+
+        $('#user-input').val('');
+        // Reset height to recalc scrollHeight
+        chatInput.style.height = 'auto';
+        chatInput.style.height = chatInput.scrollHeight + 'px';
+
+        // Show user text bubble
+        $('#chat-messages').append(
+            `<div class="col user-text-container">
+              <div class="card user-text-bubble">
+                <div class="card-body">
+                  <p class="card-text">${formattedUserInput}</p>
+                </div>
+              </div>
+            </div>`);
+
+        // Show loading bubble
+        $('#chat-messages').append(
+          `<div id="loading-bubble" class="col bot-text-container">
+            <div class="card bot-text-bubble">
+              <div class="card-body">
+                <img src={% static 'images/loading.gif' %} alt="Loading..." style="width: 24px; height: 24px;">
+              </div>
+            </div>
+          </div>`);
+        
+        updateScroll();
+
+        // POST the user message to the view
+        $.ajax({
+          url: '{% url "chat-view" chat_id=chat.id %}',
+          type: 'POST',
+          data: {
+            'message': userInput,
+            csrfmiddlewaretoken: '{{ csrf_token }}'
+          },
+          success: function(response) {
+            formattedResponseMessage = DOMPurify.sanitize(response.message.replace(/(?:\r\n|\r|\n)/g, '<br>'));
+            
+            // delete loading bubble
+            $('#loading-bubble').remove();
+
+            // Show the response bubble
+            $('#chat-messages').append(
+                `<div class="col bot-text-container">
+                  <div class="card bot-text-bubble">
+                    <div class="card-body">
+                      <p class="card-text">${formattedResponseMessage}</p>
+                    </div>
+                  </div>
+                </div>`);
+
+            updateScroll();
+          }
+        });
+      }
+    }
+
+    // send text on enter
+    $('#user-input').on('keypress', function(e) {
+      if (e.key === "Enter" && !e.shiftKey) {
+        // prevent default behavior
+        e.preventDefault();
+
+        sendMessage();
+
+        $(this).val('');
+
+        // Reset height to recalc scrollHeight
+        this.style.height = 'auto';
+        // Set the height based on the scrollHeight, which grows as needed
+        this.style.height = this.scrollHeight + 'px';
+      }
+    });
+  </script>
+{% endblock %}

@@ -27,8 +27,10 @@ with open(sys.argv[1], 'r') as diff_file:
 
 # Provide project context here
 project_context = f"""
-These code changes are for a django project.  The app is an active interview service
-which uses the chatgpt API to create a dynamic interview chat for job-seekers.
+These code changes are for a Django web app. The app is deployed with 
+docker-compose and Nginx on DigitalOcean. The app is an active interview
+service which uses the ChatGPT API to create a dynamic interview chat
+for job-seekers.
 """.strip()
 
 # Provide the prompt here
@@ -50,7 +52,7 @@ and potential bugs and provide feedback.  Please include a summary section.
 
 # Run the prompt
 completion = client.chat.completions.create(
-    model="gpt-4o-mini",
+    model="o3-mini",
     messages=[
         {
             "role": "system", 
