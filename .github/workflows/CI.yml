@@ -8,6 +8,11 @@ on:
     branches:
       - '**'
 
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
 jobs:
   aireview:
     name: AI Code Review
