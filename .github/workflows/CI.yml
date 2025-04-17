@@ -64,13 +64,15 @@ jobs:
         if: always()
         run: cat review-*.md >> $GITHUB_STEP_SUMMARY
 
+      # - run: cat review-*.md >> report.md
+
       - name: Create comment
         uses: peter-evans/create-or-update-comment@v4
         with:
           issue-number: 1
           body: |
             # AI Review
-            ${{ review-*.md }}
+            $GITHUB_STEP_SUMMARY
 
 
   citester:
