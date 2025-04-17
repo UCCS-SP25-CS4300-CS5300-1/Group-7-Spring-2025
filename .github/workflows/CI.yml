@@ -77,7 +77,7 @@ jobs:
           issue-number: 1
           body: |
             # AI Review
-            $GITHUB_STEP_SUMMARY
+            ${{ GITHUB_STEP_SUMMARY }}
 
 
   citester:
