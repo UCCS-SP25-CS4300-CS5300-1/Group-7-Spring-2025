@@ -31,6 +31,7 @@ urlpatterns = [
     path('accounts/register/', views.register, name='register_page'),
     path('accounts/logout/', auth_views.LogoutView.as_view(template_name='registration/logged_out.html'), name='logout'),
     path('profile/', views.profile, name='profile'),
+    path('results/', views.results, name='results'),
 
     # Chat urls
     path('chat/', views.chat_list, name='chat-list'),
