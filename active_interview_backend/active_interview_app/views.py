@@ -132,7 +132,8 @@ class CreateChat(LoginRequiredMixin, View):
                 chat = form.save(commit=False)
 
                 chat.job_listing = form.cleaned_data['listing_choice']
-                chat.resume = form.cleaned_data.get('resume_choice')
+                chat.resume = form.cleaned_data['resume_choice']
+                chat.difficulty = form.cleaned_data["difficulty"]
                 chat.owner = request.user
 
                 # Prompts are edited by ChatGPT after being written by a human developer
@@ -261,6 +262,7 @@ class EditChat(LoginRequiredMixin, UserPassesTestMixin, View):
                 chat = form.save(commit=False)
 
                 # Do other stuff if necessary, especially if a file is changed
+                chat.difficulty = form.cleaned_data["difficulty"]
 
                 chat.save()
 

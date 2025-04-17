@@ -13,7 +13,7 @@ class CreateUserForm(UserCreationForm):
 
 
 class CreateChatForm(ModelForm):
-    difficulty = IntegerField(min_value=1, max_value=10)
+    difficulty = IntegerField(initial=5, min_value=1, max_value=10)
 
     listing_choice = ModelChoiceField(queryset=UploadedJobListing.objects.none())
     resume_choice = ModelChoiceField(queryset=UploadedResume.objects.none(), required=False)
