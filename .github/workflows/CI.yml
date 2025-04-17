@@ -64,6 +64,14 @@ jobs:
         if: always()
         run: cat review-*.md >> $GITHUB_STEP_SUMMARY
 
+      - name: Create comment
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          issue-number: 1
+          body: |
+            # AI Review
+            ${{ review-*.md }}
+
 
   citester:
     name: CI Testing
