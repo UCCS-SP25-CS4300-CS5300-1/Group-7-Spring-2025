@@ -324,6 +324,14 @@ def resume_detail(request, resume_id):
     return render(request, 'resume_detail.html', {'resume': resume})
 
 @login_required
+def delete_resume(request, resume_id):
+    resume = get_object_or_404(UploadedResume, id=resume_id, user=request.user)
+    if request.method == "POST":
+        resume.delete()
+        return redirect('profile')
+    return redirect('profile')
+
+@login_required
 def upload_file(request):
     allowed_types = ['pdf']
 
@@ -375,6 +383,17 @@ def upload_file(request):
 
     return redirect('document-list')
 
+def job_posting_detail(request, job_id):
+    job = get_object_or_404(UploadedJobListing, id=job_id)
+    return render(request, 'job_posting_detail.html', {'job': job})
+
+@login_required
+def delete_job(request, job_id):
+    job = get_object_or_404(UploadedJobListing, id=job_id, user=request.user)
+    if request.method == "POST":
+        job.delete()
+    return redirect('profile')
+
 
 class UploadedJobListingView(APIView):
     # permission_classes = [IsAuthenticated]
@@ -405,12 +424,9 @@ class UploadedJobListingView(APIView):
         os.makedirs(user_dir, exist_ok=True)
         filepath = os.path.join(user_dir, filename)
 
+
         # Convert the text to Markdown
         markdown_text = markdown.markdown(text)
-
-        # Save the text content to a file
-        with open(filepath, 'w', encoding='utf-8') as f:
-            f.write(text)
 
         # Create and save the UploadedJobListing object in the database
         job_listing = UploadedJobListing(user=user, content=text, filepath=filepath, title=title)
@@ -462,12 +478,6 @@ class UploadedResumeView(APIView):
 #            return Response(serializer.data)
 #        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-#    def delete(self, request, pk):
-#        # Use get_object_or_404 to return 404 when the object is not found
-#        file = get_object_or_404(UploadedResume, pk=pk, user=request.user)
-#        file.delete()
-#        return Response(status=status.HTTP_204_NO_CONTENT)
-
 
 class JobListingList(APIView):
     permission_classes = [IsAuthenticated]
@@ -515,3 +525,4 @@ class JobListingList(APIView):
 class DocumentList(View):
     def get(self, request):
         return render(request, 'documents/document-list.html')
+

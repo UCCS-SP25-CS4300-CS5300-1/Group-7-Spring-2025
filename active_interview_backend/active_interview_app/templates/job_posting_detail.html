@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block title %}
-  {{ resume.title }} - Resume Details
+  {{ job.title }} - Job Posting Details
 {% endblock %}
 
 {% block content %}
@@ -13,7 +13,7 @@
   </style>
 
   <div class="resume-detail">
-    <h1>{{ resume.title }}</h1>
-    <div>{{ resume.content }}</div>
+    <h1>{{ job.title }}</h1>
+    <div>{{ job.content }}</div>
   </div>
 {% endblock %}

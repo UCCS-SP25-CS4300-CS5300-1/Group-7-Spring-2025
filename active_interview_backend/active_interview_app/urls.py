@@ -56,6 +56,11 @@ urlpatterns = [
     #path('api/files/<int:pk>/', views.UploadedResumeDetail.as_view(), name='file_detail'), #Making changes to files.
     path('pasted-text/', views.UploadedJobListingView.as_view(), name='save_pasted_text'), #For the text box input.
     path('resume/<int:resume_id>/', views.resume_detail, name='resume_detail'),
+    path('job-posting/<int:job_id>/', views.job_posting_detail, name='job_posting_detail'),
+    path('resume/delete/<int:resume_id>/', views.delete_resume, name='delete_resume'),
+    path('delete_job/<int:job_id>/', views.delete_job, name='delete_job'),
+
+
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
