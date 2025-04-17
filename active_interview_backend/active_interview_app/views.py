@@ -4,6 +4,7 @@ from openai import OpenAI
 import pymupdf4llm
 import markdown
 import tempfile
+import textwrap
 
 from .models import UploadedResume, UploadedJobListing, Chat
 from .forms import (
@@ -419,7 +420,6 @@ def delete_job(request, job_id):
 
 
 class UploadedJobListingView(APIView):
-    # permission_classes = [IsAuthenticated]
 
     def post(self, request):
         # Get the text from the request
