@@ -143,18 +143,24 @@ class CreateChat(LoginRequiredMixin, View):
                         You are a professional interviewer for a company preparing for a candidate’s interview.
                         You will act as the interviewer and engage in a roleplaying session with the candidate.
                         
-                        Please review the job listing and resume below:
+                        Please review the job listing, resume and difficulty below:
                         
                         # Job Listing:
                         \"\"\"{listing}\"\"\"
                         
                         # Candidate Resume:
                         \"\"\"{resume}\"\"\"
+
+                        # Difficulty
+                        - **Scale:** 1 to 10  
+                        - **1** = extremely easygoing interview, no curveballs  
+                        - **10** = very challenging, for top‑tier candidates only  
+                        - **Selected level:** {difficulty}
                         
                         Ignore any formatting issues in the resume, and focus on its content. 
                         Begin the session by greeting the candidate and asking an introductory question about their background, 
                         then move on to deeper, role-related questions based on the job listing and resume.
-                    """).format(listing=chat.job_listing.content, resume=chat.resume.content)
+                    """).format(listing=chat.job_listing.content, resume=chat.resume.content, difficulty=chat.difficulty)
                 else: # if no resume
                     system_prompt = textwrap.dedent("""\
                         You are a professional interviewer for a company preparing for a candidate’s interview.
@@ -164,10 +170,16 @@ class CreateChat(LoginRequiredMixin, View):
                         
                         # Job Listing:
                         \"\"\"{listing}\"\"\"
+
+                        # Difficulty
+                        - **Scale:** 1 to 10  
+                        - **1** = extremely easygoing interview, no curveballs  
+                        - **10** = very challenging, for top‑tier candidates only  
+                        - **Selected level:** {difficulty}
                         
                         Begin the session by greeting the candidate and asking an introductory question about their background, 
                         then move on to role-specific questions based on the job listing.
-                    """).format(listing=chat.job_listing.content)
+                    """).format(listing=chat.job_listing.content, difficulty=chat.difficulty)
 
 
                 chat.messages = [
