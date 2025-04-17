@@ -1,5 +1,6 @@
-from django.forms import ModelForm, ModelChoiceField
+from django.forms import ModelForm, ModelChoiceField, IntegerField
 from .models import *
+from django.core.validators import MinValueValidator
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.contrib.auth.models import Group
@@ -12,6 +13,8 @@ class CreateUserForm(UserCreationForm):
 
 
 class CreateChatForm(ModelForm):
+    difficulty = IntegerField(min_value=1, max_value=10)
+
     listing_choice = ModelChoiceField(queryset=UploadedJobListing.objects.none())
     resume_choice = ModelChoiceField(queryset=UploadedResume.objects.none(), required=False)
 
@@ -29,6 +32,8 @@ class CreateChatForm(ModelForm):
 
 
 class EditChatForm(ModelForm):
+    difficulty = IntegerField(min_value=1, max_value=10)
+
     class Meta:
         model = Chat
         fields = ["title"]
