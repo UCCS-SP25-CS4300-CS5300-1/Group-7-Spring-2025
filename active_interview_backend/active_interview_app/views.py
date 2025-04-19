@@ -4,6 +4,8 @@ from openai import OpenAI
 import pymupdf4llm
 import textwrap
 import markdown
+import re
+import json
 
 from django.conf import settings
 from django.contrib import messages
@@ -132,7 +134,8 @@ class CreateChat(LoginRequiredMixin, View):
                 chat = form.save(commit=False)
 
                 chat.job_listing = form.cleaned_data['listing_choice']
-                chat.resume = form.cleaned_data.get('resume_choice')
+                chat.resume = form.cleaned_data['resume_choice']
+                chat.difficulty = form.cleaned_data["difficulty"]
                 chat.owner = request.user
 
                 # Prompts are edited by ChatGPT after being written by a human developer
@@ -142,7 +145,13 @@ class CreateChat(LoginRequiredMixin, View):
                         You are a professional interviewer for a company preparing for a candidate’s interview.
                         You will act as the interviewer and engage in a roleplaying session with the candidate.
                         
-                        Please review the job listing and resume below:
+                        Please review the job listing, resume and difficulty below:
+
+                        # Difficulty
+                        - **Scale:** 1 to 10  
+                        - **1** = extremely easygoing interview, no curveballs  
+                        - **10** = very challenging, for top‑tier candidates only  
+                        - **Selected level:** <<{difficulty}>>
                         
                         # Job Listing:
                         \"\"\"{listing}\"\"\"
@@ -153,20 +162,26 @@ class CreateChat(LoginRequiredMixin, View):
                         Ignore any formatting issues in the resume, and focus on its content. 
                         Begin the session by greeting the candidate and asking an introductory question about their background, 
                         then move on to deeper, role-related questions based on the job listing and resume.
-                    """).format(listing=chat.job_listing.content, resume=chat.resume.content)
+                    """).format(listing=chat.job_listing.content, resume=chat.resume.content, difficulty=chat.difficulty)
                 else: # if no resume
                     system_prompt = textwrap.dedent("""\
                         You are a professional interviewer for a company preparing for a candidate’s interview.
                         You will act as the interviewer and engage in a roleplaying session with the candidate.
                         
-                        Please review the job listing below:
+                        Please review the job listing and difficulty below:
+
+                        # Difficulty
+                        - **Scale:** 1 to 10  
+                        - **1** = extremely easygoing interview, no curveballs  
+                        - **10** = very challenging, for top‑tier candidates only  
+                        - **Selected level:** <<{difficulty}>>
                         
                         # Job Listing:
                         \"\"\"{listing}\"\"\"
                         
                         Begin the session by greeting the candidate and asking an introductory question about their background, 
                         then move on to role-specific questions based on the job listing.
-                    """).format(listing=chat.job_listing.content)
+                    """).format(listing=chat.job_listing.content, difficulty=chat.difficulty)
 
 
                 chat.messages = [
@@ -261,6 +276,8 @@ class EditChat(LoginRequiredMixin, UserPassesTestMixin, View):
                 chat = form.save(commit=False)
 
                 # Do other stuff if necessary, especially if a file is changed
+                chat.difficulty = form.cleaned_data["difficulty"]
+                chat.messages[0]['content'] = re.sub("<<(\d{1,2})>>", "<<"+str(chat.difficulty)+">>", chat.messages[0]['content'], 1) # replace difficulty in the messages
 
                 chat.save()
 
