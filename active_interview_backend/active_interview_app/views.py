@@ -4,6 +4,8 @@ from openai import OpenAI
 import pymupdf4llm
 import textwrap
 import markdown
+import re
+import json
 
 from django.conf import settings
 from django.contrib import messages
@@ -144,18 +146,18 @@ class CreateChat(LoginRequiredMixin, View):
                         You will act as the interviewer and engage in a roleplaying session with the candidate.
                         
                         Please review the job listing, resume and difficulty below:
+
+                        # Difficulty
+                        - **Scale:** 1 to 10  
+                        - **1** = extremely easygoing interview, no curveballs  
+                        - **10** = very challenging, for top‑tier candidates only  
+                        - **Selected level:** <<{difficulty}>>
                         
                         # Job Listing:
                         \"\"\"{listing}\"\"\"
                         
                         # Candidate Resume:
                         \"\"\"{resume}\"\"\"
-
-                        # Difficulty
-                        - **Scale:** 1 to 10  
-                        - **1** = extremely easygoing interview, no curveballs  
-                        - **10** = very challenging, for top‑tier candidates only  
-                        - **Selected level:** {difficulty}
                         
                         Ignore any formatting issues in the resume, and focus on its content. 
                         Begin the session by greeting the candidate and asking an introductory question about their background, 
@@ -166,16 +168,16 @@ class CreateChat(LoginRequiredMixin, View):
                         You are a professional interviewer for a company preparing for a candidate’s interview.
                         You will act as the interviewer and engage in a roleplaying session with the candidate.
                         
-                        Please review the job listing below:
-                        
-                        # Job Listing:
-                        \"\"\"{listing}\"\"\"
+                        Please review the job listing and difficulty below:
 
                         # Difficulty
                         - **Scale:** 1 to 10  
                         - **1** = extremely easygoing interview, no curveballs  
                         - **10** = very challenging, for top‑tier candidates only  
-                        - **Selected level:** {difficulty}
+                        - **Selected level:** <<{difficulty}>>
+                        
+                        # Job Listing:
+                        \"\"\"{listing}\"\"\"
                         
                         Begin the session by greeting the candidate and asking an introductory question about their background, 
                         then move on to role-specific questions based on the job listing.
@@ -275,6 +277,7 @@ class EditChat(LoginRequiredMixin, UserPassesTestMixin, View):
 
                 # Do other stuff if necessary, especially if a file is changed
                 chat.difficulty = form.cleaned_data["difficulty"]
+                chat.messages[0]['content'] = re.sub("<<(\d{1,2})>>", "<<"+str(chat.difficulty)+">>", chat.messages[0]['content'], 1) # replace difficulty in the messages
 
                 chat.save()
 
