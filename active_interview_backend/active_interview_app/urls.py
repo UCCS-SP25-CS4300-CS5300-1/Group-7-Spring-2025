@@ -38,6 +38,7 @@ urlpatterns = [
     path('chat/<int:chat_id>/', views.ChatView.as_view(), name='chat-view'),
     path('chat/<int:chat_id>/edit/', views.EditChat.as_view(), name='chat-edit'),
     path('chat/<int:chat_id>/delete/', views.DeleteChat.as_view(), name='chat-delete'),
+    path('chat/<int:chat_id>/restart/', views.RestartChat.as_view(), name='chat-restart'),
 
     # Demo urls
     # path('demo/', views.demo, name='demo'),

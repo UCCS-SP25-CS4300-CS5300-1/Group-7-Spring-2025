@@ -277,7 +277,7 @@ class EditChat(LoginRequiredMixin, UserPassesTestMixin, View):
 
                 # Do other stuff if necessary, especially if a file is changed
                 chat.difficulty = form.cleaned_data["difficulty"]
-                chat.messages[0]['content'] = re.sub("<<(\d{1,2})>>", "<<"+str(chat.difficulty)+">>", chat.messages[0]['content'], 1) # replace difficulty in the messages
+                chat.messages[0]['content'] = re.sub(r"<<(\d{1,2})>>", "<<"+str(chat.difficulty)+">>", chat.messages[0]['content'], 1) # replace difficulty in the messages
 
                 chat.save()
 
@@ -301,6 +301,30 @@ class DeleteChat(LoginRequiredMixin, UserPassesTestMixin, View):
         # else:
         #     print("delete not in form")
         #     return redirect("chat-view", chat_id=chat.id)
+
+
+# Note: this class has no template.  it is technically built into base-sidebar
+class RestartChat(LoginRequiredMixin, UserPassesTestMixin, View):
+    def test_func(self):
+        # manually grab chat id from kwargs and process it
+        chat = Chat.objects.get(id=self.kwargs['chat_id'])
+
+        return self.request.user == chat.owner
+        
+    def post(self, request, chat_id):
+        chat = Chat.objects.get(id=chat_id)
+
+        if 'restart' in request.POST:
+            chat.messages = chat.messages[:2] #slice messages to only the very first 2 messages
+
+            chat.save()
+
+            return redirect("chat-view", chat_id=chat.id)
+        # else:
+        #     print("delete not in form")
+        #     return redirect("chat-view", chat_id=chat.id)
+
+
 
 @login_required
 def loggedin(request):
