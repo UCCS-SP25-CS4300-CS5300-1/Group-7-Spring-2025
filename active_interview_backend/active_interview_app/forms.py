@@ -20,7 +20,7 @@ class CreateChatForm(ModelForm):
 
     class Meta:
         model = Chat
-        fields = ["title"]
+        fields = ["title", "type"]
     
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)

@@ -136,6 +136,7 @@ class CreateChat(LoginRequiredMixin, View):
                 chat.job_listing = form.cleaned_data['listing_choice']
                 chat.resume = form.cleaned_data['resume_choice']
                 chat.difficulty = form.cleaned_data["difficulty"]
+                chat.type = form.cleaned_data["type"]
                 chat.owner = request.user
 
                 # Prompts are edited by ChatGPT after being written by a human developer
@@ -145,7 +146,10 @@ class CreateChat(LoginRequiredMixin, View):
                         You are a professional interviewer for a company preparing for a candidate’s interview.
                         You will act as the interviewer and engage in a roleplaying session with the candidate.
                         
-                        Please review the job listing, resume and difficulty below:
+                        Please review the job listing, resume and misc. interview details below:
+                        
+                        # Type of Interview
+                        This interview will be of the following type: {type}
 
                         # Difficulty
                         - **Scale:** 1 to 10  
@@ -162,13 +166,16 @@ class CreateChat(LoginRequiredMixin, View):
                         Ignore any formatting issues in the resume, and focus on its content. 
                         Begin the session by greeting the candidate and asking an introductory question about their background, 
                         then move on to deeper, role-related questions based on the job listing and resume.
-                    """).format(listing=chat.job_listing.content, resume=chat.resume.content, difficulty=chat.difficulty)
+                    """).format(listing=chat.job_listing.content, resume=chat.resume.content, difficulty=chat.difficulty, type=chat.get_type_display())
                 else: # if no resume
                     system_prompt = textwrap.dedent("""\
                         You are a professional interviewer for a company preparing for a candidate’s interview.
                         You will act as the interviewer and engage in a roleplaying session with the candidate.
                         
-                        Please review the job listing and difficulty below:
+                        Please review the job listing and misc. interview details below:
+                        
+                        # Type of Interview
+                        This interview will be of the following type: {type}
 
                         # Difficulty
                         - **Scale:** 1 to 10  
@@ -181,7 +188,7 @@ class CreateChat(LoginRequiredMixin, View):
                         
                         Begin the session by greeting the candidate and asking an introductory question about their background, 
                         then move on to role-specific questions based on the job listing.
-                    """).format(listing=chat.job_listing.content, difficulty=chat.difficulty)
+                    """).format(listing=chat.job_listing.content, difficulty=chat.difficulty, type=chat.get_type_display())
 
 
                 chat.messages = [
@@ -279,6 +286,8 @@ class EditChat(LoginRequiredMixin, UserPassesTestMixin, View):
                 chat.difficulty = form.cleaned_data["difficulty"]
                 chat.messages[0]['content'] = re.sub(r"<<(\d{1,2})>>", "<<"+str(chat.difficulty)+">>", chat.messages[0]['content'], 1) # replace difficulty in the messages
 
+                # print(chat.get_type_display())
+
                 chat.save()
 
                 return redirect("chat-view", chat_id=chat.id)
@@ -321,7 +330,7 @@ class RestartChat(LoginRequiredMixin, UserPassesTestMixin, View):
 
             return redirect("chat-view", chat_id=chat.id)
         # else:
-        #     print("delete not in form")
+        #     print("restart not in form")
         #     return redirect("chat-view", chat_id=chat.id)
 
 

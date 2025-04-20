@@ -39,6 +39,19 @@ class Chat(models.Model):
     job_listing = models.ForeignKey(UploadedJobListing, null=True, on_delete=models.SET_NULL)
     resume = models.ForeignKey(UploadedResume, null=True, blank=True, on_delete=models.SET_NULL)
 
+    # interview type
+    GENERAL = "GEN"
+    SKILLS = "ISK"
+    PERSONALITY = "PER"
+    FINAL_SCREENING = "FSC"
+    INTERVIEW_TYPES = {
+        (GENERAL, "General"),
+        (SKILLS, "Industry Skills"),
+        (PERSONALITY, "Personality/Preliminary"),
+        (FINAL_SCREENING, "Final Screening"),
+    }
+    type = models.CharField(max_length=3, choices=INTERVIEW_TYPES, default=GENERAL)
+
     #create object itself, not the field
     #all templates for documents in /documents/
     #thing that returns all user files is at views
