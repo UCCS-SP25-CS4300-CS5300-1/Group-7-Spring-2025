@@ -1,14 +1,12 @@
 {% extends "base-sidebar.html" %}
 
-
 {% block title %}
   AIS - Create AI Interview
 {% endblock %}
 
-
 {% block content %}
   <div class="centered-container flex-grow-1 d-flex flex-column justify-content-center p-2">
-    <h3 class="whiteTextOverride px-3 pt-3" style="text-align: center;">Create an AI Interview</h3>
+    <h3 class="whiteTextOverride px-3 pt-3 text-center">Create an AI Interview</h3>
     <hr class="white-break">
     <div id="content-scroll" class="d-flex flex-column overflow-y-auto overflow-x-hidden pe-0">
       <form method="post" action="{% url "chat-create" %}" id="chat-create-form">
@@ -18,6 +16,10 @@
             <tr>
               <td class="text-start align-middle"><h5 class="text-white">Title*:</h5></td>
               <td class="text-end">{{ form.title }}</td>
+            </tr>
+            <tr>
+              <td class="text-start align-middle"><h5 class="text-white">Type*:</h5></td>
+              <td class="text-end">{{ form.type }}</td>
             </tr>
             <tr>
               <td class="text-start align-middle"><h5 class="text-white">Difficulty*:</h5></td>
