@@ -50,6 +50,9 @@ def aboutus(request):
 def features(request):
     return render(request, 'features.html')
 
+def results(request):
+    return render(request, 'results.html')
+
 
 # @login_required
 # def chat_view(request):
