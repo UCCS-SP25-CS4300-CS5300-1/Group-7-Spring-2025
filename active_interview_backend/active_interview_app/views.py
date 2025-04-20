@@ -5,23 +5,17 @@ import pymupdf4llm
 import textwrap
 import markdown
 import re
-import json
 
 from django.conf import settings
 from django.contrib import messages
-from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.mixins import UserPassesTestMixin
-from django.contrib.auth.models import User
 from django.forms.models import model_to_dict
-from django.http import HttpResponseRedirect
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.utils.timezone import now
 from django.views import View
-from django.views.decorators.csrf import csrf_exempt
-from django.http import HttpResponse
 
 
 from rest_framework import status
@@ -35,9 +29,6 @@ from .models import *
 from .serializers import *
 
 
-
-
-
 # Init openai client
 client = OpenAI(api_key=settings.OPENAI_API_KEY)
 MAX_TOKENS = 15000
@@ -47,14 +38,14 @@ MAX_TOKENS = 15000
 def index(request):
     return render(request, 'index.html')
 
+
 def aboutus(request):
     return render(request, 'about-us.html')
+
 
 # def demo(request):
 #     return render(request, os.path.join('demo', 'demo.html'))
 
-def features(request):
-    return render(request, 'features.html')
 
 def features(request):
     return render(request, 'features.html')
@@ -67,11 +58,15 @@ def features(request):
 #             owner=request.user,
 #             title="New Chat",
 #             messages=[
-#                 {"role": "system", "content": "You are a helpful assistant."},
+#                 {
+#                   "role": "system",
+#                   "content": "You are a helpful assistant."
+#                 },
 #             ]
 #         )
 
-#         owner_chats = Chat.objects.filter(owner=request.user).order_by('-modified_date')
+#         owner_chats = Chat.objects.filter(owner=request.user) \
+#               .order_by('-modified_date')
 
 #         request.session['chat_id'] = chat.id
 
@@ -79,8 +74,9 @@ def features(request):
 #         context['chat'] = chat
 #         context['owner_chats'] = owner_chats
 
-#         return render(request, os.path.join('chat', 'chat-view.html'), context)
-    
+#         return render(request, os.path.join('chat', 'chat-view.html'),
+#                       context)
+
 #     elif request.method == 'POST':
 #         chat_id = request.session.get('chat_id')
 #         chat = Chat.objects.get(id=chat_id)
@@ -106,7 +102,8 @@ def features(request):
 
 @login_required
 def chat_list(request):
-    owner_chats = Chat.objects.filter(owner=request.user).order_by('-modified_date')
+    owner_chats = Chat.objects.filter(owner=request.user)\
+        .order_by('-modified_date')
 
     context = {}
     context['owner_chats'] = owner_chats
@@ -116,20 +113,22 @@ def chat_list(request):
 
 class CreateChat(LoginRequiredMixin, View):
     def get(self, request):
-        owner_chats = Chat.objects.filter(owner=request.user).order_by('-modified_date')
-        
-        form = CreateChatForm(user=request.user) # Pass user into chatform
+        owner_chats = Chat.objects.filter(owner=request.user)\
+            .order_by('-modified_date')
+
+        form = CreateChatForm(user=request.user)  # Pass user into chatform
 
         context = {}
         context['owner_chats'] = owner_chats
         context['form'] = form
 
-        return render(request, os.path.join('chat', 'chat-create.html'), context)
+        return render(request, os.path.join('chat', 'chat-create.html'),
+                      context)
 
     def post(self, request):
         if 'create' in request.POST:
             form = CreateChatForm(request.POST, user=request.user)
-            
+
             if form.is_valid():
                 chat = form.save(commit=False)
 
@@ -139,61 +138,81 @@ class CreateChat(LoginRequiredMixin, View):
                 chat.type = form.cleaned_data["type"]
                 chat.owner = request.user
 
-                # Prompts are edited by ChatGPT after being written by a human developer
-                system_prompt = "An error has occurred.  Please notify the user about this." # Default message.  Should only show up if something went wrong.
-                if chat.resume: # if resume is present
+                # Prompts are edited by ChatGPT after being written by a human
+                # developer
+                # Default message. Should only show up if something went wrong.
+                system_prompt = "An error has occurred.  Please notify the " \
+                                "user about this."
+                if chat.resume:  # if resume is present
                     system_prompt = textwrap.dedent("""\
-                        You are a professional interviewer for a company preparing for a candidate’s interview.
-                        You will act as the interviewer and engage in a roleplaying session with the candidate.
-                        
-                        Please review the job listing, resume and misc. interview details below:
-                        
+                        You are a professional interviewer for a company
+                        preparing for a candidate’s interview. You will act as
+                        the interviewer and engage in a roleplaying session
+                        with the candidate.
+
+                        Please review the job listing, resume and misc.
+                        interview details below:
+
                         # Type of Interview
                         This interview will be of the following type: {type}
 
                         # Difficulty
-                        - **Scale:** 1 to 10  
-                        - **1** = extremely easygoing interview, no curveballs  
-                        - **10** = very challenging, for top‑tier candidates only  
+                        - **Scale:** 1 to 10
+                        - **1** = extremely easygoing interview, no curveballs
+                        - **10** = very challenging, for top‑tier candidates
+                          only
                         - **Selected level:** <<{difficulty}>>
-                        
+
                         # Job Listing:
                         \"\"\"{listing}\"\"\"
-                        
+
                         # Candidate Resume:
                         \"\"\"{resume}\"\"\"
-                        
-                        Ignore any formatting issues in the resume, and focus on its content. 
-                        Begin the session by greeting the candidate and asking an introductory question about their background, 
-                        then move on to deeper, role-related questions based on the job listing and resume.
-                    """).format(listing=chat.job_listing.content, resume=chat.resume.content, difficulty=chat.difficulty, type=chat.get_type_display())
-                else: # if no resume
+
+                        Ignore any formatting issues in the resume, and focus
+                        on its content.
+                        Begin the session by greeting the candidate and asking
+                        an introductory question about their background, then
+                        move on to deeper, role-related questions based on the
+                        job listing and resume.
+                    """).format(listing=chat.job_listing.content,
+                                resume=chat.resume.content,
+                                difficulty=chat.difficulty,
+                                type=chat.get_type_display())
+                else:  # if no resume
                     system_prompt = textwrap.dedent("""\
-                        You are a professional interviewer for a company preparing for a candidate’s interview.
-                        You will act as the interviewer and engage in a roleplaying session with the candidate.
-                        
-                        Please review the job listing and misc. interview details below:
-                        
+                        You are a professional interviewer for a company
+                        preparing for a candidate’s interview. You will act as
+                        the interviewer and engage in a roleplaying session
+                        with the candidate.
+
+                        Please review the job listing and misc. interview
+                        details below:
+
                         # Type of Interview
                         This interview will be of the following type: {type}
 
                         # Difficulty
-                        - **Scale:** 1 to 10  
-                        - **1** = extremely easygoing interview, no curveballs  
-                        - **10** = very challenging, for top‑tier candidates only  
+                        - **Scale:** 1 to 10
+                        - **1** = extremely easygoing interview, no curveballs
+                        - **10** = very challenging, for top‑tier candidates
+                          only
                         - **Selected level:** <<{difficulty}>>
-                        
+
                         # Job Listing:
                         \"\"\"{listing}\"\"\"
-                        
-                        Begin the session by greeting the candidate and asking an introductory question about their background, 
-                        then move on to role-specific questions based on the job listing.
-                    """).format(listing=chat.job_listing.content, difficulty=chat.difficulty, type=chat.get_type_display())
 
+                        Begin the session by greeting the candidate and asking
+                        an introductory question about their background, then
+                        move on to role-specific questions based on the job
+                        listing.
+                    """).format(listing=chat.job_listing.content,
+                                difficulty=chat.difficulty,
+                                type=chat.get_type_display())
 
                 chat.messages = [
                     {
-                        "role": "system", 
+                        "role": "system",
                         "content": system_prompt
                     },
                 ]
@@ -205,7 +224,12 @@ class CreateChat(LoginRequiredMixin, View):
                     max_tokens=MAX_TOKENS
                 )
                 ai_message = response.choices[0].message.content
-                chat.messages.append({"role": "assistant", "content": ai_message})
+                chat.messages.append(
+                    {
+                        "role": "assistant",
+                        "content": ai_message
+                    }
+                )
 
                 chat.save()
 
@@ -223,7 +247,8 @@ class ChatView(LoginRequiredMixin, UserPassesTestMixin, View):
 
     def get(self, request, chat_id):
         chat = Chat.objects.get(id=chat_id)
-        owner_chats = Chat.objects.filter(owner=request.user).order_by('-modified_date')
+        owner_chats = Chat.objects.filter(owner=request.user)\
+            .order_by('-modified_date')
 
         context = {}
         context['chat'] = chat
@@ -259,11 +284,12 @@ class EditChat(LoginRequiredMixin, UserPassesTestMixin, View):
         chat = Chat.objects.get(id=self.kwargs['chat_id'])
 
         return self.request.user == chat.owner
-        
+
     def get(self, request, chat_id):
         chat = Chat.objects.get(id=chat_id)
-        owner_chats = Chat.objects.filter(owner=request.user).order_by('-modified_date')
-        
+        owner_chats = Chat.objects.filter(owner=request.user)\
+            .order_by('-modified_date')
+
         form = EditChatForm(initial=model_to_dict(chat), instance=chat)
 
         context = {}
@@ -278,13 +304,16 @@ class EditChat(LoginRequiredMixin, UserPassesTestMixin, View):
 
         if 'update' in request.POST:
             form = EditChatForm(request.POST, instance=chat)
-            
+
             if form.is_valid():
                 chat = form.save(commit=False)
 
-                # Do other stuff if necessary, especially if a file is changed
+                # replace difficulty in the messages
                 chat.difficulty = form.cleaned_data["difficulty"]
-                chat.messages[0]['content'] = re.sub(r"<<(\d{1,2})>>", "<<"+str(chat.difficulty)+">>", chat.messages[0]['content'], 1) # replace difficulty in the messages
+                chat.messages[0]['content'] = \
+                    re.sub(r"<<(\d{1,2})>>",
+                           "<<"+str(chat.difficulty)+">>",
+                           chat.messages[0]['content'], 1)
 
                 # print(chat.get_type_display())
 
@@ -300,7 +329,7 @@ class DeleteChat(LoginRequiredMixin, UserPassesTestMixin, View):
         chat = Chat.objects.get(id=self.kwargs['chat_id'])
 
         return self.request.user == chat.owner
-        
+
     def post(self, request, chat_id):
         chat = Chat.objects.get(id=chat_id)
 
@@ -319,12 +348,13 @@ class RestartChat(LoginRequiredMixin, UserPassesTestMixin, View):
         chat = Chat.objects.get(id=self.kwargs['chat_id'])
 
         return self.request.user == chat.owner
-        
+
     def post(self, request, chat_id):
         chat = Chat.objects.get(id=chat_id)
 
         if 'restart' in request.POST:
-            chat.messages = chat.messages[:2] #slice messages to only the very first 2 messages
+            # slice messages to only the very first 2 messages
+            chat.messages = chat.messages[:2]
 
             chat.save()
 
@@ -332,7 +362,6 @@ class RestartChat(LoginRequiredMixin, UserPassesTestMixin, View):
         # else:
         #     print("restart not in form")
         #     return redirect("chat-view", chat_id=chat.id)
-
 
 
 @login_required
@@ -347,12 +376,12 @@ def register(request):
         username = form.cleaned_data.get('username')
         group = Group.objects.get(name='average_role')
         user.groups.add(group)
-        #user = User.objects.create(user=user)
+        # user = User.objects.create(user=user)
         user.save()
         messages.success(request, 'Account was created for ' + username)
         return redirect('/accounts/login/?next=/')
     context={'form':form}
-        
+
     return render(request, 'registration/register.html', context)
 
 
@@ -429,7 +458,6 @@ class UploadedJobListingView(APIView):
         title = request.POST.get("title", '').strip()
         print(request.POST)
 
-
         # Check if the text is empty
         if not text:
             messages.error(request, "Text field cannot be empty.")
@@ -438,7 +466,6 @@ class UploadedJobListingView(APIView):
         if not title:
             messages.error(request, "Title field cannot be empty.")
             return redirect('document-list')
-
 
         user = request.user
         timestamp = now().strftime("%d%m%Y_%H%M%S")
@@ -459,7 +486,6 @@ class UploadedJobListingView(APIView):
         # Create and save the UploadedJobListing object in the database
         job_listing = UploadedJobListing(user=user, content=text, filepath=filepath, title=title)
         job_listing.save()
-
 
         # Show success message and render the converted markdown
         messages.success(request, "Text uploaded successfully!")
