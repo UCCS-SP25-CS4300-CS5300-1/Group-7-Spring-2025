@@ -1,17 +1,15 @@
 {% extends "base-sidebar.html" %}
 
-
 {% block title %}
   AIS - {{ chat.title }}
 {% endblock %}
-
 
 {% block content %}
   {% load static %}
   <div class="centered-container flex-grow-1 d-flex flex-column">
     <h3 class="whiteTextOverride px-3 pt-3">{{ chat.title }}</h3>
     <div id="chat-scroll" class="d-flex flex-column-reverse flex-grow-1 overflow-y-auto overflow-x-hidden pe-0">
-      <div class="row" style="flex-direction: column-reverse;">
+      <div class="row flex-column-reverse">
         <div id="chat-messages">
           {% comment %} Pre-populate existing messages here {% endcomment %}
           {% comment %} Ignore system message in list {% endcomment %}
@@ -47,7 +45,6 @@
     </div>
   </div>
 {% endblock %}
-
 
 {% block scripts %}
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

@@ -250,3 +250,7 @@ html, body {
 .table.borderless tbody tr td, .table.borderless thead tr th {
   border: none;
 }
+
+.pt-66 {
+    padding-top: 66px !important;
+}
