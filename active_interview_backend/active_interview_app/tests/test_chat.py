@@ -119,6 +119,8 @@ class TestCreateChatView(TestCase):
         response = self.client.post(reverse('chat-create'),
             {
                 "title": "Example Title Strikes Back",
+                "type": Chat.GENERAL,
+                "difficulty": 5,
                 "listing_choice": generateExampleJobListing(self.user).id,
                 "resume_choice": generateExampleResume(self.user).id,
                 "create": "create"
@@ -186,6 +188,7 @@ class TestEditChatView(TestCase):
         response = self.client.post(reverse('chat-edit', args=[self.chat.id]),
             {
                 "title": "Changed Title",
+                "difficulty": 3,
                 "update": "update"
             }
         )
@@ -196,6 +199,7 @@ class TestEditChatView(TestCase):
         # Validate that the chat's title has been updated
         self.assertEqual(Chat.objects.get(id=self.chat.id).title,
                          "Changed Title")
+        self.assertEqual(Chat.objects.get(id=self.chat.id).difficulty, 3)
 
 
 class TestDeleteChatView(TestCase):
