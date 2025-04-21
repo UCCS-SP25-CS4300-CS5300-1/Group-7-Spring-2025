@@ -467,7 +467,7 @@ def upload_file(request):
                     instance.title = title
                     instance.file = None
                     # This is marked "None", because it stops
-                    # it from being saved to /media/uploads.                    
+                    # it from being saved to /media/uploads.
                     instance.save()
                     messages.success(request, "File uploaded successfully!")
                     return redirect('document-list')
@@ -556,7 +556,6 @@ class UploadedJobListingView(APIView):
             'documents/document-list.html',
             {'markdown_text': markdown_text}
         )
-
 
 
 class UploadedResumeView(APIView):
