@@ -24,7 +24,7 @@
               </button>
               <ul class="sidebar-dropdown-menu dropdown-menu">
                 <li><a class="sidebar-dropdown-item dropdown-item" href="{% url 'chat-edit' chat_id=owner_chat.id %}">Edit</a></li>
-                {% comment %} <li><a class="sidebar-dropdown-item dropdown-item" href="#">Results</a></li> {% endcomment %}
+                <li><a class="sidebar-dropdown-item dropdown-item" href="{% url 'chat-results' chat_id=owner_chat.id %}">Results</a></li>
                 <li><hr class="dropdown-divider"></li>
                 <li>
                   <a class="sidebar-dropdown-item dropdown-item text-danger" data-bs-toggle="modal" data-bs-target="#restartChatModal" data-chat-title="{{ owner_chat.title }}" data-chat-link="{% url 'chat-restart' chat_id=owner_chat.id %}">

@@ -5,6 +5,7 @@ import pymupdf4llm
 import markdown
 import tempfile
 import textwrap
+import re
 
 from .models import UploadedResume, UploadedJobListing, Chat
 from .forms import (
@@ -230,7 +231,6 @@ class CreateChat(LoginRequiredMixin, View):
                     {
                         "role": "system",
                         "content": system_prompt
-                
                     },
                 ]
 
@@ -248,13 +248,8 @@ class CreateChat(LoginRequiredMixin, View):
                     }
                 )
 
-                
-
-            
-
-
                 chat.save()
-                
+
                 return redirect("chat-view", chat_id=chat.id)
             # else:
             #     print("chat form invalid")
@@ -293,9 +288,6 @@ class ChatView(LoginRequiredMixin, UserPassesTestMixin, View):
         )
         ai_message = response.choices[0].message.content
         new_messages.append({"role": "assistant", "content": ai_message})
-        
-
-
 
         chat.messages = new_messages
         chat.save()
@@ -387,6 +379,42 @@ class RestartChat(LoginRequiredMixin, UserPassesTestMixin, View):
         # else:
         #     print("restart not in form")
         #     return redirect("chat-view", chat_id=chat.id)
+
+
+class ResultsChat(LoginRequiredMixin, UserPassesTestMixin, View):
+    def test_func(self):
+        # manually grab chat id from kwargs and process it
+        chat = Chat.objects.get(id=self.kwargs['chat_id'])
+
+        return self.request.user == chat.owner
+
+    def get(self, request, chat_id):
+        chat = Chat.objects.get(id=chat_id)
+        owner_chats = Chat.objects.filter(owner=request.user)\
+            .order_by('-modified_date')
+        
+     
+        feedback_prompt = textwrap.dedent("""\
+            Please provide constructive feedback to me about the
+            interview so far.
+        """)
+        input_messages = chat.messages
+        input_messages.append({"role": "user", "content": feedback_prompt})
+
+        response = client.chat.completions.create(
+            model="gpt-4o",
+            messages=input_messages,
+            max_tokens=MAX_TOKENS
+        )
+        ai_message = response.choices[0].message.content
+
+        context = {}
+        context['chat'] = chat
+        context['owner_chats'] = owner_chats
+        context['feedback'] = ai_message
+
+        return render(request, os.path.join('chat', 'chat-results.html'),
+                      context)
 
 
 @login_required
