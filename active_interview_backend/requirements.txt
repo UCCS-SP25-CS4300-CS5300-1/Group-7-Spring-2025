@@ -34,7 +34,7 @@ pydantic==2.10.6
 pydantic_core==2.27.2
 pyflakes==3.2.0
 PyMuPDF==1.25.5
-pymupdf4llm==0.0.20
+pymupdf4llm==0.0.21
 PySocks==1.7.1
 PyYAML==6.0.2
 regex==2024.11.6
