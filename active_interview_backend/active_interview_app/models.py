@@ -36,7 +36,7 @@ class Chat(models.Model):
     messages = models.JSONField() # Json of the messages object
     job_listing = models.ForeignKey(UploadedJobListing, null=True, on_delete=models.SET_NULL)
     resume = models.ForeignKey(UploadedResume, null=True, blank=True, on_delete=models.SET_NULL)
-
+    text_audio = models.URLField(blank=True, null=True)
     #create object itself, not the field
     #all templates for documents in /documents/
     #thing that returns all user files is at views

@@ -173,6 +173,7 @@ class CreateChat(LoginRequiredMixin, View):
                     {
                         "role": "system", 
                         "content": system_prompt
+                
                     },
                 ]
 
@@ -185,8 +186,13 @@ class CreateChat(LoginRequiredMixin, View):
                 ai_message = response.choices[0].message.content
                 chat.messages.append({"role": "assistant", "content": ai_message})
 
-                chat.save()
+                
 
+            
+
+
+                chat.save()
+                
                 return redirect("chat-view", chat_id=chat.id)
             # else:
             #     print("chat form invalid")
@@ -224,6 +230,9 @@ class ChatView(LoginRequiredMixin, UserPassesTestMixin, View):
         )
         ai_message = response.choices[0].message.content
         new_messages.append({"role": "assistant", "content": ai_message})
+        
+
+
 
         chat.messages = new_messages
         chat.save()

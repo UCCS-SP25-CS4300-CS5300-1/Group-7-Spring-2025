@@ -6,10 +6,11 @@ from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support.ui import WebDriverWait, Select
 from selenium.webdriver.support import expected_conditions as EC
-
-
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support.select import Select
+import time
 # === Helper Fucntions ===
 # Make a context-dependent driver for the environment
 def getEnvDriver():
@@ -22,6 +23,8 @@ def getEnvDriver():
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--disable-gpu")
         chrome_options.add_argument("--window-size=1920,1080")
+        chrome_options.add_argument("--use-fake-ui-for-media-stream")
+        chrome_options.add_argument("--use-fake-device-for-media-stream") 
 
         driver = webdriver.Chrome(options=chrome_options)
 
@@ -89,3 +92,105 @@ class TestDriver(StaticLiveServerTestCase):
 
         # Stop chrome driver
         driver.quit()
+    
+    #From here on you may need to configure the user test to match with the password
+    #As well as match it with the chat number, because that can cause errors on local machine
+    def testLogin(self):
+        driver = getEnvDriver()
+        user = None
+        if not User.objects.filter(username = 'test').exists():
+            user = User.objects.create_user(
+                username="test", 
+                password="!QAZxsw2"
+            )
+
+        if settings.PROD == False:
+            driver.get('http://127.0.0.1:8000/accounts/login/')
+        else:
+            driver.get('https://app.activeinterviewservice.me/accounts/login/')
+        
+        user_name = driver.find_element(by="id", value="id_username")
+        user_password = driver.find_element(by="id", value='id_password')
+        submit = driver.find_element(by="id", value="submit")
+        #This already exists on the website, however you may need to do in your local
+        user_name.send_keys('test')
+        user_password.send_keys('!QAZxsw2')
+
+        submit.send_keys(Keys.RETURN)
+        driver.get('http://127.0.0.1:8000/')
+        assert len(driver.find_elements(By.ID, "login-button")) == 0
+
+
+    def testText2Speech(self):
+        driver = getEnvDriver()
+        if settings.PROD == False:
+            driver.get('http://127.0.0.1:8000/accounts/login/')
+        else:
+            driver.get('https://app.activeinterviewservice.me/accounts/login/')
+        
+        user_name = driver.find_element(by="id", value="id_username")
+        user_password = driver.find_element(by="id", value='id_password')
+        submit = driver.find_element(by="id", value="submit")
+
+        user_name.send_keys('test')
+        user_password.send_keys('!QAZxsw2')
+        submit.send_keys(Keys.RETURN)
+
+        if settings.PROD == False:
+            driver.get('http://127.0.0.1:8000/chat/17/')
+        else:
+            driver.get('https://app.activeinterviewservice.me/chat/26/')
+        
+        ai_message = driver.find_element(By.ID, "ai_message").text
+        text2speech_button = driver.find_element(By.ID, "text2speech_button")
+        text2speech_button.click()
+        #print(ai_message)
+        #Can use anything like the entire message in assert, just did Craig because I know for my resume (test) it will say my name
+        assert "Craig" in ai_message
+    
+    def testCreateChat(self):
+        driver = getEnvDriver()
+        if settings.PROD == False:
+            driver.get('http://127.0.0.1:8000/accounts/login/')
+        else:
+            driver.get('https://app.activeinterviewservice.me/accounts/login/')
+        
+        user_name = driver.find_element(by="id", value="id_username")
+        user_password = driver.find_element(by="id", value='id_password')
+        submit = driver.find_element(by="id", value="submit")
+        user_name.send_keys('test')
+        user_password.send_keys('!QAZxsw2')
+        submit.send_keys(Keys.RETURN)
+        if settings.PROD == False:
+            driver.get('http://127.0.0.1:8000/chat/create')
+        else:
+            driver.get('https://app.activeinterviewservice.me/chat/create')
+        title = driver.find_element(By.ID, "id_title")
+        title.send_keys('test')
+        job = driver.find_element(By.ID, "id_listing_choice")
+        select = Select(job)
+        select.select_by_index(1)
+        resume = driver.find_element(By.ID, "id_resume_choice")
+        select = Select(resume)
+        select.select_by_index(1)
+        print("testing create")
+        submit = driver.find_element(By.ID, "create-form-button")
+        submit.click()
+        ai_message = driver.find_element(By.ID, "ai_message").text
+        assert "Craig" in ai_message
+        
+
+
+
+
+        
+
+
+
+        
+
+        
+
+    
+
+
