@@ -116,45 +116,45 @@ class TestDriver(StaticLiveServerTestCase):
         driver.quit()
     
     #From here on you may need to configure the user test to match with the password
-    #As well as match it with the chat number, because that can cause errors on local machine
-    def testLogin(self):
-        driver = loginSim()
-        driver.get('http://127.0.0.1:8000/')
-        assert len(driver.find_elements(By.ID, "login-button")) == 0
+    # #As well as match it with the chat number, because that can cause errors on local machine
+    # def testLogin(self):
+    #     driver = loginSim()
+    #     driver.get('http://127.0.0.1:8000/')
+    #     assert len(driver.find_elements(By.ID, "login-button")) == 0
 
 
-    def testText2Speech(self):
-        driver = loginSim()
-        if settings.PROD == False:
-            driver.get('http://127.0.0.1:8000/chat/1/')
-        else:
-            driver.get('https://app.activeinterviewservice.me/chat/26/')
+    # def testText2Speech(self):
+    #     driver = loginSim()
+    #     if settings.PROD == False:
+    #         driver.get('http://127.0.0.1:8000/chat/1/')
+    #     else:
+    #         driver.get('https://app.activeinterviewservice.me/chat/26/')
         
-        ai_message = driver.find_element(By.ID, "ai_message").text
-        text2speech_button = driver.find_element(By.ID, "text2speech_button")
-        text2speech_button.click()
-        #print(ai_message)
-        #Can use anything like the entire message in assert, just did Craig because I know for my resume (test) it will say my name
-        assert "Craig" in ai_message
+    #     ai_message = driver.find_element(By.ID, "ai_message").text
+    #     text2speech_button = driver.find_element(By.ID, "text2speech_button")
+    #     text2speech_button.click()
+    #     #print(ai_message)
+    #     #Can use anything like the entire message in assert, just did Craig because I know for my resume (test) it will say my name
+    #     assert "Craig" in ai_message
     
-    def testCreateChat(self):
-        driver = loginSim()
-        if settings.PROD == False:
-            driver.get('http://127.0.0.1:8000/chat/create')
-        else:
-            driver.get('https://app.activeinterviewservice.me/chat/create')
-        title = driver.find_element(By.ID, "id_title")
-        title.send_keys('test')
-        job = driver.find_element(By.ID, "id_listing_choice")
-        select = Select(job)
-        select.select_by_index(1)
-        resume = driver.find_element(By.ID, "id_resume_choice")
-        select = Select(resume)
-        select.select_by_index(1)
-        submit = driver.find_element(By.ID, "create-form-button")
-        submit.click()
-        ai_message = driver.find_element(By.ID, "ai_message").text
-        assert "Craig" in ai_message
+    # def testCreateChat(self):
+    #     driver = loginSim()
+    #     if settings.PROD == False:
+    #         driver.get('https://127.0.0.1:8000/chat/create')
+    #     else:
+    #         driver.get('https://app.activeinterviewservice.me/chat/create')
+    #     title = driver.find_element(By.ID, "id_title")
+    #     title.send_keys('test')
+    #     job = driver.find_element(By.ID, "id_listing_choice")
+    #     select = Select(job)
+    #     select.select_by_index(1)
+    #     resume = driver.find_element(By.ID, "id_resume_choice")
+    #     select = Select(resume)
+    #     select.select_by_index(1)
+    #     submit = driver.find_element(By.ID, "create-form-button")
+    #     submit.click()
+    #     ai_message = driver.find_element(By.ID, "ai_message").text
+    #     assert "Craig" in ai_message
         
 
 

@@ -61,12 +61,12 @@
                 <li style="font-size: 23px;">
                   {% if document.title and document.title != "1" %}
                     {{ document.title }} -
-                    <a href="{% url 'resume_detail' resume_id=document.id %}">View</a> |
-                    <a href="#" data-bs-toggle="modal" data-bs-target="#deleteResumeModal{{ document.id }}">Delete</a>
+                    <a class="link-light" href="{% url 'resume_detail' resume_id=document.id %}">View</a> |
+                    <a class="link-light" href="#" data-bs-toggle="modal" data-bs-target="#deleteResumeModal{{ document.id }}">Delete</a>
                   {% elif document.file %}
                     {{ document.original_filename }} -
-                    <a href="{% url 'resume_detail' resume_id=document.id %}">View</a> |
-                    <a href="#" data-bs-toggle="modal" data-bs-target="#deleteResumeModal{{ document.id }}">Delete</a>
+                    <a class="link-light" href="{% url 'resume_detail' resume_id=document.id %}">View</a> |
+                    <a class="link-light" href="#" data-bs-toggle="modal" data-bs-target="#deleteResumeModal{{ document.id }}">Delete</a>
                   {% endif %}
                 </li>            
                 {% endif %}
@@ -110,8 +110,8 @@
                 <li style="font-size: 23px;">
                   {% if job.title %}
                     {{ job.title }} -
-                    <a href="{% url 'job_posting_detail' job_id=job.id %}">View</a> |
-                    <a href="#" data-bs-toggle="modal" data-bs-target="#deleteJobModal{{ job.id }}">Delete</a>
+                    <a class="link-light" href="{% url 'job_posting_detail' job_id=job.id %}">View</a> |
+                    <a class="link-light" href="#" data-bs-toggle="modal" data-bs-target="#deleteJobModal{{ job.id }}">Delete</a>
                   {% endif %}
                   <div class="modal fade" id="deleteJobModal{{ job.id }}" tabindex="-1" aria-labelledby="deleteJobLabel{{ job.id }}" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered">
