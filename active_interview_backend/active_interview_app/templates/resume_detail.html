@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block title %}
+  {{ resume.title }} - Resume Details
+{% endblock %}
+
+{% block content %}
+  <style>
+    .resume-detail {
+      color: white;
+      padding: 2rem;
+    }
+  </style>
+
+  <div class="resume-detail">
+    <h1>{{ resume.title }}</h1>
+    <div>{{ resume.content }}</div>
+  </div>
+{% endblock %}
