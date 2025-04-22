@@ -1,14 +1,12 @@
 {% extends "base-sidebar.html" %}
 
-
 {% block title %}
   AIS - Edit "{{ chat.title }}"
 {% endblock %}
 
-
 {% block content %}
   <div class="centered-container flex-grow-1 d-flex flex-column justify-content-center p-2">
-    <h3 class="whiteTextOverride px-3 pt-3" style="text-align: center;">Edit "{{ chat.title }}"</h3>
+    <h3 class="whiteTextOverride px-3 pt-3 text-center">Edit "{{ chat.title }}"</h3>
     <hr class="white-break">
     <div id="content-scroll" class="d-flex flex-column overflow-y-auto overflow-x-hidden pe-0">
       <form method="post" action="{% url "chat-edit" chat_id=chat.id %}">
@@ -16,8 +14,12 @@
         <table class="table borderless">
           <tbody>
             <tr>
-              <td class="text-start align-middle"><h5 class="text-white">Title*:</h5></td>
+              <td class="text-start align-middle"><h5 class="text-white">Title:</h5></td>
               <td class="text-end">{{ form.title }}</td>
+            </tr>
+            <tr>
+              <td class="text-start align-middle"><h5 class="text-white">Difficulty:</h5></td>
+              <td class="text-end">{{ form.difficulty }}</td>
             </tr>
           </tbody>
         </table>

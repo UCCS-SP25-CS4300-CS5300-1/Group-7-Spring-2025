@@ -62,24 +62,6 @@ html, body {
 }
 
 /* index.html (homepage) getting started divs*/
-/*
-.col{
-    height: 50%; 
-    width: 30%; 
-    margin: 60px; 
-    float: center;
-    text-align: center; 
-    border-style: solid; 
-    border-color: lightblue;
-    border-radius: 15px;
-    color: #4482a6; 
-    font-family: Verdana, Geneva, Tahoma, sans-serif; 
-    font-weight: light; 
-    font-size: 25px;
-
-}
-*/
-
 
 footer {
     background-color: var(--emerald);

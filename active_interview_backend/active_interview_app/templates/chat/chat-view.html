@@ -1,17 +1,15 @@
 {% extends "base-sidebar.html" %}
 
-
 {% block title %}
   AIS - {{ chat.title }}
 {% endblock %}
-
 
 {% block content %}
   {% load static %}
   <div class="centered-container flex-grow-1 d-flex flex-column">
     <h3 class="whiteTextOverride px-3 pt-3">{{ chat.title }}</h3>
     <div id="chat-scroll" class="d-flex flex-column-reverse flex-grow-1 overflow-y-auto overflow-x-hidden pe-0">
-      <div class="row" style="flex-direction: column-reverse;">
+      <div class="row flex-column-reverse">
         <div id="chat-messages">
           {% comment %} Pre-populate existing messages here {% endcomment %}
           {% comment %} Ignore system message in list {% endcomment %}
@@ -21,6 +19,7 @@
                 <div class="card user-text-bubble">
                   <div class="card-body">
                     <p class="card-text">{{ message.content|linebreaksbr }}</p>
+                    
                   </div>
                 </div>
               </div>
@@ -28,7 +27,10 @@
               <div class="col bot-text-container">
                 <div class="card bot-text-bubble">
                   <div class="card-body">
-                    <p class="card-text">{{ message.content|linebreaksbr }}</p>
+                      <div class = "ai_messages"> 
+                      <p class="card-text" id = "ai_message">{{ message.content|linebreaksbr }} </p>
+                      <button class ="button-chat-send btn btn-primary ms-2" id ="text2speech_button" onclick="textToSpeech(this)">Speak</button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -41,6 +43,7 @@
       <div class="card-body">
         <div class="d-flex">
           <textarea id="user-input" class="chat-input flex-grow-1 border-0 p-2" placeholder="Enter text here..." style="resize: none;"></textarea>
+          <button class="button-chat-send btn btn-primary ms-2" id = "speech-text" onclick="speechToText()">Speak</button>
           <button class="button-chat-send btn btn-primary ms-2" type="button" onclick="sendMessage()">Send</button>
         </div>
       </div>
@@ -48,11 +51,83 @@
   </div>
 {% endblock %}
 
-
 {% block scripts %}
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.2.4/purify.min.js" integrity="sha512-Y1p/STLW/B+l+MPJ5K5OdILMwJa2gMFXXmC/qsyDuGH9uc1MZMUo6/8YQUg9Ut4ns8KGCrCtt+58UwmNFFiVvA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script>
+
+
+
+
+  //global variable because of everytime you click the button of speech to text it will alternate
+  // and if store it in there it will not alternate
+  let active_speech = false;
+
+
+    function textToSpeech(button) {
+      //Because there are multiple chat messages, it grabs by the previous one
+      let ai_message = button.previousElementSibling.innerText;
+      //cancels it to prevent multiple from playing
+      window.speechSynthesis.cancel();
+      //speech
+      let speech = new SpeechSynthesisUtterance();
+      //binds speech text to the message
+      speech.text = ai_message;
+      //talks about ai message
+      window.speechSynthesis.speak(speech);
+      
+      
+   }
+
+   function speechToText() {
+    //gets the button of when to start/stop listening
+    const button = document.getElementById('speech-text');
+    const textbox = document.getElementById('user-input');
+    //creates a way to listen
+    const Listener = window.webkitSpeechRecognition;
+    const recognition = new Listener();
+    //display results while you are talking
+    recognition.interimResults = true;
+    //stops code if you stop talking
+    recognition.continuous = true;
+    //because of interim results it will display as it goes along
+    recognition.onresult = (event) => {
+      //stores text for each time of listening
+      let text = '';
+      //goes through the stored text from the event
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        //stores text
+        text += event.results[i][0].transcript;
+      }
+      //places text in textbox
+      textbox.value = text;
+    };
+    //button to alternate between stop and start
+    button.addEventListener('click', () => {
+      //if active is true it stops it, which well then go to onend
+      if (active_speech) {
+        //Stops listening
+        recognition.stop();
+      } 
+      else {
+        //starts listening
+        recognition.start();
+        active_speech = true;
+        //shows people to click to stop
+        button.textContent = 'Stop';
+      }
+    });
+    //can be stopped by button or silence
+    recognition.onend = () => {
+      //resets the text box
+      button.textContent = 'Speak';
+      //alternates back to false
+      active_speech = false;
+    };
+  }
+  
+  
+    
     // Move the chat scroll to the bottom
     function updateScroll(){
       var element = document.getElementById("chat-scroll");
@@ -132,11 +207,12 @@
                 `<div class="col bot-text-container">
                   <div class="card bot-text-bubble">
                     <div class="card-body">
-                      <p class="card-text">${formattedResponseMessage}</p>
+                      <p class="card-text" id = "ai_message">${formattedResponseMessage}</p>
+                       <button class ="button-chat-send btn btn-primary ms-2" id ="text2speech_button" onclick="textToSpeech(this)">Speak</button>
                     </div>
                   </div>
                 </div>`);
-
+            
             updateScroll();
           }
         });
