@@ -24,4 +24,3 @@ urlpatterns = [
     # add app urls
     path('', include('active_interview_app.urls')),
 ]
-

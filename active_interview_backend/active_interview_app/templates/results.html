@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+  AIS - Results
+{% endblock %}
+
+{% block content %}
+
+<head>
+  <!--javascript source-->
+  <script  type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+  <script type="text/javascript" src="/static/js/charts.js" defer></script>
+
+</head>
+<style>
+  .h1{
+    margin-left: auto; 
+    margin-right: auto; 
+    margin-top: 2%;
+    margin-bottom: 5%;
+    color: #4482a6;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+  }
+
+  .container{
+    display: flex;
+    max-height: fit-content;
+    justify-content: space-around;
+    flex-basis: auto;
+    flex-wrap: wrap;
+  }
+
+  .flex-box{
+
+    max-height: max-content;
+    max-width: max-content;
+    flex: 0 1 auto;
+
+  }
+
+  #feedbackbox{
+    border: solid;
+    border-radius: 15px;
+    border-width: 3px;
+    border-color: lightblue;
+    max-width: fit-content;
+    height: fit-content;
+    margin-top: 5%;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  #feedbackpara{
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    color: #4482a6;
+    font-size: large;
+    max-width: 800px;
+    padding: 2em;
+  }
+</style>
+
+<h1 class="h1">Interview Results</h1>
+
+<body>
+  <div class="container">
+    <div class="flex-box">
+      <canvas id="BarChart" style="width:100%; max-width:500px; height:100%; max-height: 450px;"></canvas>
+    </div>
+
+    <div class="flex-box">
+      <canvas id="DonutChart" style="width:100%;max-width:500px; height:100%; max-height: 450px;"></canvas>
+    </div>
+  </div>
+
+<div class="container" id="feedbackbox">
+  <h1 class="h1" style="margin-bottom: 1%;">Feedback</h1>
+  <p id="feedbackpara">Lorem ipsum dolor sit amet, consectetur
+     adipisicing elit. Vitae minus consequuntur officia! 
+     Libero illo ex animi nesciunt similique at quam pariatur 
+     consequatur aliquam aut, sequi a dolor inventore, enim minima!
+  </p>
+</div>
+</body>
+
+{% endblock %}

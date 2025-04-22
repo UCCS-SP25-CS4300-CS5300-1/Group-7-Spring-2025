@@ -11,6 +11,9 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.select import Select
 import time
+
+
+
 # === Helper Fucntions ===
 # Make a context-dependent driver for the environment
 def getEnvDriver():
@@ -29,7 +32,7 @@ def getEnvDriver():
         driver = webdriver.Chrome(options=chrome_options)
 
         return driver
-    
+
     # if testing in local non-container environment:
     else:
         driver = webdriver.Chrome()
@@ -40,13 +43,13 @@ def getEnvDriver():
 def authenticate(test_case, driver):
     # Retrieve or generate E2E user
     user = None
-    if not User.objects.filter(username = 'E2ETester').exists():
+    if not User.objects.filter(username='E2ETester').exists():
         user = User.objects.create_user(
-            username="E2ETester", 
+            username="E2ETester",
             password="curlylift77"
         )
     else:
-        user = User.objects.get(username = 'E2ETester')
+        user = User.objects.get(username='E2ETester')
 
     # log in on client object
     test_case.user = user
@@ -54,10 +57,10 @@ def authenticate(test_case, driver):
 
     # Get session cookie from Django test client
     session_cookie = test_case.client.cookies['sessionid']
-    
+
     # Navigate Selenium to the live server domain to set the cookie
     driver.get(test_case.live_server_url)
-    
+
     # Add the session cookie to Selenium
     driver.add_cookie({
         'name': 'sessionid',
@@ -90,7 +93,6 @@ def loginSim():
     submit.send_keys(Keys.RETURN)
     return driver
 
-
 class TestDriver(StaticLiveServerTestCase):
     def testE2EDriver(self):
         # Init chrome driver
@@ -99,11 +101,10 @@ class TestDriver(StaticLiveServerTestCase):
         # Stop chrome driver
         driver.quit()
 
-    
     def testE2EAuth(self):
         # Init chrome driver
         driver = getEnvDriver()
-        
+
         authenticate(self, driver)
 
         # Assert that uesr is logged in through user authentication buttons
@@ -124,7 +125,7 @@ class TestDriver(StaticLiveServerTestCase):
     def testText2Speech(self):
         driver = loginSim()
         if settings.PROD == False:
-            driver.get('http://127.0.0.1:8000/chat/17/')
+            driver.get('http://127.0.0.1:8000/chat/1/')
         else:
             driver.get('https://app.activeinterviewservice.me/chat/26/')
         

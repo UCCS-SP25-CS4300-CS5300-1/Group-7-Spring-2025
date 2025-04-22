@@ -18,7 +18,7 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# media paths 
+# media paths
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
@@ -27,13 +27,16 @@ MEDIA_ROOT = BASE_DIR / 'media'
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-# SECRET_KEY = 'django-insecure-!qu0*#gq2vxvl4+ve+2!c^+y24aj%t5$wo-8daxq8s#r(-&%4h' # OLD AND COMPROMISED
-SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", 
-                            get_random_secret_key() if os.environ.get("PROD", "true").lower() == "false"
-                                else None)
+# OLD AND COMPROMISED
+# SECRET_KEY =
+#   'django-insecure-!qu0*#gq2vxvl4+ve+2!c^+y24aj%t5$wo-8daxq8s#r(-&%4h'
+SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY",
+                            get_random_secret_key()
+                            if os.environ.get("PROD", "true").lower()
+                            == "false"
+                            else None)
 
 OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
-
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -58,8 +61,6 @@ INSTALLED_APPS = [
     'bootstrap5',
     'rest_framework',
     'filetype',
-    'gtts',
-    
 ]
 
 MIDDLEWARE = [
