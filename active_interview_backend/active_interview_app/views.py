@@ -453,7 +453,7 @@ def profile(request):
 @login_required
 def resume_detail(request, resume_id):
     resume = get_object_or_404(UploadedResume, pk=resume_id)
-    return render(request, 'resume_detail.html', {'resume': resume})
+    return render(request, 'documents/resume_detail.html', {'resume': resume})
 
 
 @login_required
@@ -530,7 +530,7 @@ def upload_file(request):
 
 def job_posting_detail(request, job_id):
     job = get_object_or_404(UploadedJobListing, id=job_id)
-    return render(request, 'job_posting_detail.html', {'job': job})
+    return render(request, 'documents/job_posting_detail.html', {'job': job})
 
 
 @login_required
