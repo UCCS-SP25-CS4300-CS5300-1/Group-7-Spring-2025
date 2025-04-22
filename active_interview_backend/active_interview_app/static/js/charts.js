@@ -27,18 +27,26 @@ const chart1 = new Chart(BarChart, {
           size: 15,
           color: "blue",
         },
+        legend: {
+          display: false,
+        },
         title: {
           display: true,
           text: "Category scores (out of 100)",
         },
         scales: {
-          y: {
-            beginAtZero: true,
-          },
-        },
-    },
+          y: [{
+            ticks: {
+                beginAtZero: true,
+                max: 100,
+                min: 0
+            }
+        }],
+      }  
+    } 
   });
 
+const dataSplits = [200,50,100];
 const DonutChart = document.getElementById("DonutChart").getContext('2d');
 const chart2 = new Chart(DonutChart, {
   type: 'doughnut',
@@ -50,7 +58,7 @@ const chart2 = new Chart(DonutChart, {
       'Grammar'
     ],
     datasets: [{
-      data: [200, 50, 100],
+      data: dataSplits,
       backgroundColor: barColors,
       hoverOffset: 4
     }],
