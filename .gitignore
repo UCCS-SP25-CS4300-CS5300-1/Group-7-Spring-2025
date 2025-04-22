@@ -371,3 +371,4 @@ staticfiles/
 error_log.txt
 
 testfile.pdf
+myenv/

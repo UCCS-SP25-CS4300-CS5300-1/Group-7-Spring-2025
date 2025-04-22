@@ -119,6 +119,8 @@ class TestCreateChatView(TestCase):
         response = self.client.post(reverse('chat-create'),
             {
                 "title": "Example Title Strikes Back",
+                "type": Chat.GENERAL,
+                "difficulty": 5,
                 "listing_choice": generateExampleJobListing(self.user).id,
                 "resume_choice": generateExampleResume(self.user).id,
                 "create": "create"
@@ -186,6 +188,7 @@ class TestEditChatView(TestCase):
         response = self.client.post(reverse('chat-edit', args=[self.chat.id]),
             {
                 "title": "Changed Title",
+                "difficulty": 3,
                 "update": "update"
             }
         )
@@ -196,6 +199,7 @@ class TestEditChatView(TestCase):
         # Validate that the chat's title has been updated
         self.assertEqual(Chat.objects.get(id=self.chat.id).title,
                          "Changed Title")
+        self.assertEqual(Chat.objects.get(id=self.chat.id).difficulty, 3)
 
 
 class TestDeleteChatView(TestCase):
@@ -218,3 +222,32 @@ class TestDeleteChatView(TestCase):
 
         # Validate that the chat has been deleted
         self.assertFalse(Chat.objects.filter(id=self.chat.id).exists())
+
+
+class TestRestartChatView(TestCase):
+    def setUp(self):
+        self.user = generateExampleUser()
+        self.chat = generateExampleChat(self.user)
+        self.client.force_login(self.user)
+
+    def testPOSTRestartChatView(self):
+        self.chat.messages += {
+            "role": "user",
+            "content": "DELETEME",
+        }
+
+        # Call the view to update the current item's title
+        response = self.client.post(reverse('chat-restart',
+                                            args=[self.chat.id]),
+            {
+                "restart": "restart"
+            }
+        )
+
+        # Validate that the view is valid.  This view redirects
+        self.assertEqual(response.status_code, 302)
+
+        # Validate that the chat only has 2 messages now
+        self.assertLessEqual(len(Chat.objects.get(id=self.chat.id)\
+                                 .messages), 2)
+
