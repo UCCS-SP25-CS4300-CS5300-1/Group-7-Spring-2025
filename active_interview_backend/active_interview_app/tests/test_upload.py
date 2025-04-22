@@ -174,7 +174,7 @@ class ResumeDetailViewTests(TestCase):
         self.client.login(username='testuser', password='password')
         response = self.client.get(reverse('resume_detail', args=[self.resume.id]))
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'resume_detail.html')
+        self.assertTemplateUsed(response, 'documents/resume_detail.html')
         self.assertEqual(response.context['resume'], self.resume)
 
     def test_resume_detail_view_unauthenticated_redirects(self):
