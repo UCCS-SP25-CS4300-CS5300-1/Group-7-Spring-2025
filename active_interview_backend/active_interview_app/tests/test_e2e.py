@@ -93,6 +93,7 @@ def loginSim():
     submit.send_keys(Keys.RETURN)
     return driver
 
+  
 class TestDriver(StaticLiveServerTestCase):
     def testE2EDriver(self):
         # Init chrome driver
