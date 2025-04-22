@@ -29,6 +29,10 @@
       <li class="nav-item">
         <a class="nav-link" href="{% url "about-us" %}">About Us</a>
       </li>
+    <!-- !!!!!!!!!!!!!!!!Might not need --- for testing purposes!!!!!!!!!!!!!!!!!!!!!!-->
+      <li class="nav-item">
+        <a class="nav-link" href="{% url "results" %}">Results</a>
+      </li>
     </ul>
     {% if user.is_authenticated %}
       <ul class="navbar-nav ms-auto" id="profile-dropdown">

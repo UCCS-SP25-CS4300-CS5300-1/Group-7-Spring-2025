@@ -6,6 +6,7 @@ from django.conf.urls.static import static
 from rest_framework import routers
 
 from . import views
+from .views import *
 
 
 # Create router and register views
@@ -29,6 +30,7 @@ urlpatterns = [
              template_name='registration/logged_out.html'),
          name='logout'),
     path('profile/', views.profile, name='profile'),
+    path('results/', views.results, name='results'),
 
     # Chat urls
     path('chat/', views.chat_list, name='chat-list'),
@@ -49,18 +51,20 @@ urlpatterns = [
     path('api/', include(router.urls)),
 
     # Joel's file upload urls
-    path('document/', views.upload_file, name='document-list'),
+    path('document/', views.DocumentList.as_view(), name='document-list'),
     path('upload-file/', views.upload_file, name='upload_file'),
-    path('api/paste-text/', views.UploadedJobListingView.as_view(),
-         name='save_pasted_text'),
-    path('paste-text/<int:pk>/', views.UploadedJobListingView.as_view(),
-         name='pasted_text_detail'),
-    # List files and uploads.
-    path('api/files/', views.UploadedResumeView.as_view(), name='file_list'),
-    # path('api/files/<int:pk>/', views.UploadedResumeDetail.as_view(),
-    #   name='file_detail'), #Making changes to files.
-    path('pasted-text/', views.UploadedJobListingView.as_view(),
-         name='save_pasted_text'),  # For the text box input.
+    path('api/paste-text/', views.UploadedJobListingView.as_view(), name='save_pasted_text'),
+    path('paste-text/<int:pk>/', views.UploadedJobListingView.as_view(), name='pasted_text_detail'),
+    path('api/files/', views.UploadedResumeView.as_view(), name='file_list'),  #List files and uploads.
+    #path('api/files/<int:pk>/', views.UploadedResumeDetail.as_view(), name='file_detail'), #Making changes to files.
+    path('pasted-text/', views.UploadedJobListingView.as_view(), name='save_pasted_text'), #For the text box input.
+    path('resume/<int:resume_id>/', views.resume_detail, name='resume_detail'),
+    path('job-posting/<int:job_id>/', views.job_posting_detail, name='job_posting_detail'),
+    path('resume/delete/<int:resume_id>/', views.delete_resume, name='delete_resume'),
+    path('delete_job/<int:job_id>/', views.delete_job, name='delete_job'),
+
+
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 # if settings.PROD:
