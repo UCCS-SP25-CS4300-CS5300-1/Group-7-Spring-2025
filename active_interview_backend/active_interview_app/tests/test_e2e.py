@@ -69,6 +69,26 @@ def authenticate(test_case, driver):
     # Refresh the page after adding the cookie
     driver.get(test_case.live_server_url)
 
+def loginSim():
+    user = None
+    if not User.objects.filter(username = 'test').exists():
+        user = User.objects.create_user(
+            username="test", 
+            password="!QAZxsw2"
+        )
+    driver = getEnvDriver()
+    if settings.PROD == False:
+        driver.get('http://127.0.0.1:8000/accounts/login/')
+    else:
+        driver.get('https://app.activeinterviewservice.me/accounts/login/')
+    user_name = driver.find_element(by="id", value="id_username")
+    user_password = driver.find_element(by="id", value='id_password')
+    submit = driver.find_element(by="id", value="submit")
+
+    user_name.send_keys('test')
+    user_password.send_keys('!QAZxsw2')
+    submit.send_keys(Keys.RETURN)
+    return driver
 
 
 class TestDriver(StaticLiveServerTestCase):
@@ -96,46 +116,13 @@ class TestDriver(StaticLiveServerTestCase):
     #From here on you may need to configure the user test to match with the password
     #As well as match it with the chat number, because that can cause errors on local machine
     def testLogin(self):
-        driver = getEnvDriver()
-        user = None
-        if not User.objects.filter(username = 'test').exists():
-            user = User.objects.create_user(
-                username="test", 
-                password="!QAZxsw2"
-            )
-
-        if settings.PROD == False:
-            driver.get('http://127.0.0.1:8000/accounts/login/')
-        else:
-            driver.get('https://app.activeinterviewservice.me/accounts/login/')
-        
-        user_name = driver.find_element(by="id", value="id_username")
-        user_password = driver.find_element(by="id", value='id_password')
-        submit = driver.find_element(by="id", value="submit")
-        #This already exists on the website, however you may need to do in your local
-        user_name.send_keys('test')
-        user_password.send_keys('!QAZxsw2')
-
-        submit.send_keys(Keys.RETURN)
+        driver = loginSim()
         driver.get('http://127.0.0.1:8000/')
         assert len(driver.find_elements(By.ID, "login-button")) == 0
 
 
     def testText2Speech(self):
-        driver = getEnvDriver()
-        if settings.PROD == False:
-            driver.get('http://127.0.0.1:8000/accounts/login/')
-        else:
-            driver.get('https://app.activeinterviewservice.me/accounts/login/')
-        
-        user_name = driver.find_element(by="id", value="id_username")
-        user_password = driver.find_element(by="id", value='id_password')
-        submit = driver.find_element(by="id", value="submit")
-
-        user_name.send_keys('test')
-        user_password.send_keys('!QAZxsw2')
-        submit.send_keys(Keys.RETURN)
-
+        driver = loginSim()
         if settings.PROD == False:
             driver.get('http://127.0.0.1:8000/chat/17/')
         else:
@@ -149,18 +136,7 @@ class TestDriver(StaticLiveServerTestCase):
         assert "Craig" in ai_message
     
     def testCreateChat(self):
-        driver = getEnvDriver()
-        if settings.PROD == False:
-            driver.get('http://127.0.0.1:8000/accounts/login/')
-        else:
-            driver.get('https://app.activeinterviewservice.me/accounts/login/')
-        
-        user_name = driver.find_element(by="id", value="id_username")
-        user_password = driver.find_element(by="id", value='id_password')
-        submit = driver.find_element(by="id", value="submit")
-        user_name.send_keys('test')
-        user_password.send_keys('!QAZxsw2')
-        submit.send_keys(Keys.RETURN)
+        driver = loginSim()
         if settings.PROD == False:
             driver.get('http://127.0.0.1:8000/chat/create')
         else:
@@ -173,7 +149,6 @@ class TestDriver(StaticLiveServerTestCase):
         resume = driver.find_element(By.ID, "id_resume_choice")
         select = Select(resume)
         select.select_by_index(1)
-        print("testing create")
         submit = driver.find_element(By.ID, "create-form-button")
         submit.click()
         ai_message = driver.find_element(By.ID, "ai_message").text
