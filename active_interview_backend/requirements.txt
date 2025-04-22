@@ -47,7 +47,7 @@ sqlparse==0.5.3
 tqdm==4.67.1
 trio==0.29.0
 trio-websocket==0.12.2
-typing_extensions==4.12.2
+typing_extensions==4.13.2
 urllib3==2.3.0
 websocket-client==1.8.0
 wsproto==1.2.0
