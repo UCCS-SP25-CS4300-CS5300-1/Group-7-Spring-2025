@@ -19,7 +19,7 @@ filetype==1.2.0
 flake8==7.2.0
 gunicorn==23.0.0
 h11==0.14.0
-httpcore==1.0.7
+httpcore==1.0.9
 httpx==0.28.1
 idna==3.10
 jiter==0.9.0
