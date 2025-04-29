@@ -6,6 +6,8 @@ import markdown
 import tempfile
 import textwrap
 import re
+from markdownify import markdownify as md
+from docx import Document
 
 from .models import UploadedResume, UploadedJobListing, Chat
 from .forms import (
@@ -467,7 +469,7 @@ def delete_resume(request, resume_id):
 
 @login_required
 def upload_file(request):
-    allowed_types = ['pdf']
+    allowed_types = ['pdf', 'docx']
 
     if request.method == "POST":
         form = UploadFileForm(request.POST, request.FILES)
@@ -476,35 +478,37 @@ def upload_file(request):
             file_name = uploaded_file.name
             title = request.POST.get("title", '').strip()
 
-            file_type = filetype.guess(uploaded_file.read())
+            file_bytes = uploaded_file.read()
+            file_type = filetype.guess(file_bytes)
             uploaded_file.seek(0)
 
-            # Due to how pymupdf4llm works, we have to
-            # save a file for it, because the .to_markdown()
-            # function accepts a file path, and not the file object itself.
-            # Therefore, a file is temporarily created so there's a filepath,
-            # and deleted once everything is converted.
             if file_type and file_type.extension in allowed_types:
                 try:
-                    with tempfile.NamedTemporaryFile(
-                        delete=False,
-                        suffix=".pdf"
-                    ) as temp_file:
-                        for chunk in uploaded_file.chunks():
-                            temp_file.write(chunk)
-                        temp_file_path = temp_file.name
-
-                    markdown_text = pymupdf4llm.to_markdown(temp_file_path)
-
                     instance = form.save(commit=False)
                     instance.user = request.user
                     instance.original_filename = file_name
                     instance.filesize = uploaded_file.size
-                    instance.content = markdown_text
                     instance.title = title
-                    instance.file = None
-                    # This is marked "None", because it stops
-                    # it from being saved to /media/uploads.
+                    instance.file = None  # Don't save the raw file to /media
+
+                    if file_type.extension == 'pdf':
+                        with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as temp_file:
+                            for chunk in uploaded_file.chunks():
+                                temp_file.write(chunk)
+                            temp_file_path = temp_file.name
+                        instance.content = pymupdf4llm.to_markdown(temp_file_path)
+
+                    elif file_type.extension == 'docx':
+                        # Save temporarily and load using python-docx
+                        with tempfile.NamedTemporaryFile(delete=False, suffix=".docx") as temp_file:
+                            for chunk in uploaded_file.chunks():
+                                temp_file.write(chunk)
+                            temp_file_path = temp_file.name
+
+                        doc = Document(temp_file_path)
+                        full_text = '\n'.join([para.text for para in doc.paragraphs])
+                        instance.content = md(full_text)  # optional: convert to markdown
+
                     instance.save()
                     messages.success(request, "File uploaded successfully!")
                     return redirect('document-list')
@@ -512,13 +516,8 @@ def upload_file(request):
                 except Exception as e:
                     messages.error(request, f"Error processing the file: {e}")
                     return redirect('document-list')
-
             else:
-                messages.error(
-                    request,
-                    "Invalid filetype. Only PDF files are allowed."
-                )
-
+                messages.error(request, "Invalid filetype. Only PDF and DOCX files are allowed.")
         else:
             messages.error(request, "There was an issue with the form.")
     else:
