@@ -62,17 +62,19 @@
                   {% if document.title and document.title != "1" %}
                     {{ document.title }} -
                     <a class="link-light" href="{% url 'resume_detail' resume_id=document.id %}">View</a> |
+                    <a class="link-light" href="{% url 'edit_resume' document.id %}">Edit</a> |  <!-- Edit Link -->
                     <a class="link-light" href="#" data-bs-toggle="modal" data-bs-target="#deleteResumeModal{{ document.id }}">Delete</a>
                   {% elif document.file %}
                     {{ document.original_filename }} -
                     <a class="link-light" href="{% url 'resume_detail' resume_id=document.id %}">View</a> |
+                    <a class="link-light" href="{% url 'edit_resume' document.id %}">Edit</a> |  <!-- Edit Link -->
                     <a class="link-light" href="#" data-bs-toggle="modal" data-bs-target="#deleteResumeModal{{ document.id }}">Delete</a>
                   {% endif %}
                 </li>            
                 {% endif %}
               {% endfor %}
             </ul>
-                        {% for document in resumes %}
+            {% for document in resumes %}
               <div class="modal fade" id="deleteResumeModal{{ document.id }}" tabindex="-1" aria-labelledby="deleteResumeLabel{{ document.id }}" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
                   <div class="modal-content text-black">
@@ -94,7 +96,6 @@
                 </div>
               </div>
             {% endfor %}
-
           {% endif %}
         </div>
 
@@ -111,6 +112,7 @@
                   {% if job.title %}
                     {{ job.title }} -
                     <a class="link-light" href="{% url 'job_posting_detail' job_id=job.id %}">View</a> |
+                    <a class="link-light" href="{% url 'edit_job_posting' job.id %}">Edit</a> | <!-- Edit Link -->
                     <a class="link-light" href="#" data-bs-toggle="modal" data-bs-target="#deleteJobModal{{ job.id }}">Delete</a>
                   {% endif %}
                   <div class="modal fade" id="deleteJobModal{{ job.id }}" tabindex="-1" aria-labelledby="deleteJobLabel{{ job.id }}" aria-hidden="true">

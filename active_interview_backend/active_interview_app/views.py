@@ -14,7 +14,9 @@ from .forms import (
     CreateUserForm,
     CreateChatForm,
     EditChatForm,
-    UploadFileForm
+    UploadFileForm,
+    DocumentEditForm,
+    JobPostingEditForm
 )
 from .serializers import (
     UploadedResumeSerializer,
@@ -534,6 +536,20 @@ def upload_file(request):
 
     return redirect('document-list')
 
+def edit_resume(request, resume_id):
+    # Adjust model logic as needed (for resumes or job listings)
+    document = get_object_or_404(UploadedResume, id=resume_id)  
+
+    if request.method == 'POST':
+        form = DocumentEditForm(request.POST, instance=document)
+        if form.is_valid():
+            form.save()
+            return redirect('resume_detail', resume_id=document.id)
+
+    else:
+        form = DocumentEditForm(instance=document)
+
+    return render(request, 'documents/edit_document.html', {'form': form, 'document': document})
 
 @login_required
 def job_posting_detail(request, job_id):
@@ -545,6 +561,21 @@ def job_posting_detail(request, job_id):
         'resumes': resumes,
         'job_listings': job_listings,
     })
+
+@login_required
+def edit_job_posting(request, job_id):
+    job_listing = get_object_or_404(UploadedJobListing, id=job_id, user=request.user)
+
+    if request.method == 'POST':
+        form = JobPostingEditForm(request.POST, instance=job_listing)  # Adjust form as needed
+        if form.is_valid():
+            form.save()
+            return redirect('job_posting_detail', job_id=job_listing.id)
+    else:
+        form = JobPostingEditForm(instance=job_listing)  # Render the form with existing job details
+
+    return render(request, 'documents/edit_job_posting.html', {'form': form, 'job_listing': job_listing})
+
 
 
 @login_required

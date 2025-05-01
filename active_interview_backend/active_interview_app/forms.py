@@ -1,3 +1,4 @@
+from django import forms
 from django.forms import ModelForm, ModelChoiceField, IntegerField
 from .models import *
 from django.contrib.auth.forms import UserCreationForm
@@ -9,6 +10,27 @@ class CreateUserForm(UserCreationForm):
         model = User
         fields = ['username', 'email', 'password1', 'password2']
 
+
+class DocumentEditForm(forms.ModelForm):
+    class Meta:
+        model = UploadedResume
+        fields = ['title', 'content']
+        widgets = {
+            'title': forms.TextInput(attrs={'class': 'form-control'}),
+            'content': forms.Textarea(attrs={'class': 'form-control', 'rows': 15}),
+        }
+
+
+class JobPostingEditForm(forms.ModelForm):
+    class Meta:
+        model = UploadedJobListing
+        fields = ['title', 'content']
+        widgets = {
+            'title': forms.TextInput(attrs={'class': 'form-control'}),
+            'content': forms.Textarea(attrs={'class': 'form-control', 'rows': 15}),
+        }
+
+        
 
 class CreateChatForm(ModelForm):
     difficulty = IntegerField(initial=5, min_value=1, max_value=10)

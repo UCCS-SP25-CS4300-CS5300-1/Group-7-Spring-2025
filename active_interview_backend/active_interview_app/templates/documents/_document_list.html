@@ -9,6 +9,7 @@
           <li style="font-size: 23px;">
             {{ document.title }} -
             <a class="link-light" href="{% url 'resume_detail' resume_id=document.id %}">View</a> |
+            <a class="link-light" href="{% url 'edit_resume' resume_id=document.id %}">Edit</a> |
             <a class="link-light" href="#" data-bs-toggle="modal" data-bs-target="#deleteResumeModal{{ document.id }}">Delete</a>
           </li>
           {% endif %}
@@ -39,7 +40,7 @@
     {% endif %}
   </div>
   
-  <!-- Optional: Adjust this line if you'd like a cleaner transition between sections -->
+
   <hr class="white-break">
   <div class="row mb-3">
     <h3>Uploaded Job Listings</h3>
@@ -51,8 +52,11 @@
           <li style="font-size: 23px;">
             {{ job.title }} -
             <a class="link-light" href="{% url 'job_posting_detail' job_id=job.id %}">View</a> |
+            <a class="link-light" href="{% url 'edit_job_posting' job_id=job.id %}">Edit</a> |  <!-- Add Edit Link -->
             <a class="link-light" href="#" data-bs-toggle="modal" data-bs-target="#deleteJobModal{{ job.id }}">Delete</a>
           </li>
+          
+          <!-- Delete Modal for Job -->
           <div class="modal fade" id="deleteJobModal{{ job.id }}" tabindex="-1" aria-labelledby="deleteJobLabel{{ job.id }}" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
               <div class="modal-content text-black">
@@ -76,5 +80,6 @@
         {% endfor %}
       </ul>
     {% endif %}
-  </div>
+</div>
+
   

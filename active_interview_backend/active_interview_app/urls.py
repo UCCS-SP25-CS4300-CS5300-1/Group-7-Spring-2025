@@ -64,6 +64,10 @@ urlpatterns = [
     path('job-posting/<int:job_id>/', views.job_posting_detail, name='job_posting_detail'),
     path('resume/delete/<int:resume_id>/', views.delete_resume, name='delete_resume'),
     path('delete_job/<int:job_id>/', views.delete_job, name='delete_job'),
+    path('resume/edit/<int:resume_id>/', views.edit_resume, name='edit_resume'),
+    path('job-posting/edit/<int:job_id>/', views.edit_job_posting, name='edit_job_posting'),
+    
+
 
 
 
