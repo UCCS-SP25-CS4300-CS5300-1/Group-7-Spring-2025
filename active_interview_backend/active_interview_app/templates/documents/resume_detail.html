@@ -16,4 +16,9 @@
     <h1>{{ resume.title }}</h1>
     <div>{{ resume.content|linebreaksbr }}</div>
   </div>
+
+  <div style="color: white;">
+    {% include 'documents/_document_list.html' %}
+  </div>
+  
 {% endblock %}

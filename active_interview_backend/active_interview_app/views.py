@@ -454,8 +454,16 @@ def profile(request):
 
 @login_required
 def resume_detail(request, resume_id):
-    resume = get_object_or_404(UploadedResume, pk=resume_id)
-    return render(request, 'documents/resume_detail.html', {'resume': resume})
+    resume = get_object_or_404(UploadedResume, id=resume_id)
+    resumes = UploadedResume.objects.filter(user=request.user)
+    job_listings = UploadedJobListing.objects.filter(user=request.user)
+    return render(request, 'documents/resume_detail.html', {
+        'resume': resume,
+        'resumes': resumes,
+        'job_listings': job_listings,
+    })
+
+
 
 
 @login_required
@@ -507,7 +515,7 @@ def upload_file(request):
 
                         doc = Document(temp_file_path)
                         full_text = '\n'.join([para.text for para in doc.paragraphs])
-                        instance.content = md(full_text)  # optional: convert to markdown
+                        instance.content = md(full_text)  # Convert to markdown
 
                     instance.save()
                     messages.success(request, "File uploaded successfully!")
@@ -527,9 +535,16 @@ def upload_file(request):
     return redirect('document-list')
 
 
+@login_required
 def job_posting_detail(request, job_id):
     job = get_object_or_404(UploadedJobListing, id=job_id)
-    return render(request, 'documents/job_posting_detail.html', {'job': job})
+    resumes = UploadedResume.objects.filter(user=request.user)
+    job_listings = UploadedJobListing.objects.filter(user=request.user)
+    return render(request, 'documents/job_posting_detail.html', {
+        'job': job,
+        'resumes': resumes,
+        'job_listings': job_listings,
+    })
 
 
 @login_required
@@ -587,11 +602,7 @@ class UploadedJobListingView(APIView):
 
         # Show success message and render the converted markdown
         messages.success(request, "Text uploaded successfully!")
-        return render(
-            request,
-            'documents/document-list.html',
-            {'markdown_text': markdown_text}
-        )
+        return redirect('document-list')
 
 
 class UploadedResumeView(APIView):
