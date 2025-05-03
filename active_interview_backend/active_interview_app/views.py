@@ -417,6 +417,56 @@ class ResultsChat(LoginRequiredMixin, UserPassesTestMixin, View):
                       context)
 
 
+class ResultCharts(LoginRequiredMixin, UserPassesTestMixin, View):
+    def test_func(self):
+        # manually grab chat id from kwargs and process it
+        chat = Chat.objects.get(id=self.kwargs['chat_id'])
+
+        return self.request.user == chat.owner
+
+    def get(self, request, chat_id):
+        chat = Chat.objects.get(id=chat_id)
+        owner_chats = Chat.objects.filter(owner=request.user)\
+            .order_by('-modified_date')
+        
+     
+        scores_prompt = textwrap.dedent("""\
+            Based on the interview above, please rate the interviewee in the following categories from 0 to 10, and return the result as a JSON object with integers only:
+
+            - Professionalism
+            - Subject Knowledge
+            - Speed
+            - Overall
+
+            Example format:
+            {
+                "Professionalism": 8,
+                "Subject Knowledge": 7,
+                "Speed": 9,
+                "Overall": 6
+            }
+        """)
+        input_messages = chat.messages
+        input_messages.append({"role": "user", "content": scores_prompt})
+
+        response = client.chat.completions.create(
+            model="gpt-4o",
+            messages=input_messages,
+            max_tokens=MAX_TOKENS
+        )
+        ai_message = response.choices[0].message.content
+
+        context = {}
+        context['chat'] = chat
+        context['owner_chats'] = owner_chats
+        context['scores'] = ai_message
+
+
+        return JsonResponse({'message': ai_message})
+
+
+
+
 @login_required
 def loggedin(request):
     return render(request, 'loggedinindex.html')
