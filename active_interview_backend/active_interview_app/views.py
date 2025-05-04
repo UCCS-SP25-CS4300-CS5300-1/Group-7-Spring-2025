@@ -461,11 +461,12 @@ class ResultCharts(LoginRequiredMixin, UserPassesTestMixin, View):
         context['chat'] = chat
         context['owner_chats'] = owner_chats
         
-
-        ai_message = response.choices[0].message.content.strip()
-        scores = [int(line.strip()) for line in ai_message.splitlines() if line.strip().isdigit()]
-        professionalism, subject_knowledge, clarity, overall = [0, 0, 0, 0]
-        professionalism, subject_knowledge, clarity, overall = scores
+        try:
+            ai_message = response.choices[0].message.content.strip()
+            scores = [int(line.strip()) for line in ai_message.splitlines() if line.strip().isdigit()]
+            professionalism, subject_knowledge, clarity, overall = scores
+        except:
+            professionalism, subject_knowledge, clarity, overall = [0, 0, 0, 0]
 
         context['scores'] = {
             'Professionalism': professionalism,
@@ -485,12 +486,9 @@ class ResultCharts(LoginRequiredMixin, UserPassesTestMixin, View):
         ai_message = response.choices[0].message.content
         context['feedback'] = ai_message
 
-
-        #print(input_messages)
-        
         return render(request, os.path.join('chat', 'chat-results.html'),
                       context)
-        #return render(request, 'charts.js', {'scores' : scores_list})
+
 
 
 @login_required
