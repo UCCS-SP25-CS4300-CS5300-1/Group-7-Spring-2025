@@ -466,8 +466,6 @@ def resume_detail(request, resume_id):
     })
 
 
-
-
 @login_required
 def delete_resume(request, resume_id):
     resume = get_object_or_404(UploadedResume, id=resume_id, user=request.user)
@@ -502,7 +500,8 @@ def upload_file(request):
                     instance.file = None  # Don't save the raw file to /media
 
                     if file_type.extension == 'pdf':
-                        with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as temp_file:
+                        with tempfile.NamedTemporaryFile(delete=False,
+                                                         suffix=".pdf") as temp_file:
                             for chunk in uploaded_file.chunks():
                                 temp_file.write(chunk)
                             temp_file_path = temp_file.name
@@ -510,7 +509,8 @@ def upload_file(request):
 
                     elif file_type.extension == 'docx':
                         # Save temporarily and load using python-docx
-                        with tempfile.NamedTemporaryFile(delete=False, suffix=".docx") as temp_file:
+                        with tempfile.NamedTemporaryFile(delete=False,
+                                                         suffix=".docx") as temp_file:
                             for chunk in uploaded_file.chunks():
                                 temp_file.write(chunk)
                             temp_file_path = temp_file.name
@@ -527,7 +527,8 @@ def upload_file(request):
                     messages.error(request, f"Error processing the file: {e}")
                     return redirect('document-list')
             else:
-                messages.error(request, "Invalid filetype. Only PDF and DOCX files are allowed.")
+                messages.error(request,
+                "Invalid filetype. Only PDF and DOCX files are allowed.")
         else:
             messages.error(request, "There was an issue with the form.")
     else:
@@ -536,9 +537,10 @@ def upload_file(request):
 
     return redirect('document-list')
 
+
 def edit_resume(request, resume_id):
     # Adjust model logic as needed (for resumes or job listings)
-    document = get_object_or_404(UploadedResume, id=resume_id)  
+    document = get_object_or_404(UploadedResume, id=resume_id)
 
     if request.method == 'POST':
         form = DocumentEditForm(request.POST, instance=document)
@@ -549,7 +551,11 @@ def edit_resume(request, resume_id):
     else:
         form = DocumentEditForm(instance=document)
 
-    return render(request, 'documents/edit_document.html', {'form': form, 'document': document})
+    return render(request,
+                  'documents/edit_document.html',
+                  {'form': form,
+                   'document': document})
+
 
 @login_required
 def job_posting_detail(request, job_id):
@@ -562,20 +568,28 @@ def job_posting_detail(request, job_id):
         'job_listings': job_listings,
     })
 
+
 @login_required
 def edit_job_posting(request, job_id):
-    job_listing = get_object_or_404(UploadedJobListing, id=job_id, user=request.user)
+    job_listing = get_object_or_404(UploadedJobListing,
+                                    id=job_id,
+                                    user=request.user)
 
     if request.method == 'POST':
-        form = JobPostingEditForm(request.POST, instance=job_listing)  # Adjust form as needed
+        form = JobPostingEditForm(request.POST,
+                                  instance=job_listing)
+        # Adjust form as needed
         if form.is_valid():
             form.save()
             return redirect('job_posting_detail', job_id=job_listing.id)
     else:
-        form = JobPostingEditForm(instance=job_listing)  # Render the form with existing job details
+        form = JobPostingEditForm(instance=job_listing)
+        # Render the form with existing job details
 
-    return render(request, 'documents/edit_job_posting.html', {'form': form, 'job_listing': job_listing})
-
+    return render(request,
+                  'documents/edit_job_posting.html',
+                  {'form': form,
+                   'job_listing': job_listing})
 
 
 @login_required
@@ -617,7 +631,7 @@ class UploadedJobListingView(APIView):
         filepath = os.path.join(user_dir, filename)
 
         # Convert the text to Markdown
-        markdown_text = markdown.markdown(text)
+        # markdown_text = markdown.markdown(text)
 
         # Create and save the UploadedJobListing object in the database
         job_listing = UploadedJobListing(
