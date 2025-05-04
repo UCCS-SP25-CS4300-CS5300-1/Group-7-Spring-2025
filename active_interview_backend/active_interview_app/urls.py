@@ -42,7 +42,7 @@ urlpatterns = [
          name='chat-delete'),
     path('chat/<int:chat_id>/restart/', views.RestartChat.as_view(),
          name='chat-restart'),
-    path('chat/<int:chat_id>/results/', views.ResultsChat.as_view(),
+    path('chat/<int:chat_id>/results/', views.ResultCharts.as_view(),
          name='chat-results'),
 
     # Demo urls
