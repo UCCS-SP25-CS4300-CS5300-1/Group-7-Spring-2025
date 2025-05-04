@@ -439,7 +439,7 @@ class ResultCharts(LoginRequiredMixin, UserPassesTestMixin, View):
             - Subject Knowledge
             - Clarity
             - Overall                          
-            If no responsee from the interviewee at all from the start of the interview the scores are 0
+            
             Example format:
                 8
                 7
@@ -461,11 +461,11 @@ class ResultCharts(LoginRequiredMixin, UserPassesTestMixin, View):
         context['chat'] = chat
         context['owner_chats'] = owner_chats
         
-        try:
-            ai_message = response.choices[0].message.content.strip()
-            scores = [int(line.strip()) for line in ai_message.splitlines() if line.strip().isdigit()]
+        ai_message = response.choices[0].message.content.strip()
+        scores = [int(line.strip()) for line in ai_message.splitlines() if line.strip().isdigit()]
+        if len(scores) == 4:
             professionalism, subject_knowledge, clarity, overall = scores
-        except:
+        else:
             professionalism, subject_knowledge, clarity, overall = [0, 0, 0, 0]
 
         context['scores'] = {
@@ -476,6 +476,7 @@ class ResultCharts(LoginRequiredMixin, UserPassesTestMixin, View):
         }
         explain = textwrap.dedent("""\
             Explain the reason for the following scores so that the user can understand, do not include json object for scores
+            IF NO response was given since start of interview please tell them to start interview
         """)
         input_messages.append({"role": "user", "content": explain})
         response = client.chat.completions.create(
