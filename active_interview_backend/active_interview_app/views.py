@@ -6,8 +6,9 @@ import markdown
 import tempfile
 import textwrap
 import re
+import json
 
-from .models import UploadedResume, UploadedJobListing, Chat
+from .models import UploadedResume, UploadedJobListing, Chat, Chart
 from .forms import (
     CreateUserForm,
     CreateChatForm,
@@ -249,7 +250,7 @@ class CreateChat(LoginRequiredMixin, View):
                 )
 
                 chat.save()
-
+                
                 return redirect("chat-view", chat_id=chat.id)
             # else:
             #     print("chat form invalid")
@@ -432,7 +433,7 @@ class ResultCharts(LoginRequiredMixin, UserPassesTestMixin, View):
      
         scores_prompt = textwrap.dedent("""\
             Based on the interview so far, please rate the interviewee in the following categories from 0 to 100, 
-            and return the result as a JSON object with integers only:
+            and return the result as a JSON object with integers only, in the following order that list only the integers:
 
             - Professionalism
             - Subject Knowledge
@@ -440,14 +441,13 @@ class ResultCharts(LoginRequiredMixin, UserPassesTestMixin, View):
             - Overall
 
             Example format:
-            {
-                "Professionalism": 8,
-                "Subject Knowledge": 7,
-                "Speed": 9,
-                "Overall": 6
-            }
+                8
+                7
+                9
+                6
         """)
         input_messages = chat.messages
+        
         input_messages.append({"role": "user", "content": scores_prompt})
 
         response = client.chat.completions.create(
@@ -456,14 +456,41 @@ class ResultCharts(LoginRequiredMixin, UserPassesTestMixin, View):
             max_tokens=MAX_TOKENS
         )
         ai_message = response.choices[0].message.content
+        print("\n")
+        print(ai_message)
+
+        
+
 
         context = {}
         context['chat'] = chat
         context['owner_chats'] = owner_chats
-        context['scores'] = ai_message
+        context['feedback'] = ai_message
 
-        scores_list = response.model_dump()
-        return render(request, 'charts.js', {'scores' : scores_list})
+        ai_message = response.choices[0].message.content.strip()
+        scores = [int(line.strip()) for line in ai_message.splitlines() if line.strip().isdigit()]
+        professionalism, subject_knowledge, clarity, overall = scores
+
+
+        
+
+
+        context['scores'] = {
+            'Professionalism': professionalism,
+            'Subject Knowledge': subject_knowledge,
+            'Clarity': clarity,
+            'Overall': overall
+        }
+
+
+        print("\n")
+
+
+        #print(input_messages)
+        
+        return render(request, os.path.join('chat', 'chat-results.html'),
+                      context)
+        #return render(request, 'charts.js', {'scores' : scores_list})
 
 
 @login_required

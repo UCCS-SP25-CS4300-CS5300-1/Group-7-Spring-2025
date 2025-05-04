@@ -2,7 +2,7 @@
 After a user completes their mock interview they will be given a page of their results 
 */
 
-const inputData = JSON.parse('{{ scores|safe|escapejs }}');
+const inputData = JSON.parse(document.getElementById('chart-data').textContent);
 
 
 //Bar Graph
