@@ -11,7 +11,7 @@ from markdownify import markdownify as md
 from docx import Document
 import json
 
-from .models import UploadedResume, UploadedJobListing, Chat, Chart
+from .models import UploadedResume, UploadedJobListing, Chat
 from .forms import (
     CreateUserForm,
     CreateChatForm,
@@ -440,7 +440,6 @@ class ResultCharts(LoginRequiredMixin, UserPassesTestMixin, View):
         scores_prompt = textwrap.dedent("""\
             Based on the interview so far, please rate the interviewee in the following categories from 0 to 100, 
             and return the result as a JSON object with integers only, in the following order that list only the integers:
-            and return the result as a JSON object with integers only, in the following order that list only the integers:
 
             - Professionalism
             - Subject Knowledge
@@ -452,13 +451,8 @@ class ResultCharts(LoginRequiredMixin, UserPassesTestMixin, View):
                 7
                 9
                 6
-                8
-                7
-                9
-                6
         """)
         input_messages = chat.messages
-        
         
         input_messages.append({"role": "user", "content": scores_prompt})
 
@@ -468,11 +462,6 @@ class ResultCharts(LoginRequiredMixin, UserPassesTestMixin, View):
             max_tokens=MAX_TOKENS
         )
         ai_message = response.choices[0].message.content
-        print("\n")
-        print(ai_message)
-
-        
-
 
         context = {}
         context['chat'] = chat
@@ -507,32 +496,7 @@ class ResultCharts(LoginRequiredMixin, UserPassesTestMixin, View):
         return render(request, os.path.join('chat', 'chat-results.html'),
                       context)
 
-        context['feedback'] = ai_message
 
-        ai_message = response.choices[0].message.content.strip()
-        scores = [int(line.strip()) for line in ai_message.splitlines() if line.strip().isdigit()]
-        professionalism, subject_knowledge, clarity, overall = scores
-
-
-        
-
-
-        context['scores'] = {
-            'Professionalism': professionalism,
-            'Subject Knowledge': subject_knowledge,
-            'Clarity': clarity,
-            'Overall': overall
-        }
-
-
-        print("\n")
-
-
-        #print(input_messages)
-        
-        return render(request, os.path.join('chat', 'chat-results.html'),
-                      context)
-        #return render(request, 'charts.js', {'scores' : scores_list})
 
 
 @login_required
