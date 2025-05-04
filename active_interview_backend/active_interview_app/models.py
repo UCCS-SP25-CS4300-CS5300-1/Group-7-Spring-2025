@@ -70,10 +70,5 @@ class Chat(models.Model):
 
     def __str__(self):
         return self.title
-    
-class Chart(models.Model):
-    chat = models.ForeignKey(Chat, on_delete=models.CASCADE)
-    professionalism = models.IntegerField()
-    subject_knowledge = models.IntegerField()
-    clarity = models.IntegerField()
-    overall = models.IntegerField()
+
+

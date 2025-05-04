@@ -6,6 +6,7 @@ import markdown
 import tempfile
 import textwrap
 import re
+import json
 from markdownify import markdownify as md
 from docx import Document
 import json
@@ -255,6 +256,7 @@ class CreateChat(LoginRequiredMixin, View):
 
                 chat.save()
                 
+                
                 return redirect("chat-view", chat_id=chat.id)
             # else:
             #     print("chat form invalid")
@@ -438,19 +440,25 @@ class ResultCharts(LoginRequiredMixin, UserPassesTestMixin, View):
         scores_prompt = textwrap.dedent("""\
             Based on the interview so far, please rate the interviewee in the following categories from 0 to 100, 
             and return the result as a JSON object with integers only, in the following order that list only the integers:
+            and return the result as a JSON object with integers only, in the following order that list only the integers:
 
             - Professionalism
             - Subject Knowledge
             - Clarity
-            - Overall
-
+            - Overall                          
+            
             Example format:
+                8
+                7
+                9
+                6
                 8
                 7
                 9
                 6
         """)
         input_messages = chat.messages
+        
         
         input_messages.append({"role": "user", "content": scores_prompt})
 
@@ -469,6 +477,36 @@ class ResultCharts(LoginRequiredMixin, UserPassesTestMixin, View):
         context = {}
         context['chat'] = chat
         context['owner_chats'] = owner_chats
+        
+        ai_message = response.choices[0].message.content.strip()
+        scores = [int(line.strip()) for line in ai_message.splitlines() if line.strip().isdigit()]
+        if len(scores) == 4:
+            professionalism, subject_knowledge, clarity, overall = scores
+        else:
+            professionalism, subject_knowledge, clarity, overall = [0, 0, 0, 0]
+
+        context['scores'] = {
+            'Professionalism': professionalism,
+            'Subject Knowledge': subject_knowledge,
+            'Clarity': clarity,
+            'Overall': overall
+        }
+        explain = textwrap.dedent("""\
+            Explain the reason for the following scores so that the user can understand, do not include json object for scores
+            IF NO response was given since start of interview please tell them to start interview
+        """)
+        input_messages.append({"role": "user", "content": explain})
+        response = client.chat.completions.create(
+            model="gpt-4o",
+            messages=input_messages,
+            max_tokens=MAX_TOKENS
+        )
+        ai_message = response.choices[0].message.content
+        context['feedback'] = ai_message
+
+        return render(request, os.path.join('chat', 'chat-results.html'),
+                      context)
+
         context['feedback'] = ai_message
 
         ai_message = response.choices[0].message.content.strip()
