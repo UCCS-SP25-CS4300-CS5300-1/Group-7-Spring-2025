@@ -32,7 +32,7 @@ urlpatterns = [
     path('profile/', views.profile, name='profile'),
     path('results/', views.results, name='results'),
 
-    # Chat urls
+    # Chat url
     path('chat/', views.chat_list, name='chat-list'),
     path('chat/create/', views.CreateChat.as_view(), name='chat-create'),
     path('chat/<int:chat_id>/', views.ChatView.as_view(), name='chat-view'),
