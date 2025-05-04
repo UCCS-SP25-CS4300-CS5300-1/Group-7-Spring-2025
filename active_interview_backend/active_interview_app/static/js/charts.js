@@ -2,9 +2,12 @@
 After a user completes their mock interview they will be given a page of their results 
 */
 
+const inputData = JSON.parse('{{ scores|safe|escapejs }}');
+
+
 //Bar Graph
-const xValues = ["Coherence", "Clarity", "Correctness", "Politeness"];
-const yValues = [55, 49, 44, 50];
+const xValues = ["Professionalism", "Subject Knowledge", "Clarity", "Overall"];
+const yValues = [];
 const barColors = ["#4482A6", "#F5F9E9","#96A13A","#564256"];
 
 Chart.defaults.backgroundColor = '#9BD0F5';
@@ -18,7 +21,7 @@ const chart1 = new Chart(BarChart, {
       labels: xValues,
       datasets: [{
         backgroundColor: barColors,
-        data: yValues,
+        data: Object.values(inputData),
       }]
     },
     options: {

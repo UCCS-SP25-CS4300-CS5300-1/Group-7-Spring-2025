@@ -431,11 +431,12 @@ class ResultCharts(LoginRequiredMixin, UserPassesTestMixin, View):
         
      
         scores_prompt = textwrap.dedent("""\
-            Based on the interview above, please rate the interviewee in the following categories from 0 to 10, and return the result as a JSON object with integers only:
+            Based on the interview so far, please rate the interviewee in the following categories from 0 to 100, 
+            and return the result as a JSON object with integers only:
 
             - Professionalism
             - Subject Knowledge
-            - Speed
+            - Clarity
             - Overall
 
             Example format:
@@ -461,10 +462,8 @@ class ResultCharts(LoginRequiredMixin, UserPassesTestMixin, View):
         context['owner_chats'] = owner_chats
         context['scores'] = ai_message
 
-
-        return JsonResponse({'message': ai_message})
-
-
+        scores_list = response.model_dump
+        return render(request, 'charts.js', {'scores' : scores_list})
 
 
 @login_required
