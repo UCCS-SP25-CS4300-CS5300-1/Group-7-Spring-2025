@@ -8,7 +8,7 @@ import textwrap
 import re
 import json
 
-from .models import UploadedResume, UploadedJobListing, Chat, Chart
+from .models import UploadedResume, UploadedJobListing, Chat
 from .forms import (
     CreateUserForm,
     CreateChatForm,
@@ -438,8 +438,8 @@ class ResultCharts(LoginRequiredMixin, UserPassesTestMixin, View):
             - Professionalism
             - Subject Knowledge
             - Clarity
-            - Overall
-
+            - Overall                          
+            If no responsee from the interviewee at all from the start of the interview the scores are 0
             Example format:
                 8
                 7
@@ -456,24 +456,16 @@ class ResultCharts(LoginRequiredMixin, UserPassesTestMixin, View):
             max_tokens=MAX_TOKENS
         )
         ai_message = response.choices[0].message.content
-        print("\n")
-        print(ai_message)
-
-        
-
 
         context = {}
         context['chat'] = chat
         context['owner_chats'] = owner_chats
-        context['feedback'] = ai_message
+        
 
         ai_message = response.choices[0].message.content.strip()
         scores = [int(line.strip()) for line in ai_message.splitlines() if line.strip().isdigit()]
+        professionalism, subject_knowledge, clarity, overall = [0, 0, 0, 0]
         professionalism, subject_knowledge, clarity, overall = scores
-
-
-        
-
 
         context['scores'] = {
             'Professionalism': professionalism,
@@ -481,9 +473,17 @@ class ResultCharts(LoginRequiredMixin, UserPassesTestMixin, View):
             'Clarity': clarity,
             'Overall': overall
         }
-
-
-        print("\n")
+        explain = textwrap.dedent("""\
+            Explain the reason for the following scores so that the user can understand, do not include json object for scores
+        """)
+        input_messages.append({"role": "user", "content": explain})
+        response = client.chat.completions.create(
+            model="gpt-4o",
+            messages=input_messages,
+            max_tokens=MAX_TOKENS
+        )
+        ai_message = response.choices[0].message.content
+        context['feedback'] = ai_message
 
 
         #print(input_messages)
