@@ -6,6 +6,8 @@ import markdown
 import tempfile
 import textwrap
 import re
+from markdownify import markdownify as md
+from docx import Document
 import json
 
 from .models import UploadedResume, UploadedJobListing, Chat, Chart
@@ -13,7 +15,9 @@ from .forms import (
     CreateUserForm,
     CreateChatForm,
     EditChatForm,
-    UploadFileForm
+    UploadFileForm,
+    DocumentEditForm,
+    JobPostingEditForm
 )
 from .serializers import (
     UploadedResumeSerializer,
@@ -528,8 +532,14 @@ def profile(request):
 
 @login_required
 def resume_detail(request, resume_id):
-    resume = get_object_or_404(UploadedResume, pk=resume_id)
-    return render(request, 'documents/resume_detail.html', {'resume': resume})
+    resume = get_object_or_404(UploadedResume, id=resume_id)
+    resumes = UploadedResume.objects.filter(user=request.user)
+    job_listings = UploadedJobListing.objects.filter(user=request.user)
+    return render(request, 'documents/resume_detail.html', {
+        'resume': resume,
+        'resumes': resumes,
+        'job_listings': job_listings,
+    })
 
 
 @login_required
@@ -543,7 +553,7 @@ def delete_resume(request, resume_id):
 
 @login_required
 def upload_file(request):
-    allowed_types = ['pdf']
+    allowed_types = ['pdf', 'docx']
 
     if request.method == "POST":
         form = UploadFileForm(request.POST, request.FILES)
@@ -552,35 +562,39 @@ def upload_file(request):
             file_name = uploaded_file.name
             title = request.POST.get("title", '').strip()
 
-            file_type = filetype.guess(uploaded_file.read())
+            file_bytes = uploaded_file.read()
+            file_type = filetype.guess(file_bytes)
             uploaded_file.seek(0)
 
-            # Due to how pymupdf4llm works, we have to
-            # save a file for it, because the .to_markdown()
-            # function accepts a file path, and not the file object itself.
-            # Therefore, a file is temporarily created so there's a filepath,
-            # and deleted once everything is converted.
             if file_type and file_type.extension in allowed_types:
                 try:
-                    with tempfile.NamedTemporaryFile(
-                        delete=False,
-                        suffix=".pdf"
-                    ) as temp_file:
-                        for chunk in uploaded_file.chunks():
-                            temp_file.write(chunk)
-                        temp_file_path = temp_file.name
-
-                    markdown_text = pymupdf4llm.to_markdown(temp_file_path)
-
                     instance = form.save(commit=False)
                     instance.user = request.user
                     instance.original_filename = file_name
                     instance.filesize = uploaded_file.size
-                    instance.content = markdown_text
                     instance.title = title
-                    instance.file = None
-                    # This is marked "None", because it stops
-                    # it from being saved to /media/uploads.
+                    instance.file = None  # Don't save the raw file to /media
+
+                    if file_type.extension == 'pdf':
+                        with tempfile.NamedTemporaryFile(delete=False,
+                                                         suffix=".pdf") as temp_file:
+                            for chunk in uploaded_file.chunks():
+                                temp_file.write(chunk)
+                            temp_file_path = temp_file.name
+                        instance.content = pymupdf4llm.to_markdown(temp_file_path)
+
+                    elif file_type.extension == 'docx':
+                        # Save temporarily and load using python-docx
+                        with tempfile.NamedTemporaryFile(delete=False,
+                                                         suffix=".docx") as temp_file:
+                            for chunk in uploaded_file.chunks():
+                                temp_file.write(chunk)
+                            temp_file_path = temp_file.name
+
+                        doc = Document(temp_file_path)
+                        full_text = '\n'.join([para.text for para in doc.paragraphs])
+                        instance.content = md(full_text)  # Convert to markdown
+
                     instance.save()
                     messages.success(request, "File uploaded successfully!")
                     return redirect('document-list')
@@ -588,13 +602,9 @@ def upload_file(request):
                 except Exception as e:
                     messages.error(request, f"Error processing the file: {e}")
                     return redirect('document-list')
-
             else:
-                messages.error(
-                    request,
-                    "Invalid filetype. Only PDF files are allowed."
-                )
-
+                messages.error(request,
+                "Invalid filetype. Only PDF and DOCX files are allowed.")
         else:
             messages.error(request, "There was an issue with the form.")
     else:
@@ -604,9 +614,58 @@ def upload_file(request):
     return redirect('document-list')
 
 
+def edit_resume(request, resume_id):
+    # Adjust model logic as needed (for resumes or job listings)
+    document = get_object_or_404(UploadedResume, id=resume_id)
+
+    if request.method == 'POST':
+        form = DocumentEditForm(request.POST, instance=document)
+        if form.is_valid():
+            form.save()
+            return redirect('resume_detail', resume_id=document.id)
+
+    else:
+        form = DocumentEditForm(instance=document)
+
+    return render(request,
+                  'documents/edit_document.html',
+                  {'form': form,
+                   'document': document})
+
+
+@login_required
 def job_posting_detail(request, job_id):
     job = get_object_or_404(UploadedJobListing, id=job_id)
-    return render(request, 'documents/job_posting_detail.html', {'job': job})
+    resumes = UploadedResume.objects.filter(user=request.user)
+    job_listings = UploadedJobListing.objects.filter(user=request.user)
+    return render(request, 'documents/job_posting_detail.html', {
+        'job': job,
+        'resumes': resumes,
+        'job_listings': job_listings,
+    })
+
+
+@login_required
+def edit_job_posting(request, job_id):
+    job_listing = get_object_or_404(UploadedJobListing,
+                                    id=job_id,
+                                    user=request.user)
+
+    if request.method == 'POST':
+        form = JobPostingEditForm(request.POST,
+                                  instance=job_listing)
+        # Adjust form as needed
+        if form.is_valid():
+            form.save()
+            return redirect('job_posting_detail', job_id=job_listing.id)
+    else:
+        form = JobPostingEditForm(instance=job_listing)
+        # Render the form with existing job details
+
+    return render(request,
+                  'documents/edit_job_posting.html',
+                  {'form': form,
+                   'job_listing': job_listing})
 
 
 @login_required
@@ -648,7 +707,7 @@ class UploadedJobListingView(APIView):
         filepath = os.path.join(user_dir, filename)
 
         # Convert the text to Markdown
-        markdown_text = markdown.markdown(text)
+        # markdown_text = markdown.markdown(text)
 
         # Create and save the UploadedJobListing object in the database
         job_listing = UploadedJobListing(
@@ -664,11 +723,7 @@ class UploadedJobListingView(APIView):
 
         # Show success message and render the converted markdown
         messages.success(request, "Text uploaded successfully!")
-        return render(
-            request,
-            'documents/document-list.html',
-            {'markdown_text': markdown_text}
-        )
+        return redirect('document-list')
 
 
 class UploadedResumeView(APIView):
