@@ -6,8 +6,6 @@ const inputData = JSON.parse('{{ scores|safe|escapejs }}');
 
 
 //Bar Graph
-const xValues = ["Professionalism", "Subject Knowledge", "Clarity", "Overall"];
-const yValues = [];
 const barColors = ["#4482A6", "#F5F9E9","#96A13A","#564256"];
 
 Chart.defaults.backgroundColor = '#9BD0F5';
@@ -18,7 +16,7 @@ const BarChart = document.getElementById('BarChart').getContext('2d');
 const chart1 = new Chart(BarChart, {
     type: "bar",
     data: {
-      labels: xValues,
+      labels: Object.keys(inputData),
       datasets: [{
         backgroundColor: barColors,
         data: Object.values(inputData),
@@ -55,13 +53,9 @@ const chart2 = new Chart(DonutChart, {
   type: 'doughnut',
 
   data: {
-    labels: [
-      'Professionalism',
-      'Speed',
-      'Grammar'
-    ],
+    labels: Object.keys(inputData),
     datasets: [{
-      data: dataSplits,
+      data: Object.values(inputData),
       backgroundColor: barColors,
       hoverOffset: 4
     }],

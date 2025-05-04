@@ -462,7 +462,7 @@ class ResultCharts(LoginRequiredMixin, UserPassesTestMixin, View):
         context['owner_chats'] = owner_chats
         context['scores'] = ai_message
 
-        scores_list = response.model_dump
+        scores_list = response.model_dump()
         return render(request, 'charts.js', {'scores' : scores_list})
 
 
