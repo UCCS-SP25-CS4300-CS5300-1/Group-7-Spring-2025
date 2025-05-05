@@ -1,5 +1,6 @@
 import os
 import filetype
+import json
 from openai import OpenAI
 import pymupdf4llm
 import markdown
@@ -247,6 +248,114 @@ class CreateChat(LoginRequiredMixin, View):
                         "content": ai_message
                     }
                 )
+
+                # ===== Get AI timed questions =====
+                if chat.resume:  # if resume is present
+                    system_prompt = textwrap.dedent("""\
+                        You are a professional interviewer for a company
+                        preparing for a candidate’s interview. You will act as
+                        the interviewer and engage in a roleplaying session
+                        with the candidate.
+
+                        Please review the job listing, resume and misc.
+                        interview details below:
+
+                        # Type of Interview
+                        This interview will be of the following type: {type}
+
+                        # Difficulty
+                        - **Scale:** 1 to 10
+                        - **1** = extremely easygoing interview, no curveballs
+                        - **10** = very challenging, for top‑tier candidates
+                          only
+                        - **Selected level:** <<{difficulty}>>
+
+                        # Job Listing:
+                        \"\"\"{listing}\"\"\"
+
+                        # Candidate Resume:
+                        \"\"\"{resume}\"\"\"
+
+                        Ignore any formatting issues in the resume, and focus
+                        on its content.
+                        Please provide a json formatted list of 10 key 
+                        interview questions you wish to ask the user and the
+                        duration of time they should have to answer each
+                        question in seconds.  For example:
+                                                    
+                        \"\"\"
+                        [
+                            {{
+                                "id": 0,
+                                "title": "Merge Conflicts",
+                                "duration": 60,
+                                "content": "How would you handle a merge conflict?"
+                            }}
+                        ]
+                        \"\"\"
+                    """).format(listing=chat.job_listing.content,
+                                resume=chat.resume.content,
+                                difficulty=chat.difficulty,
+                                type=chat.get_type_display())
+                else:  # if no resume"
+                    system_prompt = textwrap.dedent("""\
+                        You are a professional interviewer for a company
+                        preparing for a candidate’s interview. You will act as
+                        the interviewer and engage in a roleplaying session
+                        with the candidate.
+
+                        Please review the job listing and misc. interview
+                        details below:
+
+                        # Type of Interview
+                        This interview will be of the following type: {type}
+
+                        # Difficulty
+                        - **Scale:** 1 to 10
+                        - **1** = extremely easygoing interview, no curveballs
+                        - **10** = very challenging, for top‑tier candidates
+                          only
+                        - **Selected level:** <<{difficulty}>>
+
+                        # Job Listing:
+                        \"\"\"{listing}\"\"\"
+
+                        Please provide a json formatted list of 10 key 
+                        interview questions you wish to ask the user and the
+                        duration of time they should have to answer each
+                        question in seconds.  For example:
+                                                    
+                        \"\"\"
+                        [
+                            {{
+                                "id": 0,
+                                "title": "Merge Conflicts",
+                                "duration": 60,
+                                "content": "How would you handle a merge conflict?"
+                            }}
+                        ]
+                        \"\"\"
+                    """).format(listing=chat.job_listing.content,
+                                difficulty=chat.difficulty,
+                                type=chat.get_type_display())
+
+                timed_question_messages = [
+                    {
+                        "role": "system",
+                        "content": system_prompt
+                    },
+                ]
+
+                # Make ai speak first
+                response = client.chat.completions.create(
+                    model="gpt-4o",
+                    messages=timed_question_messages,
+                    max_tokens=MAX_TOKENS
+                )
+                ai_message = response.choices[0].message.content
+                cleaned_message = re.search("(\[[\s\S]+\])", ai_message)\
+                        .group(0).strip()
+                chat.key_questions = json.loads(cleaned_message)
 
                 chat.save()
 
