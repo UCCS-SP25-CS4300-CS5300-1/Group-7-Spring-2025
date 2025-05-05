@@ -490,6 +490,46 @@ class RestartChat(LoginRequiredMixin, UserPassesTestMixin, View):
         #     return redirect("chat-view", chat_id=chat.id)
 
 
+class KeyQuestionsView(LoginRequiredMixin, UserPassesTestMixin, View):
+    def test_func(self):
+        # manually grab chat id from kwargs and process it
+        chat = Chat.objects.get(id=self.kwargs['chat_id'])
+
+        return self.request.user == chat.owner
+
+    def get(self, request, chat_id):
+        chat = Chat.objects.get(id=chat_id)
+        owner_chats = Chat.objects.filter(owner=request.user)\
+            .order_by('-modified_date')
+
+        context = {}
+        context['chat'] = chat
+        context['owner_chats'] = owner_chats
+
+        return render(request, 'key-questions.html', context)
+
+    def post(self, request, chat_id):
+        chat = Chat.objects.get(id=chat_id)
+
+        user_message = request.POST.get('message', '')
+
+        # new_messages = chat.messages
+        # new_messages.append({"role": "user", "content": user_message})
+
+        # response = client.chat.completions.create(
+        #     model="gpt-4o",
+        #     messages=new_messages,
+        #     max_tokens=MAX_TOKENS
+        # )
+        # ai_message = response.choices[0].message.content
+        # new_messages.append({"role": "assistant", "content": ai_message})
+
+        # chat.messages = new_messages
+        # chat.save()
+
+        return JsonResponse({'message': ai_message})
+    
+
 class ResultsChat(LoginRequiredMixin, UserPassesTestMixin, View):
     def test_func(self):
         # manually grab chat id from kwargs and process it

@@ -1,0 +1,303 @@
+{% extends "base-sidebar.html" %}
+
+{% block title %}
+  AIS - {{ chat.title }} Key Questions
+{% endblock %}
+
+{% block content %}
+  {% load static %}
+  <div class="centered-container flex-grow-1 d-flex flex-column">
+    {% comment %} <div id="carouselQuestions" class="carousel slide flex-grow-1">
+      <div class="carousel-inner h-100">
+        {% for key_question in chat.key_questions %}
+          <div class="carousel-item active h-100 d-flex flex-column">
+            <h3 class="whiteTextOverride px-3 pt-3">{{ key_question.title }}</h3>
+            <div id="chat-scroll" class="d-flex flex-column-reverse flex-grow-1 overflow-y-auto overflow-x-hidden pe-0">
+              <div class="row flex-column-reverse">
+                <div id="chat-messages">
+                  {% for message in chat.messages|slice:"1:" %}
+                    {% if message.role == 'user' %}
+                      <div class="col user-text-container">
+                        <div class="card user-text-bubble">
+                          <div class="card-body">
+                            <p class="card-text">{{ message.content|linebreaksbr }}</p>
+                            
+                          </div>
+                        </div>
+                      </div>
+                    {% else %}
+                      <div class="col bot-text-container">
+                        <div class="card bot-text-bubble">
+                          <div class="card-body">
+                              <div class = "ai_messages"> 
+                              <p class="card-text" id = "ai_message">{{ message.content|linebreaksbr }} </p>
+                              <button class ="button-chat-send btn btn-primary ms-2" id ="text2speech_button" onclick="textToSpeech(this)">Speak</button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    {% endif %}
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+            <div class="input-card card mb-3 mt-3">
+              <div class="card-body">
+                <div class="d-flex">
+                  <textarea id="user-input" class="chat-input flex-grow-1 border-0 p-2" placeholder="Enter text here..." style="resize: none;"></textarea>
+                  <button class="button-chat-send btn btn-primary ms-2" id = "speech-text" onclick="speechToText()">Speak</button>
+                  <button class="button-chat-send btn btn-primary ms-2" type="button" onclick="sendMessage()">Send</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+      <button class="carousel-control-prev" type="button" data-bs-target="#carouselQuestions" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#carouselQuestions" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
+    </div> {% endcomment %}
+    <ul class="nav nav-pills mb-3" id="question-tabs" role="tablist">
+      {% for key_question in chat.key_questions %}
+        <li class="nav-item" role="presentation">
+          <button class="nav-link {% if forloop.first %}active{% endif %}"
+                  id="tab-{{ key_question.id }}"
+                  data-bs-toggle="pill"
+                  data-bs-target="#pane-{{ key_question.id }}"
+                  type="button" role="tab"
+                  aria-controls="pane-{{ key_question.id }}"
+                  aria-selected="{% if forloop.first %}true{% else %}false{% endif %}">
+            {{ key_question.title }}
+          </button>
+        </li>
+      {% endfor %}
+    </ul>
+    <div class="tab-content h-100 d-flex flex-column">
+      {% for key_question in chat.key_questions %}
+        <div class="tab-pane fade {% if forloop.first %}show active{% endif %}"
+            id="pane-{{ key_question.id }}"
+            role="tabpanel"
+            aria-labelledby="tab-{{ key_question.id }}">
+          <h3 class="text-white">{{ key_question.title }}</h3>
+          <div id="chat-scroll" class="d-flex flex-column-reverse flex-grow-1 overflow-y-auto overflow-x-hidden pe-0">
+            <div class="row flex-column-reverse">
+              <div id="chat-messages">
+                <div class="col bot-text-container">
+                  <div class="card bot-text-bubble">
+                    <div class="card-body">
+                        <div class = "ai_messages"> 
+                        <p class="card-text" id = "ai_message">{{ key_question.content }}</p>
+                        <button class ="button-chat-send btn btn-primary ms-2" id ="text2speech_button" onclick="textToSpeech(this)">Speak</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="input-card card mb-3 mt-3">
+            <div class="card-body">
+              <div class="d-flex">
+                <textarea id="user-input" class="chat-input flex-grow-1 border-0 p-2" placeholder="Enter text here..." style="resize: none;"></textarea>
+                <button class="button-chat-send btn btn-primary ms-2" id = "speech-text" onclick="speechToText()">Speak</button>
+                <button class="button-chat-send btn btn-primary ms-2" type="button" onclick="sendMessage()">Send</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+{% endblock %}
+
+{% block scripts %}
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.2.4/purify.min.js" integrity="sha512-Y1p/STLW/B+l+MPJ5K5OdILMwJa2gMFXXmC/qsyDuGH9uc1MZMUo6/8YQUg9Ut4ns8KGCrCtt+58UwmNFFiVvA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script>
+
+
+
+
+  //global variable because of everytime you click the button of speech to text it will alternate
+  // and if store it in there it will not alternate
+  let active_speech = false;
+
+
+    function textToSpeech(button) {
+      //Because there are multiple chat messages, it grabs by the previous one
+      let ai_message = button.previousElementSibling.innerText;
+      //cancels it to prevent multiple from playing
+      window.speechSynthesis.cancel();
+      //speech
+      let speech = new SpeechSynthesisUtterance();
+      //binds speech text to the message
+      speech.text = ai_message;
+      //talks about ai message
+      window.speechSynthesis.speak(speech);
+      
+      
+   }
+
+   function speechToText() {
+    //gets the button of when to start/stop listening
+    const button = document.getElementById('speech-text');
+    const textbox = document.getElementById('user-input');
+    //creates a way to listen
+    const Listener = window.webkitSpeechRecognition;
+    const recognition = new Listener();
+    //display results while you are talking
+    recognition.interimResults = true;
+    //stops code if you stop talking
+    recognition.continuous = true;
+    //because of interim results it will display as it goes along
+    recognition.onresult = (event) => {
+      //stores text for each time of listening
+      let text = '';
+      //goes through the stored text from the event
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        //stores text
+        text += event.results[i][0].transcript;
+      }
+      //places text in textbox
+      textbox.value = text;
+    };
+    //button to alternate between stop and start
+    button.addEventListener('click', () => {
+      //if active is true it stops it, which well then go to onend
+      if (active_speech) {
+        //Stops listening
+        recognition.stop();
+      } 
+      else {
+        //starts listening
+        recognition.start();
+        active_speech = true;
+        //shows people to click to stop
+        button.textContent = 'Stop';
+      }
+    });
+    //can be stopped by button or silence
+    recognition.onend = () => {
+      //resets the text box
+      button.textContent = 'Speak';
+      //alternates back to false
+      active_speech = false;
+    };
+  }
+  
+  
+    
+    // Move the chat scroll to the bottom
+    function updateScroll(){
+      var element = document.getElementById("chat-scroll");
+      element.scrollTop = element.scrollHeight;
+    }
+
+    {% comment %} $(document).ready(function() {
+      updateScroll();
+    }); {% endcomment %}
+    
+
+    const chatInput = document.getElementById('user-input');
+    chatInput.addEventListener('input', function() {
+      // Reset height to recalc scrollHeight
+      this.style.height = 'auto';
+      // Set the height based on the scrollHeight, which grows as needed
+      var scrollHeight = this.scrollHeight
+      
+      // Conditionally increase the size of the textarea
+      if (scrollHeight < 200) {
+        this.style.height = scrollHeight + 'px';
+      } else {
+        this.style.height = '200px';
+      }
+    });
+    
+
+    {% comment %} Jquery script adpated from chatgpt {% endcomment %}
+    function sendMessage() {
+      var userInput = $('#user-input').val();
+      if (userInput.trim() !== '') {
+        formattedUserInput = DOMPurify.sanitize(userInput.replace(/(?:\r\n|\r|\n)/g, '<br>'));
+
+        $('#user-input').val('');
+        // Reset height to recalc scrollHeight
+        chatInput.style.height = 'auto';
+        chatInput.style.height = chatInput.scrollHeight + 'px';
+
+        // Show user text bubble
+        $('#chat-messages').append(
+            `<div class="col user-text-container">
+              <div class="card user-text-bubble">
+                <div class="card-body">
+                  <p class="card-text">${formattedUserInput}</p>
+                </div>
+              </div>
+            </div>`);
+
+        // Show loading bubble
+        $('#chat-messages').append(
+          `<div id="loading-bubble" class="col bot-text-container">
+            <div class="card bot-text-bubble">
+              <div class="card-body">
+                <img src={% static 'images/loading.gif' %} alt="Loading..." style="width: 24px; height: 24px;">
+              </div>
+            </div>
+          </div>`);
+        
+        updateScroll();
+
+        // POST the user message to the view
+        $.ajax({
+          url: '{% url "chat-view" chat_id=chat.id %}',
+          type: 'POST',
+          data: {
+            'message': userInput,
+            csrfmiddlewaretoken: '{{ csrf_token }}'
+          },
+          success: function(response) {
+            formattedResponseMessage = DOMPurify.sanitize(response.message.replace(/(?:\r\n|\r|\n)/g, '<br>'));
+            
+            // delete loading bubble
+            $('#loading-bubble').remove();
+
+            // Show the response bubble
+            $('#chat-messages').append(
+                `<div class="col bot-text-container">
+                  <div class="card bot-text-bubble">
+                    <div class="card-body">
+                      <p class="card-text" id = "ai_message">${formattedResponseMessage}</p>
+                       <button class ="button-chat-send btn btn-primary ms-2" id ="text2speech_button" onclick="textToSpeech(this)">Speak</button>
+                    </div>
+                  </div>
+                </div>`);
+            
+            updateScroll();
+          }
+        });
+      }
+    }
+
+    // send text on enter
+    $('#user-input').on('keypress', function(e) {
+      if (e.key === "Enter" && !e.shiftKey) {
+        // prevent default behavior
+        e.preventDefault();
+
+        sendMessage();
+
+        $(this).val('');
+
+        // Reset height to recalc scrollHeight
+        this.style.height = 'auto';
+        // Set the height based on the scrollHeight, which grows as needed
+        this.style.height = this.scrollHeight + 'px';
+      }
+    });
+  </script>
+{% endblock %}
