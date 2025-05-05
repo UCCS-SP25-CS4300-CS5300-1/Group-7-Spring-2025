@@ -497,32 +497,128 @@ class KeyQuestionsView(LoginRequiredMixin, UserPassesTestMixin, View):
 
         return self.request.user == chat.owner
 
-    def get(self, request, chat_id):
+    def get(self, request, chat_id, question_id):
         chat = Chat.objects.get(id=chat_id)
         owner_chats = Chat.objects.filter(owner=request.user)\
             .order_by('-modified_date')
+        question = chat.key_questions[question_id]
 
         context = {}
         context['chat'] = chat
+        context['question'] = question
         context['owner_chats'] = owner_chats
 
         return render(request, 'key-questions.html', context)
 
-    def post(self, request, chat_id):
+    def post(self, request, chat_id, question_id):
         chat = Chat.objects.get(id=chat_id)
+        question = chat.key_questions[question_id]
 
         user_message = request.POST.get('message', '')
+        print(user_message)
 
-        # new_messages = chat.messages
-        # new_messages.append({"role": "user", "content": user_message})
+        system_prompt = ""
 
-        # response = client.chat.completions.create(
-        #     model="gpt-4o",
-        #     messages=new_messages,
-        #     max_tokens=MAX_TOKENS
-        # )
-        # ai_message = response.choices[0].message.content
-        # new_messages.append({"role": "assistant", "content": ai_message})
+        if chat.resume:  # if resume is present
+            system_prompt = textwrap.dedent(f"""\
+                You are a professional interviewer for a company
+                preparing for a candidate’s interview. You will act as
+                the interviewer and engage in a roleplaying session
+                with the candidate.
+
+                Please review the job listing, resume and misc.
+                interview details below:
+
+                # Type of Interview
+                This interview will be of the following type: {chat.get_type_display()}
+
+                # Difficulty
+                - **Scale:** 1 to 10
+                - **1** = extremely easygoing interview, no curveballs
+                - **10** = very challenging, for top‑tier candidates
+                only
+                - **Selected level:** <<{chat.difficulty}>>
+
+                # Job Listing:
+                \"\"\"{chat.job_listing.content}\"\"\"
+
+                # Candidate Resume:
+                \"\"\"{chat.resume.content}\"\"\"
+
+                Ignore any formatting issues in the resume, and focus
+                on its content.
+
+                Please review the answer to an interviewer question below and
+                provide constructive feedback about the user's answer,
+                including a rating of the answer from 1-10.                            
+                
+                \"\"\"
+                [
+                    {{
+                        "role": "interviewer",
+                        "content": "{question["content"]}"
+                    }},
+                    {{
+                        "role": "user", 
+                        "content": "{user_message}"
+                    }}
+                ]
+                \"\"\"
+            """)
+        else:  # if no resume"
+            system_prompt = textwrap.dedent(f"""\
+                You are a professional interviewer for a company
+                preparing for a candidate’s interview. You will act as
+                the interviewer and engage in a roleplaying session
+                with the candidate.
+
+                Please review the job listing and misc. interview
+                details below:
+
+                # Type of Interview
+                This interview will be of the following type: {chat.get_type_display()}
+
+                # Difficulty
+                - **Scale:** 1 to 10
+                - **1** = extremely easygoing interview, no curveballs
+                - **10** = very challenging, for top‑tier candidates
+                    only
+                - **Selected level:** <<{chat.difficulty}>>
+
+                # Job Listing:
+                \"\"\"{chat.job_listing.content}\"\"\"
+
+                Please review the answer to an interviewer question below and
+                provide constructive feedback about the user's answer,
+                including a rating of the answer from 1-10.                            
+                
+                \"\"\"
+                [
+                    {{
+                        "role": "interviewer",
+                        "content": "{question["content"]}"
+                    }},
+                    {{
+                        "role": "user", 
+                        "content": "{user_message}"
+                    }}
+                ]
+                \"\"\"
+            """)
+        ai_input = [
+            {
+                "role": "system",
+                "content": system_prompt
+            }
+        ]
+
+        response = client.chat.completions.create(
+            model="gpt-4o",
+            messages=ai_input,
+            max_tokens=MAX_TOKENS
+        )
+        ai_message = response.choices[0].message.content
+        print(ai_message)
 
         # chat.messages = new_messages
         # chat.save()
