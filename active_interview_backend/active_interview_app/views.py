@@ -7,13 +7,19 @@ import markdown
 import tempfile
 import textwrap
 import re
+import json
+from markdownify import markdownify as md
+from docx import Document
+import json
 
 from .models import UploadedResume, UploadedJobListing, Chat
 from .forms import (
     CreateUserForm,
     CreateChatForm,
     EditChatForm,
-    UploadFileForm
+    UploadFileForm,
+    DocumentEditForm,
+    JobPostingEditForm
 )
 from .serializers import (
     UploadedResumeSerializer,
@@ -382,7 +388,8 @@ class CreateChat(LoginRequiredMixin, View):
                 chat.key_questions = json.loads(cleaned_message)
 
                 chat.save()
-
+                
+                
                 return redirect("chat-view", chat_id=chat.id)
             # else:
             #     print("chat form invalid")
@@ -698,6 +705,81 @@ class ResultsChat(LoginRequiredMixin, UserPassesTestMixin, View):
                       context)
 
 
+class ResultCharts(LoginRequiredMixin, UserPassesTestMixin, View):
+    def test_func(self):
+        # manually grab chat id from kwargs and process it
+        chat = Chat.objects.get(id=self.kwargs['chat_id'])
+
+        return self.request.user == chat.owner
+
+    def get(self, request, chat_id):
+        chat = Chat.objects.get(id=chat_id)
+        owner_chats = Chat.objects.filter(owner=request.user)\
+            .order_by('-modified_date')
+        
+     
+        scores_prompt = textwrap.dedent("""\
+            Based on the interview so far, please rate the interviewee in the following categories from 0 to 100, 
+            and return the result as a JSON object with integers only, in the following order that list only the integers:
+
+            - Professionalism
+            - Subject Knowledge
+            - Clarity
+            - Overall                          
+            
+            Example format:
+                8
+                7
+                9
+                6
+        """)
+        input_messages = chat.messages
+        
+        input_messages.append({"role": "user", "content": scores_prompt})
+
+        response = client.chat.completions.create(
+            model="gpt-4o",
+            messages=input_messages,
+            max_tokens=MAX_TOKENS
+        )
+        ai_message = response.choices[0].message.content
+
+        context = {}
+        context['chat'] = chat
+        context['owner_chats'] = owner_chats
+        
+        ai_message = response.choices[0].message.content.strip()
+        scores = [int(line.strip()) for line in ai_message.splitlines() if line.strip().isdigit()]
+        if len(scores) == 4:
+            professionalism, subject_knowledge, clarity, overall = scores
+        else:
+            professionalism, subject_knowledge, clarity, overall = [0, 0, 0, 0]
+
+        context['scores'] = {
+            'Professionalism': professionalism,
+            'Subject Knowledge': subject_knowledge,
+            'Clarity': clarity,
+            'Overall': overall
+        }
+        explain = textwrap.dedent("""\
+            Explain the reason for the following scores so that the user can understand, do not include json object for scores
+            IF NO response was given since start of interview please tell them to start interview
+        """)
+        input_messages.append({"role": "user", "content": explain})
+        response = client.chat.completions.create(
+            model="gpt-4o",
+            messages=input_messages,
+            max_tokens=MAX_TOKENS
+        )
+        ai_message = response.choices[0].message.content
+        context['feedback'] = ai_message
+
+        return render(request, os.path.join('chat', 'chat-results.html'),
+                      context)
+
+
+
+
 @login_required
 def loggedin(request):
     return render(request, 'loggedinindex.html')
@@ -733,8 +815,14 @@ def profile(request):
 
 @login_required
 def resume_detail(request, resume_id):
-    resume = get_object_or_404(UploadedResume, pk=resume_id)
-    return render(request, 'documents/resume_detail.html', {'resume': resume})
+    resume = get_object_or_404(UploadedResume, id=resume_id)
+    resumes = UploadedResume.objects.filter(user=request.user)
+    job_listings = UploadedJobListing.objects.filter(user=request.user)
+    return render(request, 'documents/resume_detail.html', {
+        'resume': resume,
+        'resumes': resumes,
+        'job_listings': job_listings,
+    })
 
 
 @login_required
@@ -748,7 +836,7 @@ def delete_resume(request, resume_id):
 
 @login_required
 def upload_file(request):
-    allowed_types = ['pdf']
+    allowed_types = ['pdf', 'docx']
 
     if request.method == "POST":
         form = UploadFileForm(request.POST, request.FILES)
@@ -757,35 +845,39 @@ def upload_file(request):
             file_name = uploaded_file.name
             title = request.POST.get("title", '').strip()
 
-            file_type = filetype.guess(uploaded_file.read())
+            file_bytes = uploaded_file.read()
+            file_type = filetype.guess(file_bytes)
             uploaded_file.seek(0)
 
-            # Due to how pymupdf4llm works, we have to
-            # save a file for it, because the .to_markdown()
-            # function accepts a file path, and not the file object itself.
-            # Therefore, a file is temporarily created so there's a filepath,
-            # and deleted once everything is converted.
             if file_type and file_type.extension in allowed_types:
                 try:
-                    with tempfile.NamedTemporaryFile(
-                        delete=False,
-                        suffix=".pdf"
-                    ) as temp_file:
-                        for chunk in uploaded_file.chunks():
-                            temp_file.write(chunk)
-                        temp_file_path = temp_file.name
-
-                    markdown_text = pymupdf4llm.to_markdown(temp_file_path)
-
                     instance = form.save(commit=False)
                     instance.user = request.user
                     instance.original_filename = file_name
                     instance.filesize = uploaded_file.size
-                    instance.content = markdown_text
                     instance.title = title
-                    instance.file = None
-                    # This is marked "None", because it stops
-                    # it from being saved to /media/uploads.
+                    instance.file = None  # Don't save the raw file to /media
+
+                    if file_type.extension == 'pdf':
+                        with tempfile.NamedTemporaryFile(delete=False,
+                                                         suffix=".pdf") as temp_file:
+                            for chunk in uploaded_file.chunks():
+                                temp_file.write(chunk)
+                            temp_file_path = temp_file.name
+                        instance.content = pymupdf4llm.to_markdown(temp_file_path)
+
+                    elif file_type.extension == 'docx':
+                        # Save temporarily and load using python-docx
+                        with tempfile.NamedTemporaryFile(delete=False,
+                                                         suffix=".docx") as temp_file:
+                            for chunk in uploaded_file.chunks():
+                                temp_file.write(chunk)
+                            temp_file_path = temp_file.name
+
+                        doc = Document(temp_file_path)
+                        full_text = '\n'.join([para.text for para in doc.paragraphs])
+                        instance.content = md(full_text)  # Convert to markdown
+
                     instance.save()
                     messages.success(request, "File uploaded successfully!")
                     return redirect('document-list')
@@ -793,13 +885,9 @@ def upload_file(request):
                 except Exception as e:
                     messages.error(request, f"Error processing the file: {e}")
                     return redirect('document-list')
-
             else:
-                messages.error(
-                    request,
-                    "Invalid filetype. Only PDF files are allowed."
-                )
-
+                messages.error(request,
+                "Invalid filetype. Only PDF and DOCX files are allowed.")
         else:
             messages.error(request, "There was an issue with the form.")
     else:
@@ -809,9 +897,58 @@ def upload_file(request):
     return redirect('document-list')
 
 
+def edit_resume(request, resume_id):
+    # Adjust model logic as needed (for resumes or job listings)
+    document = get_object_or_404(UploadedResume, id=resume_id)
+
+    if request.method == 'POST':
+        form = DocumentEditForm(request.POST, instance=document)
+        if form.is_valid():
+            form.save()
+            return redirect('resume_detail', resume_id=document.id)
+
+    else:
+        form = DocumentEditForm(instance=document)
+
+    return render(request,
+                  'documents/edit_document.html',
+                  {'form': form,
+                   'document': document})
+
+
+@login_required
 def job_posting_detail(request, job_id):
     job = get_object_or_404(UploadedJobListing, id=job_id)
-    return render(request, 'documents/job_posting_detail.html', {'job': job})
+    resumes = UploadedResume.objects.filter(user=request.user)
+    job_listings = UploadedJobListing.objects.filter(user=request.user)
+    return render(request, 'documents/job_posting_detail.html', {
+        'job': job,
+        'resumes': resumes,
+        'job_listings': job_listings,
+    })
+
+
+@login_required
+def edit_job_posting(request, job_id):
+    job_listing = get_object_or_404(UploadedJobListing,
+                                    id=job_id,
+                                    user=request.user)
+
+    if request.method == 'POST':
+        form = JobPostingEditForm(request.POST,
+                                  instance=job_listing)
+        # Adjust form as needed
+        if form.is_valid():
+            form.save()
+            return redirect('job_posting_detail', job_id=job_listing.id)
+    else:
+        form = JobPostingEditForm(instance=job_listing)
+        # Render the form with existing job details
+
+    return render(request,
+                  'documents/edit_job_posting.html',
+                  {'form': form,
+                   'job_listing': job_listing})
 
 
 @login_required
@@ -853,7 +990,7 @@ class UploadedJobListingView(APIView):
         filepath = os.path.join(user_dir, filename)
 
         # Convert the text to Markdown
-        markdown_text = markdown.markdown(text)
+        # markdown_text = markdown.markdown(text)
 
         # Create and save the UploadedJobListing object in the database
         job_listing = UploadedJobListing(
@@ -869,11 +1006,7 @@ class UploadedJobListingView(APIView):
 
         # Show success message and render the converted markdown
         messages.success(request, "Text uploaded successfully!")
-        return render(
-            request,
-            'documents/document-list.html',
-            {'markdown_text': markdown_text}
-        )
+        return redirect('document-list')
 
 
 class UploadedResumeView(APIView):

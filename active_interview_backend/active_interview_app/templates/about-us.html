@@ -1,16 +1,11 @@
 {% extends "base.html" %}
-
-
 {% block title %}
-  AIS - About Us
-{% endblock %}
-
+  <h2>AIS - About Us</h2>
+{% endblock title %}
 {% block content %}
-
 {% load static %}
-<link rel="stylesheet" href="{% static 'css/styles.css' %}"/>
+<link type="text/css" href="{% static 'css/styles.css' %}"/>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-
 <style>
     .h1{
         margin-left: auto; 
@@ -40,19 +35,6 @@
         font-family: Verdana, Geneva, Tahoma, sans-serif;
         font-size: x-large;
         font-weight: 500;
-    }
-
-    #member1{
-
-    }
-    #member2{
-
-    }
-    #member3{
-
-    }
-    #member4{
-
     }
 
     .profileimg{
@@ -94,31 +76,29 @@
 
 <div class="container">
     <div class="team" id="member1">
-        <img class="profileimg" src="{% static 'images/jacobprofile.jpg' %}">
-        Jacob
-    </div>
+        <img class="profileimg" width="175" height="175" alt="Profile picture of Jacob" src="{% static 'images/jacobprofile.jpg' %}">
+        <p>Jacob</p>
+    </div>    
     <div class="team" id="member2">
-        <img class="profileimg" src="{% static 'images/joelprofile.jpg' %}">
+        <img class="profileimg" width="175" height="175" alt="Profile Picture" src="{% static 'images/joelprofile.jpg' %}">
         Joel
     </div>
     <div class="team" id="member3">
-        <img class="profileimg" src="{% static 'images/craigprofile.jpg' %}">
+        <img class="profileimg" width="175" height="175" alt="Profile Picture" src="{% static 'images/craigprofile.jpg' %}">
         Craig
     </div>
     <div class="team" id="member4">
-        <img class="profileimg" src="{% static 'images/maddisonprofile.jpg' %}">
+        <img class="profileimg" width="175" height="175" alt="Profile Picture" src="{% static 'images/maddisonprofile.jpg' %}">
         Maddison
     </div>
 </div>
 
 <div id="about-box">
-    <p id= "about-para">
+    <p id="about-para">
         We are a group of students with the dream of helping our fellow students (and others) succeed in starting their professional careers. 
         The AIS team consists of four tired university students: Jacob, Joel, Craig, and Maddison. 
         We hope that we can help those preparing for interviews feel more confident
         in a real interview after using our service to practice.
     </p>
 </div>
-
-
-{% endblock content%}
+{% endblock content %}

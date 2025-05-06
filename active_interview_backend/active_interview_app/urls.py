@@ -32,7 +32,7 @@ urlpatterns = [
     path('profile/', views.profile, name='profile'),
     path('results/', views.results, name='results'),
 
-    # Chat urls
+    # Chat url
     path('chat/', views.chat_list, name='chat-list'),
     path('chat/create/', views.CreateChat.as_view(), name='chat-create'),
     path('chat/<int:chat_id>/', views.ChatView.as_view(), name='chat-view'),
@@ -42,7 +42,7 @@ urlpatterns = [
          name='chat-delete'),
     path('chat/<int:chat_id>/restart/', views.RestartChat.as_view(),
          name='chat-restart'),
-    path('chat/<int:chat_id>/results/', views.ResultsChat.as_view(),
+    path('chat/<int:chat_id>/results/', views.ResultCharts.as_view(),
          name='chat-results'),
     path('chat/<int:chat_id>/key-questions/<int:question_id>/',
          views.KeyQuestionsView.as_view(), name='key-questions'),
@@ -66,6 +66,11 @@ urlpatterns = [
     path('job-posting/<int:job_id>/', views.job_posting_detail, name='job_posting_detail'),
     path('resume/delete/<int:resume_id>/', views.delete_resume, name='delete_resume'),
     path('delete_job/<int:job_id>/', views.delete_job, name='delete_job'),
+    path('resume/edit/<int:resume_id>/', views.edit_resume, name='edit_resume'),
+    path('job-posting/edit/<int:job_id>/', views.edit_job_posting, name='edit_job_posting'),
+    
+    
+
 
 
 

@@ -10,10 +10,6 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RemoveField(
-            model_name='chat',
-            name='text_audio',
-        ),
         migrations.AddField(
             model_name='chat',
             name='key_questions',
