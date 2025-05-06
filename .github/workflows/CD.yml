@@ -40,7 +40,7 @@ jobs:
         run: ssh digital_ocean 'cd ~/Group-7-Spring-2025; docker system prune --all --volumes -f; systemctl restart docker'
 
       - name: Check out the source
-        run: ssh digital_ocean 'cd ~/Group-7-Spring-2025 && git fetch && git reset --hard origin/prod && git clean -fdx -e .env -e active_interview_backend/db -e /active_interview_backend/media'
+        run: ssh digital_ocean 'cd ~/Group-7-Spring-2025 && git fetch && git reset --hard origin/prod && git clean -fdx -e .env -e active_interview_django/db -e /active_interview_django/media'
 
       - name: Start the server
         if: ${{ always() }}

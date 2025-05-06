@@ -1,6 +1,6 @@
 services:
   django:
-    build: active_interview_backend/.
+    build: active_interview_django/.
     environment:
       - PROD=false
     env_file:
@@ -9,7 +9,7 @@ services:
     volumes:
       - static_volume:/app/staticfiles # shared staticfiles volume
       - media_volume:/app/media
-      - ./active_interview_backend:/app
+      - ./active_interview_django:/app
       - db_data:/app/db
       #    ports:
       #      - "8000:8000"

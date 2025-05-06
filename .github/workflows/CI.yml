@@ -169,13 +169,13 @@ jobs:
         if: always()
         run: |
           echo -e '# Python Lint Ouput\n```' >> $GITHUB_STEP_SUMMARY;
-          flake8 --config active_interview_backend/.flake8 . | tee -a $GITHUB_STEP_SUMMARY;
+          flake8 --config active_interview_django/.flake8 . | tee -a $GITHUB_STEP_SUMMARY;
           echo -e '\n```' >> $GITHUB_STEP_SUMMARY
 
       - name: Lint Templates
         if: always()
         run: |
           echo -e '# Template Lint Ouput\n```' >> $GITHUB_STEP_SUMMARY;
-          djlint --configuration active_interview_backend/djlint.toml active_interview_backend/active_interview_app/templates/ --lint | tee -a $GITHUB_STEP_SUMMARY;
+          djlint --configuration active_interview_django/djlint.toml active_interview_django/active_interview_app/templates/ --lint | tee -a $GITHUB_STEP_SUMMARY;
           echo -e '\n```' >> $GITHUB_STEP_SUMMARY
 
