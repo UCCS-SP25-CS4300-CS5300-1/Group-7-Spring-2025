@@ -254,3 +254,8 @@ html, body {
 .pt-66 {
     padding-top: 66px !important;
 }
+
+.carousel-control-prev,
+.carousel-control-next{
+    align-items: flex-start; /* Aligns it at the bottom */
+}

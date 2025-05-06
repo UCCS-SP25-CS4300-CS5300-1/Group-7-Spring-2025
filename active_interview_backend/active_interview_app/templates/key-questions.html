@@ -1,0 +1,288 @@
+{% extends "base-sidebar.html" %}
+
+{% block title %}
+  AIS - {{ chat.title }} Key Questions
+{% endblock %}
+
+{% block content %}
+  {% load static %}
+  <div id="questions-container" class="centered-container flex-grow-1 d-flex flex-column">
+    <nav aria-label="Page navigation example">
+      <ul class="pagination">
+        <li class="page-item">
+          <a class="page-link" href="#" aria-label="Previous">
+            <span aria-hidden="true">&laquo;</span>
+          </a>
+        </li>
+        {% for key_question in chat.key_questions %}
+          <li class="page-item"><a class="page-link {% if question.id == key_question.id %}active{% endif %}" href="{% url "key-questions" chat_id=chat.id question_id=key_question.id%}">{{ key_question.id|add:"1" }}</a></li>
+        {% endfor %}
+        <li class="page-item">
+          <a class="page-link" href="#" aria-label="Next">
+            <span aria-hidden="true">&raquo;</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+    <h3 class="text-white">{{ question.title }}</h3>
+    <div id="chat-scroll" class="d-flex flex-column-reverse flex-grow-1 overflow-y-auto overflow-x-hidden pe-0">
+      <div class="row flex-column-reverse">
+        <div id="chat-messages">
+          <div class="col bot-text-container">
+            <div class="card bot-text-bubble">
+              <div class="card-body">
+                  <div class = "ai_messages"> 
+                  <p class="card-text" id = "ai_message">{{ question.content }}</p>
+                  <div class="progress" role="progressbar" aria-label="Example 20px high" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style="height: 20px">
+                    <div id="timer-bar" class="progress-bar" style="width: 100%"></div>
+                  </div>
+                  <h5 id="timer-text">{{ question.duration }}s</h5>
+                  {% comment %} <button class ="button-chat-send btn btn-primary ms-2" id ="text2speech_button" onclick="textToSpeech(this)">Speak</button> {% endcomment %}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="inputCard" class="input-card card mb-3 mt-3">
+      <div class="card-body">
+        <div class="d-flex">
+          <textarea id="user-input" class="chat-input flex-grow-1 border-0 p-2" placeholder="Enter text here..." style="resize: none;"></textarea>
+          {% comment %} <button class="button-chat-send btn btn-primary ms-2" id = "speech-text" onclick="speechToText()">Speak</button> {% endcomment %}
+          {% comment %} <button class="button-chat-send btn btn-primary ms-2" type="button" onclick="location.reload()">Retry</button> {% endcomment %}
+          <button class="button-chat-send btn btn-primary ms-2" type="button" onclick="sendMessage()">Send</button>
+        </div>
+      </div>
+    </div>
+    {% comment %} <button class="button-chat-send btn btn-primary mb-2 d-none" type="button" onclick="location.reload()">Retry</button> {% endcomment %}
+  </div>
+{% endblock %}
+
+{% block scripts %}
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.2.4/purify.min.js" integrity="sha512-Y1p/STLW/B+l+MPJ5K5OdILMwJa2gMFXXmC/qsyDuGH9uc1MZMUo6/8YQUg9Ut4ns8KGCrCtt+58UwmNFFiVvA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script>
+    var start = Date.now();
+
+    var timer = {{ question.duration }};
+
+    let timerInterval = setInterval(function() {
+      // stop timer when user container is in DOM
+      if ($("#user-response-container").length) {
+        clearInterval(timerInterval); // Stop the interval
+      }
+
+      var delta = Date.now() - start; // milliseconds elapsed since start
+
+      timer = timer - 1
+
+      // console.log(timer); // in seconds
+
+      var raw_percent = (timer / {{ question.duration }}) * 100;
+      raw_percent = raw_percent.toFixed(2)
+      const percent = raw_percent + "%"
+      // console.log(percent);
+
+      $("#timer-bar").css("width", percent);
+      $("#timer-text").text(timer + "s");
+
+      if (timer === 0) {
+        clearInterval(timerInterval); // Stop the interval
+        
+        // Remove text box
+        $('#inputCard').remove();
+
+        // add retry button to the page
+        $("#questions-container").append("<button class=\"button-chat-send btn btn-primary mb-2\" type=\"button\" onclick=\"location.reload()\">Retry</button>");
+      }
+  }, 1000); // update about every second
+  </script>
+  <script>
+
+
+
+
+  //global variable because of everytime you click the button of speech to text it will alternate
+  // and if store it in there it will not alternate
+  let active_speech = false;
+
+
+    function textToSpeech(button) {
+      //Because there are multiple chat messages, it grabs by the previous one
+      let ai_message = button.previousElementSibling.innerText;
+      //cancels it to prevent multiple from playing
+      window.speechSynthesis.cancel();
+      //speech
+      let speech = new SpeechSynthesisUtterance();
+      //binds speech text to the message
+      speech.text = ai_message;
+      //talks about ai message
+      window.speechSynthesis.speak(speech);
+      
+      
+   }
+
+   function speechToText() {
+    //gets the button of when to start/stop listening
+    const button = document.getElementById('speech-text');
+    const textbox = document.getElementById('user-input');
+    //creates a way to listen
+    const Listener = window.webkitSpeechRecognition;
+    const recognition = new Listener();
+    //display results while you are talking
+    recognition.interimResults = true;
+    //stops code if you stop talking
+    recognition.continuous = true;
+    //because of interim results it will display as it goes along
+    recognition.onresult = (event) => {
+      //stores text for each time of listening
+      let text = '';
+      //goes through the stored text from the event
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        //stores text
+        text += event.results[i][0].transcript;
+      }
+      //places text in textbox
+      textbox.value = text;
+    };
+    //button to alternate between stop and start
+    button.addEventListener('click', () => {
+      //if active is true it stops it, which well then go to onend
+      if (active_speech) {
+        //Stops listening
+        recognition.stop();
+      } 
+      else {
+        //starts listening
+        recognition.start();
+        active_speech = true;
+        //shows people to click to stop
+        button.textContent = 'Stop';
+      }
+    });
+    //can be stopped by button or silence
+    recognition.onend = () => {
+      //resets the text box
+      button.textContent = 'Speak';
+      //alternates back to false
+      active_speech = false;
+    };
+  }
+  
+  
+    
+    // Move the chat scroll to the bottom
+    function updateScroll(){
+      var element = document.getElementById("chat-scroll");
+      element.scrollTop = element.scrollHeight;
+    }
+
+    {% comment %} $(document).ready(function() {
+      updateScroll();
+    }); {% endcomment %}
+    
+
+    const chatInput = document.getElementById('user-input');
+    chatInput.addEventListener('input', function() {
+      // Reset height to recalc scrollHeight
+      this.style.height = 'auto';
+      // Set the height based on the scrollHeight, which grows as needed
+      var scrollHeight = this.scrollHeight
+      
+      // Conditionally increase the size of the textarea
+      if (scrollHeight < 200) {
+        this.style.height = scrollHeight + 'px';
+      } else {
+        this.style.height = '200px';
+      }
+    });
+    
+
+    {% comment %} Jquery script adpated from chatgpt {% endcomment %}
+    function sendMessage() {
+      var userInput = $('#user-input').val();
+      if (userInput.trim() !== '') {
+        formattedUserInput = DOMPurify.sanitize(userInput.replace(/(?:\r\n|\r|\n)/g, '<br>'));
+
+        $('#user-input').val('');
+        // Reset height to recalc scrollHeight
+        chatInput.style.height = 'auto';
+        chatInput.style.height = chatInput.scrollHeight + 'px';
+
+        // Remove text box
+        $('#inputCard').remove();
+
+        // Show user text bubble
+        $('#chat-messages').append(
+            `<div id="user-response-container" class="col user-text-container">
+              <div class="card user-text-bubble">
+                <div class="card-body">
+                  <p class="card-text">${formattedUserInput}</p>
+                </div>
+              </div>
+            </div>`);
+
+        // Show loading bubble
+        $('#chat-messages').append(
+          `<div id="loading-bubble" class="col bot-text-container">
+            <div class="card bot-text-bubble">
+              <div class="card-body">
+                <img src={% static 'images/loading.gif' %} alt="Loading..." style="width: 24px; height: 24px;">
+              </div>
+            </div>
+          </div>`);
+        
+        updateScroll();
+
+        // POST the user message to the view
+        $.ajax({
+          url: `{% url "key-questions" chat_id=chat.id question_id=question.id %}`,
+          type: 'POST',
+          data: {
+            'message': userInput,
+            csrfmiddlewaretoken: '{{ csrf_token }}'
+          },
+          success: function(response) {
+            formattedResponseMessage = DOMPurify.sanitize(response.message.replace(/(?:\r\n|\r|\n)/g, '<br>'));
+            
+            // delete loading bubble
+            $('#loading-bubble').remove();
+
+            // Show the response bubble
+            $('#chat-messages').append(
+                `<div class="col bot-text-container">
+                  <div class="card bot-text-bubble">
+                    <div class="card-body">
+                      <p class="card-text" id = "ai_message">${formattedResponseMessage}</p>
+                    </div>
+                  </div>
+                </div>`);
+
+            // add retry button to the page
+            $("#questions-container").append("<button class=\"button-chat-send btn btn-primary mb-2\" type=\"button\" onclick=\"location.reload()\">Retry</button>");
+            
+            updateScroll();
+          }
+        });
+      }
+    }
+
+    // send text on enter
+    $('#user-input').on('keypress', function(e) {
+      if (e.key === "Enter" && !e.shiftKey) {
+        // prevent default behavior
+        e.preventDefault();
+
+        sendMessage();
+
+        $(this).val('');
+
+        // Reset height to recalc scrollHeight
+        this.style.height = 'auto';
+        // Set the height based on the scrollHeight, which grows as needed
+        this.style.height = this.scrollHeight + 'px';
+      }
+    });
+  </script>
+{% endblock %}
