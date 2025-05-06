@@ -176,6 +176,6 @@ jobs:
         if: always()
         run: |
           echo -e '# Template Lint Ouput\n```' >> $GITHUB_STEP_SUMMARY;
-          djlint active_interview_backend/active_interview_app/templates/ --lint | tee -a $GITHUB_STEP_SUMMARY;
+          djlint --configuration active_interview_backend/djlint.toml active_interview_backend/active_interview_app/templates/ --lint | tee -a $GITHUB_STEP_SUMMARY;
           echo -e '\n```' >> $GITHUB_STEP_SUMMARY
 

@@ -17,19 +17,19 @@
   <div id="questions-container" class="centered-container flex-grow-1 d-flex flex-column">
     <nav aria-label="Page navigation example">
       <ul class="pagination">
-        <li class="page-item">
+        {% comment %} <li class="page-item">
           <a class="page-link" href="#" aria-label="Previous">
             <span aria-hidden="true">&laquo;</span>
           </a>
-        </li>
+        </li> {% endcomment %}
         {% for key_question in chat.key_questions %}
           <li class="page-item"><a class="page-link {% if question.id == key_question.id %}active{% endif %}" href="{% url "key-questions" chat_id=chat.id question_id=key_question.id %}">{{ key_question.id|add:"1" }}</a></li>
         {% endfor %}
-        <li class="page-item">
+        {% comment %} <li class="page-item">
           <a class="page-link" href="#" aria-label="Next">
             <span aria-hidden="true">&raquo;</span>
           </a>
-        </li>
+        </li> {% endcomment %}
       </ul>
     </nav>
     <h3 class="text-white">{{ question.title }}</h3>
