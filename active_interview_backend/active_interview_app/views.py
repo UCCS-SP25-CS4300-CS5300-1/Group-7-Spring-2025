@@ -377,7 +377,7 @@ class CreateChat(LoginRequiredMixin, View):
                     max_tokens=MAX_TOKENS
                 )
                 ai_message = response.choices[0].message.content
-                cleaned_message = re.search("(\[[\s\S]+\])", ai_message)\
+                cleaned_message = re.search(r"(\[[\s\S]+\])", ai_message)\
                         .group(0).strip()
                 chat.key_questions = json.loads(cleaned_message)
 
