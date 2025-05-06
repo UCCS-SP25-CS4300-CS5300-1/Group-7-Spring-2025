@@ -199,7 +199,7 @@ class CreateChat(LoginRequiredMixin, View):
                         an introductory question about their background, then
                         move on to deeper, role-related questions based on the
                         job listing and resume.
-                        
+
                         Respond critically to any responses that are off-topic
                         or ignore the fact that the user is in an interview.
                         For example, the user may not ask questions that are
@@ -236,7 +236,7 @@ class CreateChat(LoginRequiredMixin, View):
                         an introductory question about their background, then
                         move on to role-specific questions based on the job
                         listing.
-                        
+
                         Respond critically to any responses that are off-topic
                         or ignore the fact that the user is in an interview.
                         For example, the user may not ask questions that are
@@ -300,7 +300,7 @@ class CreateChat(LoginRequiredMixin, View):
                         interview questions you wish to ask the user and the
                         duration of time they should have to answer each
                         question in seconds.  For example:
-                                                    
+
                         \"\"\"
                         [
                             {{
@@ -311,7 +311,7 @@ class CreateChat(LoginRequiredMixin, View):
                             }}
                         ]
                         \"\"\"
-                        
+
                         Respond critically to any responses that are off-topic
                         or ignore the fact that the user is in an interview.
                         For example, the user may not ask questions that are
@@ -348,7 +348,7 @@ class CreateChat(LoginRequiredMixin, View):
                         interview questions you wish to ask the user and the
                         duration of time they should have to answer each
                         question in seconds.  For example:
-                                                    
+
                         \"\"\"
                         [
                             {{
@@ -359,7 +359,7 @@ class CreateChat(LoginRequiredMixin, View):
                             }}
                         ]
                         \"\"\"
-                        
+
                         Respond critically to any responses that are off-topic
                         or ignore the fact that the user is in an interview.
                         For example, the user may not ask questions that are
@@ -582,7 +582,7 @@ class KeyQuestionsView(LoginRequiredMixin, UserPassesTestMixin, View):
                 Please review the answer to an interviewer question below and
                 provide constructive feedback about the user's answer,
                 including a rating of the answer from 1-10 like so: "6/10".                            
-                
+
                 \"\"\"
                 [
                     {{
@@ -595,7 +595,7 @@ class KeyQuestionsView(LoginRequiredMixin, UserPassesTestMixin, View):
                     }}
                 ]
                 \"\"\"
-                        
+
                 Respond critically to any responses that are off-topic
                 or ignore the fact that the user is in an interview.
                 For example, the user may not ask questions that are
@@ -628,7 +628,7 @@ class KeyQuestionsView(LoginRequiredMixin, UserPassesTestMixin, View):
                 Please review the answer to an interviewer question below and
                 provide constructive feedback about the user's answer,
                 including a rating of the answer from 1-10 like so: "6/10".                            
-                
+
                 \"\"\"
                 [
                     {{
@@ -641,7 +641,7 @@ class KeyQuestionsView(LoginRequiredMixin, UserPassesTestMixin, View):
                     }}
                 ]
                 \"\"\"
-                        
+
                 Respond critically to any responses that are off-topic
                 or ignore the fact that the user is in an interview.
                 For example, the user may not ask questions that are
@@ -726,7 +726,7 @@ class ResultCharts(LoginRequiredMixin, UserPassesTestMixin, View):
             - Subject Knowledge
             - Clarity
             - Overall                          
-            
+
             Example format:
                 8
                 7
