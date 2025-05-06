@@ -17,7 +17,8 @@ class DocumentEditForm(forms.ModelForm):
         fields = ['title', 'content']
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control'}),
-            'content': forms.Textarea(attrs={'class': 'form-control', 'rows': 15}),
+            'content': forms.Textarea(attrs={'class': 'form-control',
+                                             'rows': 15}),
         }
 
 
@@ -27,10 +28,10 @@ class JobPostingEditForm(forms.ModelForm):
         fields = ['title', 'content']
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control'}),
-            'content': forms.Textarea(attrs={'class': 'form-control', 'rows': 15}),
+            'content': forms.Textarea(attrs={'class': 'form-control',
+                                             'rows': 15}),
         }
 
-        
 
 class CreateChatForm(ModelForm):
     difficulty = IntegerField(initial=5, min_value=1, max_value=10)
@@ -71,7 +72,6 @@ class UploadFileForm(ModelForm):
         fields = ["file", "title"]
 
     def clean_file(self):
-        allowed_types = ['txt', 'pdf', 'jpg', 'png']
+        # allowed_types = ['txt', 'pdf', 'jpg', 'png']
         uploaded_file = self.cleaned_data.get("file")
         return uploaded_file
-

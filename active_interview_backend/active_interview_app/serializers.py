@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import *
 
+
 class UploadedResumeSerializer(serializers.ModelSerializer):
     class Meta:
         model = UploadedResume
