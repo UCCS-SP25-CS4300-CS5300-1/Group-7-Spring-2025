@@ -1,3 +1,4 @@
+import re
 from django.contrib.auth.models import User
 from django.test import TestCase
 from django.urls import reverse
@@ -43,6 +44,32 @@ def generateExampleChat(owner):
                 "role": "assistant",
                 "content": "Certainly! Let's sum the numbers:\n\n34 + 12 + 78 \
                     + 56 + 23 + 89 + 45 = 337\n\nThe total sum is 337."
+            }
+        ],
+        key_questions=[
+            {
+                "id": 0,
+                "title": "Motivation for Application",
+                "duration": 120,
+                "content": "What motivated you to apply for the Fullstack \
+                    Software Developer position at Auria, especially in \
+                    relation to your experience and skills listed in your \
+                    resume?"
+            },
+            {
+                "id": 1,
+                "title": "Experience with Angular and Java",
+                "duration": 90,
+                "content": "Can you elaborate on your experience with Angular \
+                    and Java, particularly any projects or specific tasks that\
+                     utilized both?"
+            },
+            {
+                "id": 2,
+                "title": "Agile Environment",
+                "duration": 60,
+                "content": "Describe your experience working in an Agile \
+                    environment. What tools and practices have you used?"
             }
         ]
     )
@@ -251,3 +278,47 @@ class TestRestartChatView(TestCase):
         self.assertLessEqual(len(Chat.objects.get(id=self.chat.id)\
                                  .messages), 2)
 
+
+class TestKeyQuestionsView(TestCase):
+    def setUp(self):
+        self.user = generateExampleUser()
+        self.chat = generateExampleChat(self.user)
+        self.listing = generateExampleJobListing(self.user)
+        self.resume = generateExampleResume(self.user)
+        self.question = self.chat.key_questions[1]
+        self.client.force_login(self.user)
+
+        self.chat.job_listing = self.listing
+        self.chat.resume = self.resume
+        self.chat.save()
+
+    def testGETChatView(self):
+        # Call the view with a response
+        response = self.client.get(reverse('key-questions',
+                                           args=[self.chat.id,
+                                                 self.question["id"]]))
+
+        # Validate that the view is valid
+        self.assertEqual(response.status_code, 200)
+
+        # Validate that the index template was used
+        self.assertTemplateUsed(response, 'base-sidebar.html')
+
+    def testPOSTChatView(self):
+        # Call view with an ai prompt
+        response = self.client.post(reverse('key-questions',
+                                           args=[self.chat.id,
+                                                 self.question["id"]]),
+            {
+                "message": "What is pi?"
+            }
+        )
+
+        # Validate that the view is valid.  This view redirects
+        self.assertEqual(response.status_code, 200)
+
+        # Check the ai response for a valid response.  In this case, the
+        # question is off topic, and should be graded poorly
+        clean_response = response.content.decode('utf-8')
+        print(clean_response)
+        self.assertFalse(re.search("([123]/10)", clean_response) == None)

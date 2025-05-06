@@ -581,7 +581,7 @@ class KeyQuestionsView(LoginRequiredMixin, UserPassesTestMixin, View):
 
                 Please review the answer to an interviewer question below and
                 provide constructive feedback about the user's answer,
-                including a rating of the answer from 1-10.                            
+                including a rating of the answer from 1-10 like so: "6/10".                            
                 
                 \"\"\"
                 [
@@ -627,7 +627,7 @@ class KeyQuestionsView(LoginRequiredMixin, UserPassesTestMixin, View):
 
                 Please review the answer to an interviewer question below and
                 provide constructive feedback about the user's answer,
-                including a rating of the answer from 1-10.                            
+                including a rating of the answer from 1-10 like so: "6/10".                            
                 
                 \"\"\"
                 [
