@@ -33,6 +33,10 @@
               <div class="card-body">
                   <div class = "ai_messages"> 
                   <p class="card-text" id = "ai_message">{{ question.content }}</p>
+                  <div class="progress" role="progressbar" aria-label="Example 20px high" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style="height: 20px">
+                    <div id="timer-bar" class="progress-bar" style="width: 100%"></div>
+                  </div>
+                  <h5 id="timer-text">{{ question.duration }}s</h5>
                   {% comment %} <button class ="button-chat-send btn btn-primary ms-2" id ="text2speech_button" onclick="textToSpeech(this)">Speak</button> {% endcomment %}
                 </div>
               </div>
@@ -56,6 +60,34 @@
 {% block scripts %}
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.2.4/purify.min.js" integrity="sha512-Y1p/STLW/B+l+MPJ5K5OdILMwJa2gMFXXmC/qsyDuGH9uc1MZMUo6/8YQUg9Ut4ns8KGCrCtt+58UwmNFFiVvA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script>
+    var start = Date.now();
+
+    var timer = {{ question.duration }};
+
+    let timerInterval = setInterval(function() {
+      var delta = Date.now() - start; // milliseconds elapsed since start
+
+      timer = timer - 1
+
+      // console.log(timer); // in seconds
+
+      var raw_percent = (timer / {{ question.duration }}) * 100;
+      raw_percent = raw_percent.toFixed(2)
+      const percent = raw_percent + "%"
+      // console.log(percent);
+
+      $("#timer-bar").css("width", percent);
+      $("#timer-text").text(timer + "s");
+
+      if (timer === 0) {
+        clearInterval(timerInterval); // Stop the interval
+        
+        // Remove text box
+        $('#inputCard').remove();
+      }
+  }, 1000); // update about every second
+  </script>
   <script>
 
 
