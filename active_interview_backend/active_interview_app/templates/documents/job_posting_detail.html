@@ -1,8 +1,8 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 
 {% block title %}
   {{ job.title }} - Job Posting Details
-{% endblock %}
+{% endblock title %}
 
 {% block content %}
   <style>
@@ -16,4 +16,4 @@
     <h1>{{ job.title }}</h1>
     <div>{{ job.content|linebreaksbr }}</div>
   </div>
-{% endblock %}
+{% endblock content %}
