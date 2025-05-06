@@ -3,14 +3,11 @@ import filetype
 import json
 from openai import OpenAI
 import pymupdf4llm
-import markdown
 import tempfile
 import textwrap
 import re
-import json
 from markdownify import markdownify as md
 from docx import Document
-import json
 
 from .models import UploadedResume, UploadedJobListing, Chat
 from .forms import (
@@ -32,6 +29,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.mixins import UserPassesTestMixin
+from django.contrib.auth.models import Group
 from django.forms.models import model_to_dict
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
@@ -749,7 +747,7 @@ class ResultCharts(LoginRequiredMixin, UserPassesTestMixin, View):
 
         ai_message = response.choices[0].message.content.strip()
         scores = [int(line.strip())
-                      for line in ai_message.splitlines() if line.strip()\
+                      for line in ai_message.splitlines() if line.strip()
                         .isdigit()]
         if len(scores) == 4:
             professionalism, subject_knowledge, clarity, overall = scores
@@ -797,7 +795,7 @@ def register(request):
         user.save()
         messages.success(request, 'Account was created for ' + username)
         return redirect('/accounts/login/?next=/')
-    context={'form':form}
+    context = {'form': form}
 
     return render(request, 'registration/register.html', context)
 
@@ -892,7 +890,8 @@ def upload_file(request):
                     return redirect('document-list')
             else:
                 messages.error(request,
-                               "Invalid filetype. Only PDF and DOCX files are allowed.")
+                               "Invalid filetype. Only PDF and DOCX files are \
+                                allowed.")
         else:
             messages.error(request, "There was an issue with the form.")
     else:

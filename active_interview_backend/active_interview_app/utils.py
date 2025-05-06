@@ -4,6 +4,8 @@ import logging
 
 
 def handle_uploaded_file(f):
+    logger = logging.getLogger()
+
     # Ensure the directory exists.
     try:
         upload_dir = os.path.join(settings.MEDIA_ROOT, "uploads")
@@ -26,5 +28,6 @@ def handle_uploaded_file(f):
         logger.error(f"Unexpected error while saving file: {e}")
         raise ValueError(
             "An unexpected error occurred. Please try again later.")
+
 
 handle_uploaded_file()

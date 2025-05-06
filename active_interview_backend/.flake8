@@ -1,5 +1,5 @@
 [flake8]
-extend-ignore = E711, F403, F405
+extend-ignore = E127, E711, F403, F405
 exclude =
     migrations,
     manage.py,

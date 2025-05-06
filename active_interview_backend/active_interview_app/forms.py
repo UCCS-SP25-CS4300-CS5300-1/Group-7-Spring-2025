@@ -72,7 +72,6 @@ class UploadFileForm(ModelForm):
         fields = ["file", "title"]
 
     def clean_file(self):
-        allowed_types = ['txt', 'pdf', 'jpg', 'png']
+        # allowed_types = ['txt', 'pdf', 'jpg', 'png']
         uploaded_file = self.cleaned_data.get("file")
         return uploaded_file
-

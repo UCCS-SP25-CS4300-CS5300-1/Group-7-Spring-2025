@@ -6,11 +6,7 @@ from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait, Select
-from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.support.select import Select
-import time
 
 
 # === Helper Fucntions ===
@@ -73,14 +69,14 @@ def authenticate(test_case, driver):
 
 
 def loginSim():
-    user = None
-    if not User.objects.filter(username = 'test').exists():
-        user = User.objects.create_user(
-            username="test",
-            password="!QAZxsw2"
-        )
+    # user = None
+    # if not User.objects.filter(username='test').exists():
+    #     user = User.objects.create_user(
+    #         username="test",
+    #         password="!QAZxsw2"
+    #     )
     driver = getEnvDriver()
-    if settings.PROD == False:
+    if settings.PROD is False:
         driver.get('http://127.0.0.1:8000/accounts/login/')
     else:
         driver.get('https://app.activeinterviewservice.me/accounts/login/')
@@ -157,19 +153,3 @@ class TestDriver(StaticLiveServerTestCase):
     #     submit.click()
     #     ai_message = driver.find_element(By.ID, "ai_message").text
     #     assert "Craig" in ai_message
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

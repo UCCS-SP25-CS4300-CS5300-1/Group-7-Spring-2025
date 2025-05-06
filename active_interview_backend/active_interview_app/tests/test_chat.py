@@ -275,7 +275,7 @@ class TestRestartChatView(TestCase):
         self.assertEqual(response.status_code, 302)
 
         # Validate that the chat only has 2 messages now
-        self.assertLessEqual(len(Chat.objects.get(id=self.chat.id)\
+        self.assertLessEqual(len(Chat.objects.get(id=self.chat.id)
                                  .messages), 2)
 
 
