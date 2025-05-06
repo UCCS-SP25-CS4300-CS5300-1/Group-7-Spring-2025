@@ -2,7 +2,7 @@
 
 {% block title %}
   AIS - Documents
-{% endblock %}
+{% endblock title %}
 
 {% block content %}
   <style>
@@ -41,7 +41,7 @@
     {% endif %}
     
     <h2>Upload Your Resume</h2>
-    <form action="{% url 'upload_file' %}" method="POST" enctype="multipart/form-data">
+    <form action="{% url 'upload_file' %}" method="post" enctype="multipart/form-data">
       {% csrf_token %}
       
       <label for="title">Resume Title:</label>
@@ -56,7 +56,7 @@
     <hr class="white-break">
 
     <h2>Or Paste Your Job Listing Text</h2>
-    <form method="POST" action="{% url 'save_pasted_text' %}">
+    <form method="post" action="{% url 'save_pasted_text' %}">
       {% csrf_token %}
 
       <label for="title">Job Listing Title:</label>
@@ -74,4 +74,4 @@
     {% endif %}
   </div>
 
-{% endblock %}
+{% endblock content %}

@@ -1,8 +1,8 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 
 {% block title %}
   {{ resume.title }} - Resume Details
-{% endblock %}
+{% endblock title %}
 
 {% block content %}
   <style>
@@ -12,8 +12,26 @@
     }
   </style>
 
+<<<<<<< Updated upstream
   <div class="resume-detail">
     <h1>{{ resume.title }}</h1>
     <div>{{ resume.content|linebreaksbr }}</div>
+=======
+  <div class="resume-detail-wrapper">
+    <div class="resume-detail">
+      <div class="resume-title">
+        <h1>{{ resume.title }}</h1>
+      </div>
+      <div class="resume-content-box">
+        <div>{{ resume.content|linebreaksbr }}</div>
+      </div>
+    </div>
+
+    <div class="document-list-box">
+      <div class="document-list">
+        {% include "documents/_document_list.html" %}
+      </div>
+    </div>
+>>>>>>> Stashed changes
   </div>
-{% endblock %}
+{% endblock content %}
