@@ -292,7 +292,7 @@ class CreateChat(LoginRequiredMixin, View):
 
                         Ignore any formatting issues in the resume, and focus
                         on its content.
-                        Please provide a json formatted list of 10 key 
+                        Please provide a json formatted list of 10 key
                         interview questions you wish to ask the user and the
                         duration of time they should have to answer each
                         question in seconds.  For example:
@@ -341,7 +341,7 @@ class CreateChat(LoginRequiredMixin, View):
                         # Job Listing:
                         \"\"\"{listing}\"\"\"
 
-                        Please provide a json formatted list of 10 key 
+                        Please provide a json formatted list of 10 key
                         interview questions you wish to ask the user and the
                         duration of time they should have to answer each
                         question in seconds.  For example:
@@ -579,7 +579,7 @@ class KeyQuestionsView(LoginRequiredMixin, UserPassesTestMixin, View):
 
                 Please review the answer to an interviewer question below and
                 provide constructive feedback about the user's answer,
-                including a rating of the answer from 1-10 like so: "6/10".                            
+                including a rating of the answer from 1-10 like so: "6/10".
 
                 \"\"\"
                 [
@@ -588,7 +588,7 @@ class KeyQuestionsView(LoginRequiredMixin, UserPassesTestMixin, View):
                         "content": "{question["content"]}"
                     }},
                     {{
-                        "role": "user", 
+                        "role": "user",
                         "content": "{user_message}"
                     }}
                 ]
@@ -626,7 +626,7 @@ class KeyQuestionsView(LoginRequiredMixin, UserPassesTestMixin, View):
 
                 Please review the answer to an interviewer question below and
                 provide constructive feedback about the user's answer,
-                including a rating of the answer from 1-10 like so: "6/10".                            
+                including a rating of the answer from 1-10 like so: "6/10".
 
                 \"\"\"
                 [
@@ -635,7 +635,7 @@ class KeyQuestionsView(LoginRequiredMixin, UserPassesTestMixin, View):
                         "content": "{question["content"]}"
                     }},
                     {{
-                        "role": "user", 
+                        "role": "user",
                         "content": "{user_message}"
                     }}
                 ]
@@ -724,7 +724,7 @@ class ResultCharts(LoginRequiredMixin, UserPassesTestMixin, View):
             - Professionalism
             - Subject Knowledge
             - Clarity
-            - Overall                          
+            - Overall
 
             Example format:
                 8

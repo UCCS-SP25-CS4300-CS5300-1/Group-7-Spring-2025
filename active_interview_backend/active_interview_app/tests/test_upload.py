@@ -181,7 +181,7 @@ class ResumeUploadTests(TestCase):
             reverse('upload_file'),
             {
                 'file': txt_file,
-                'title': 'Test Invalid File' 
+                'title': 'Test Invalid File'
             },
             follow=True
         )
@@ -202,7 +202,7 @@ def test_post_valid_text(self):
     response = self.client.post(
         reverse('save_pasted_text'),
         {'paste-text': 'This is a pasted test.', 'title': 'Test Title'},
-        follow=True 
+        follow=True
     )
 
     self.assertEqual(response.status_code, 200)

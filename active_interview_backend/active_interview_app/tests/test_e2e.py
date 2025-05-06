@@ -26,7 +26,7 @@ def getEnvDriver():
         chrome_options.add_argument("--disable-gpu")
         chrome_options.add_argument("--window-size=1920,1080")
         chrome_options.add_argument("--use-fake-ui-for-media-stream")
-        chrome_options.add_argument("--use-fake-device-for-media-stream") 
+        chrome_options.add_argument("--use-fake-device-for-media-stream")
 
         driver = webdriver.Chrome(options=chrome_options)
 
@@ -76,7 +76,7 @@ def loginSim():
     user = None
     if not User.objects.filter(username = 'test').exists():
         user = User.objects.create_user(
-            username="test", 
+            username="test",
             password="!QAZxsw2"
         )
     driver = getEnvDriver()
