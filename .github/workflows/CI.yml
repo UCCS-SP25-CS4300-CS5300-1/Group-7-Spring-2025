@@ -169,7 +169,7 @@ jobs:
         if: always()
         run: |
           echo -e '# Python Lint Ouput\n```' >> $GITHUB_STEP_SUMMARY;
-          flake8 active_interview_backend/ | tee -a $GITHUB_STEP_SUMMARY;
+          flake8 --config active_interview_backend/ . | tee -a $GITHUB_STEP_SUMMARY;
           echo -e '\n```' >> $GITHUB_STEP_SUMMARY
 
       - name: Lint Templates
