@@ -144,7 +144,7 @@ class TestCreateChatView(TestCase):
     def testPOSTCreateChatView(self):
         # Call the view with a response
         response = self.client.post(reverse('chat-create'),
-            {
+                                    {
                 "title": "Example Title Strikes Back",
                 "type": Chat.GENERAL,
                 "difficulty": 5,
@@ -181,7 +181,7 @@ class TestChatView(TestCase):
     def testPOSTChatView(self):
         # Call view with an ai prompt
         response = self.client.post(reverse('chat-view', args=[self.chat.id]),
-            {
+                                    {
                 "message": "What is pi?"
             }
         )
@@ -213,7 +213,7 @@ class TestEditChatView(TestCase):
     def testPOSTEditChatView(self):
         # Call the view to update the current item's title
         response = self.client.post(reverse('chat-edit', args=[self.chat.id]),
-            {
+                                    {
                 "title": "Changed Title",
                 "difficulty": 3,
                 "update": "update"
@@ -239,7 +239,7 @@ class TestDeleteChatView(TestCase):
         # Call the view to update the current item's title
         response = self.client.post(reverse('chat-delete',
                                             args=[self.chat.id]),
-            {
+                                    {
                 "delete": "delete"
             }
         )
@@ -266,7 +266,7 @@ class TestRestartChatView(TestCase):
         # Call the view to update the current item's title
         response = self.client.post(reverse('chat-restart',
                                             args=[self.chat.id]),
-            {
+                                    {
                 "restart": "restart"
             }
         )
@@ -307,9 +307,9 @@ class TestKeyQuestionsView(TestCase):
     def testPOSTChatView(self):
         # Call view with an ai prompt
         response = self.client.post(reverse('key-questions',
-                                           args=[self.chat.id,
-                                                 self.question["id"]]),
-            {
+                                            args=[self.chat.id,
+                                                  self.question["id"]]),
+                                    {
                 "message": "What is pi?"
             }
         )

@@ -892,7 +892,7 @@ def upload_file(request):
                     return redirect('document-list')
             else:
                 messages.error(request,
-                "Invalid filetype. Only PDF and DOCX files are allowed.")
+                               "Invalid filetype. Only PDF and DOCX files are allowed.")
         else:
             messages.error(request, "There was an issue with the form.")
     else:
