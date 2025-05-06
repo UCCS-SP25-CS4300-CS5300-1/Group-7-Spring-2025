@@ -1,3 +1,4 @@
+from django import forms
 from django.forms import ModelForm, ModelChoiceField, IntegerField
 from .models import *
 from django.contrib.auth.forms import UserCreationForm
@@ -8,6 +9,28 @@ class CreateUserForm(UserCreationForm):
     class Meta:
         model = User
         fields = ['username', 'email', 'password1', 'password2']
+
+
+class DocumentEditForm(forms.ModelForm):
+    class Meta:
+        model = UploadedResume
+        fields = ['title', 'content']
+        widgets = {
+            'title': forms.TextInput(attrs={'class': 'form-control'}),
+            'content': forms.Textarea(attrs={'class': 'form-control',
+                                             'rows': 15}),
+        }
+
+
+class JobPostingEditForm(forms.ModelForm):
+    class Meta:
+        model = UploadedJobListing
+        fields = ['title', 'content']
+        widgets = {
+            'title': forms.TextInput(attrs={'class': 'form-control'}),
+            'content': forms.Textarea(attrs={'class': 'form-control',
+                                             'rows': 15}),
+        }
 
 
 class CreateChatForm(ModelForm):
@@ -49,7 +72,6 @@ class UploadFileForm(ModelForm):
         fields = ["file", "title"]
 
     def clean_file(self):
-        allowed_types = ['txt', 'pdf', 'jpg', 'png']
+        # allowed_types = ['txt', 'pdf', 'jpg', 'png']
         uploaded_file = self.cleaned_data.get("file")
         return uploaded_file
-

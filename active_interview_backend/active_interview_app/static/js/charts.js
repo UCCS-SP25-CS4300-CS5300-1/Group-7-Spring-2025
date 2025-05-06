@@ -2,9 +2,10 @@
 After a user completes their mock interview they will be given a page of their results 
 */
 
+const inputData = JSON.parse(document.getElementById('chart-data').textContent);
+
+
 //Bar Graph
-const xValues = ["Coherence", "Clarity", "Correctness", "Politeness"];
-const yValues = [55, 49, 44, 50];
 const barColors = ["#4482A6", "#F5F9E9","#96A13A","#564256"];
 
 Chart.defaults.backgroundColor = '#9BD0F5';
@@ -15,10 +16,10 @@ const BarChart = document.getElementById('BarChart').getContext('2d');
 const chart1 = new Chart(BarChart, {
     type: "bar",
     data: {
-      labels: xValues,
+      labels: Object.keys(inputData),
       datasets: [{
         backgroundColor: barColors,
-        data: yValues,
+        data: Object.values(inputData),
       }]
     },
     options: {
@@ -46,19 +47,15 @@ const chart1 = new Chart(BarChart, {
     } 
   });
 
-const dataSplits = [200,50,100];
+
 const DonutChart = document.getElementById("DonutChart").getContext('2d');
 const chart2 = new Chart(DonutChart, {
   type: 'doughnut',
 
   data: {
-    labels: [
-      'Professionalism',
-      'Speed',
-      'Grammar'
-    ],
+    labels: Object.keys(inputData),
     datasets: [{
-      data: dataSplits,
+      data: Object.values(inputData),
       backgroundColor: barColors,
       hoverOffset: 4
     }],

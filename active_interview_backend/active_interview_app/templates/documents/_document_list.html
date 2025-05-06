@@ -1,0 +1,88 @@
+<style>
+ .list{
+  font-size: 23px;
+ }
+</style>
+<div class="row mb-3">
+    <h3>Uploaded Resumes</h3>
+    {% if resumes|length == 0 %}
+      <center><h5>No Resumes Uploaded</h5></center>
+    {% else %}
+      <ul>
+        {% for document in resumes %}
+          {% if document.title and document.title != "1" %}
+          <li class="list">
+            {{ document.title }} -
+            <a class="link-light" href="{% url 'resume_detail' resume_id=document.id %}">View</a> |
+            <a class="link-light" href="{% url 'edit_resume' resume_id=document.id %}">Edit</a> |
+            <a class="link-light" href="#" data-bs-toggle="modal" data-bs-target="#deleteResumeModal{{ document.id }}">Delete</a>
+          </li>
+          {% endif %}
+        {% endfor %}
+      </ul>
+      {% for document in resumes %}
+        <div class="modal fade" id="deleteResumeModal{{ document.id }}" tabindex="-1" aria-labelledby="deleteResumeLabel{{ document.id }}" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content text-black">
+              <div class="modal-header">
+                <h5 class="modal-title" id="deleteResumeLabel{{ document.id }}">Confirm Delete</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                Are you sure you want to delete <strong>{{ document.title|default:document.original_filename }}</strong>?
+              </div>
+              <div class="modal-footer">
+                <form method="post" action="{% url 'delete_resume' resume_id=document.id %}">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-danger">Yes, Delete</button>
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    {% endif %}
+  </div>
+  
+
+  <hr class="white-break">
+  <div class="row mb-3">
+    <h3>Uploaded Job Listings</h3>
+    {% if job_listings|length == 0 %}
+      <center><h5>No Job Listings Uploaded</h5></center>
+    {% else %}
+      <ul>
+        {% for job in job_listings %}
+          <li class="list">
+            {{ job.title }} -
+            <a class="link-light" href="{% url 'job_posting_detail' job_id=job.id %}">View</a> |
+            <a class="link-light" href="{% url 'edit_job_posting' job_id=job.id %}">Edit</a> |  <!-- Add Edit Link -->
+            <a class="link-light" href="#" data-bs-toggle="modal" data-bs-target="#deleteJobModal{{ job.id }}">Delete</a>
+          </li>
+          
+          <!-- Delete Modal for Job -->
+          <div class="modal fade" id="deleteJobModal{{ job.id }}" tabindex="-1" aria-labelledby="deleteJobLabel{{ job.id }}" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content text-black">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="deleteJobLabel{{ job.id }}">Confirm Delete</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  Are you sure you want to delete <strong>{{ job.title }}</strong>?
+                </div>
+                <div class="modal-footer">
+                  <form method="post" action="{% url 'delete_job' job_id=job.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">Yes, Delete</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </ul>
+    {% endif %}
+</div> 

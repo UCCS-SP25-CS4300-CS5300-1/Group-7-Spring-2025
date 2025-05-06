@@ -1,0 +1,3 @@
+profile="django"
+exclude="loggedinindex.html"
+extend_exclude="old-index.html"

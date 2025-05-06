@@ -1,19 +1,80 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 
 {% block title %}
   {{ job.title }} - Job Posting Details
-{% endblock %}
+{% endblock title %}
 
 {% block content %}
   <style>
-    .resume-detail {
+    .job-detail-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 80vh;
       color: white;
       padding: 2rem;
+      text-align: center;
+    }
+
+    .job-detail {
+      max-width: 800px;
+      width: 100%;
+      margin-bottom: 3rem;
+    }
+
+    .job-title {
+      background-color: rgba(255, 255, 255, 0.2);
+      padding: 0.5rem 1.5rem;
+      border: 2px solid white;
+      border-radius: 10px;
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin-top: 20px;
+    }
+
+    .job-content-box {
+      background-color: rgba(255, 255, 255, 0.1);
+      padding: 2rem 1.5rem; /* Increased padding for more space within the box */
+      border: 2px solid white;
+      border-radius: 10px;
+      font-size: 1.2rem;
+      margin-top: 2rem;
+      margin-bottom: 2rem;
+      text-align: left;
+      width: 100%;
+      min-height: 300px; /* Increased minimum height for more vertical space */
+    }
+
+    .document-list-box {
+      background-color: rgba(255, 255, 255, 0.1);
+      padding: 1rem 1.5rem;
+      border: 2px solid white;
+      border-radius: 10px;
+      font-size: 1.2rem;
+      margin-top: 2rem;
+      text-align: left;
+      width: 100%;
+    }
+
+    .document-list {
+      margin-top: 0;
     }
   </style>
 
-  <div class="resume-detail">
-    <h1>{{ job.title }}</h1>
-    <div>{{ job.content|linebreaksbr }}</div>
+  <div class="job-detail-wrapper">
+    <div class="job-detail">
+      <div class="job-title">
+        <h1>{{ job.title }}</h1>
+      </div>
+      <div class="job-content-box">
+        <div>{{ job.content|linebreaksbr }}</div>
+      </div>
+    </div>
+
+    <div class="document-list-box">
+      <div class="document-list">
+        {% include "documents/_document_list.html" %}
+      </div>
+    </div>
   </div>
-{% endblock %}
+{% endblock content %}

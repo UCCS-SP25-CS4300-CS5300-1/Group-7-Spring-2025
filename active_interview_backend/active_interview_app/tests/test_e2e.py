@@ -6,12 +6,7 @@ from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait, Select
-from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.support.select import Select
-import time
-
 
 
 # === Helper Fucntions ===
@@ -27,7 +22,7 @@ def getEnvDriver():
         chrome_options.add_argument("--disable-gpu")
         chrome_options.add_argument("--window-size=1920,1080")
         chrome_options.add_argument("--use-fake-ui-for-media-stream")
-        chrome_options.add_argument("--use-fake-device-for-media-stream") 
+        chrome_options.add_argument("--use-fake-device-for-media-stream")
 
         driver = webdriver.Chrome(options=chrome_options)
 
@@ -72,15 +67,16 @@ def authenticate(test_case, driver):
     # Refresh the page after adding the cookie
     driver.get(test_case.live_server_url)
 
+
 def loginSim():
-    user = None
-    if not User.objects.filter(username = 'test').exists():
-        user = User.objects.create_user(
-            username="test", 
-            password="!QAZxsw2"
-        )
+    # user = None
+    # if not User.objects.filter(username='test').exists():
+    #     user = User.objects.create_user(
+    #         username="test",
+    #         password="!QAZxsw2"
+    #     )
     driver = getEnvDriver()
-    if settings.PROD == False:
+    if settings.PROD is False:
         driver.get('http://127.0.0.1:8000/accounts/login/')
     else:
         driver.get('https://app.activeinterviewservice.me/accounts/login/')
@@ -93,7 +89,7 @@ def loginSim():
     submit.send_keys(Keys.RETURN)
     return driver
 
-  
+
 class TestDriver(StaticLiveServerTestCase):
     def testE2EDriver(self):
         # Init chrome driver
@@ -114,14 +110,15 @@ class TestDriver(StaticLiveServerTestCase):
 
         # Stop chrome driver
         driver.quit()
-    
-    #From here on you may need to configure the user test to match with the password
-    # #As well as match it with the chat number, because that can cause errors on local machine
+
+    # From here on you may need to configure the user test to match with the
+    # password
+    # #As well as match it with the chat number, because that can cause errors
+    # #on local machine
     # def testLogin(self):
     #     driver = loginSim()
     #     driver.get('http://127.0.0.1:8000/')
     #     assert len(driver.find_elements(By.ID, "login-button")) == 0
-
 
     # def testText2Speech(self):
     #     driver = loginSim()
@@ -129,14 +126,15 @@ class TestDriver(StaticLiveServerTestCase):
     #         driver.get('http://127.0.0.1:8000/chat/1/')
     #     else:
     #         driver.get('https://app.activeinterviewservice.me/chat/26/')
-        
+
     #     ai_message = driver.find_element(By.ID, "ai_message").text
     #     text2speech_button = driver.find_element(By.ID, "text2speech_button")
     #     text2speech_button.click()
     #     #print(ai_message)
-    #     #Can use anything like the entire message in assert, just did Craig because I know for my resume (test) it will say my name
+    #     #Can use anything like the entire message in assert, just did Craig
+    #     #because I know for my resume (test) it will say my name
     #     assert "Craig" in ai_message
-    
+
     # def testCreateChat(self):
     #     driver = loginSim()
     #     if settings.PROD == False:
@@ -155,19 +153,3 @@ class TestDriver(StaticLiveServerTestCase):
     #     submit.click()
     #     ai_message = driver.find_element(By.ID, "ai_message").text
     #     assert "Craig" in ai_message
-        
-
-
-
-
-        
-
-
-
-        
-
-        
-
-    
-
-

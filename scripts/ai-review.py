@@ -5,7 +5,6 @@
 
 from datetime import datetime
 import sys
-import textwrap
 from zoneinfo import ZoneInfo
 
 from openai import OpenAI
@@ -21,13 +20,13 @@ client = OpenAI()
 # Get the diff from command line argument 1
 diff = ""
 with open(sys.argv[1], 'r') as diff_file:
-  diff = diff_file.read()
-  # print(diff)
-  diff_file.close()
+    diff = diff_file.read()
+    # print(diff)
+    diff_file.close()
 
 # Provide project context here
-project_context = f"""
-These code changes are for a Django web app. The app is deployed with 
+project_context = """
+These code changes are for a Django web app. The app is deployed with
 docker-compose and Nginx on DigitalOcean. The app is an active interview
 service which uses the ChatGPT API to create a dynamic interview chat
 for job-seekers.
@@ -35,8 +34,8 @@ for job-seekers.
 
 # Provide the prompt here
 prompt = f"""
-At the end of your message, state either AI_REVIEW_FAIL if you found any significant
-issues or AI_REVIEW_SUCCESS if the code is acceptable.
+At the end of your message, state either AI_REVIEW_FAIL if you found any
+significant issues or AI_REVIEW_SUCCESS if the code is acceptable.
 
 {project_context}
 
@@ -52,11 +51,12 @@ and potential bugs and provide feedback.  Please include a summary section.
 
 # Run the prompt
 completion = client.chat.completions.create(
-    model="o3-mini",
+    model="gpt-4o",
     messages=[
         {
-            "role": "system", 
-            "content": "You are a helpful assistant that provides information in Markdown format."
+            "role": "system",
+            "content": "You are a helpful assistant that provides information \
+                        in Markdown format."
         },
         {
             "role": "user",
@@ -72,18 +72,15 @@ print(response)
 local_time = datetime.now(ZoneInfo(TIMEZONE)).strftime(TIME_FORMAT)
 out_path = f"review-{local_time}.md"
 
-with open(out_path, 'w') as out_file: 
+with open(out_path, 'w') as out_file:
     out_file.write(response)
     out_file.close()
 
 # # Get last word in the response
-# raw_result = response.strip().split()[-1] # get last word
-# plain_result = raw_result.replace("*", "") # remove italics and bold from result
+# raw_result = response.strip().split()[-1]  # get last word
+# plain_result = raw_result.replace("*", "")  # remove italics/bold from result
 
 if "AI_REVIEW_SUCCESS" in response:
-    sys.exit(0) # SUCCESS
+    sys.exit(0)  # SUCCESS
 else:
-    sys.exit(1) # FAIL
-
-
-
+    sys.exit(1)  # FAIL
