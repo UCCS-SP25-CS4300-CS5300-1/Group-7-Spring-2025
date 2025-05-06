@@ -7,11 +7,10 @@
 3. Load the venv
    - Windows(Powershell): `.\myenv\bin\activate`
    - Linux/Mac: `source myenv/bin/activate`
-5. Navigate to the active_interview_backend/ folder
-6. Install the requirements: `pip install -r requirements.txt`
-7. Generate a secret django key: `python -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"`
-8. Run a django migration: `python3 manage.py migrate`
-9. Export these environment variables to your local machine
+4. Install the requirements: `pip install -r requirements.txt`
+5. Generate a secret django key: `python -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"`
+6. Run a django migration: `python3 manage.py migrate`
+7. Export these environment variables to your local machine
    - Windows(Powershell)
       - `$env:PROD = "false"`
       - `$env:DJANGO_SECRET_KEY = "<your secret key>"`
@@ -53,7 +52,7 @@ Now you should be able to register accounts on the page.
 1. Navigate to the root of the project.
 2. Make a venv: `python3 -m venv myenv`
 3. Load the venv: `source myenv/bin/activate`
-4. Install the requirements: `pip install -r active_interview_backend/requirements.txt`
+4. Install the requirements: `pip install -r requirements.txt`
 5. Generate a secret django key: `python -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"`
 6. Make an OpenAI API key.
 6. Edit open a `.env` file in the root of your project and fill it out like so:
@@ -80,7 +79,7 @@ Every once in a while, your local environment may break because of a refactor, b
 2. `docker-compose down --volumes --remove-orphans`
 3. `docker system prune --all --volumes`
 4. `sudo systemctl restart docker`
-5. `git clean -fdx -e .env -e active_interview_backend/db`
+5. `git clean -fdx -e .env -e db`
 
 ## Restarting Cleanly
 I have created an linux/mac script that should make cleanly restarting local deployments in a way that avoids bugs much easier.  If you run windows, look at scripts/clean-restart.sh and do the equivalent commands for windows.
