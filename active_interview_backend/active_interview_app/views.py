@@ -388,8 +388,8 @@ class CreateChat(LoginRequiredMixin, View):
                 chat.key_questions = json.loads(cleaned_message)
 
                 chat.save()
-                
-                
+
+
                 return redirect("chat-view", chat_id=chat.id)
             # else:
             #     print("chat form invalid")
@@ -667,7 +667,7 @@ class KeyQuestionsView(LoginRequiredMixin, UserPassesTestMixin, View):
         # chat.save()
 
         return JsonResponse({'message': ai_message})
-    
+
 
 class ResultsChat(LoginRequiredMixin, UserPassesTestMixin, View):
     def test_func(self):
@@ -680,8 +680,8 @@ class ResultsChat(LoginRequiredMixin, UserPassesTestMixin, View):
         chat = Chat.objects.get(id=chat_id)
         owner_chats = Chat.objects.filter(owner=request.user)\
             .order_by('-modified_date')
-        
-     
+
+
         feedback_prompt = textwrap.dedent("""\
             Please provide constructive feedback to me about the
             interview so far.
@@ -716,8 +716,8 @@ class ResultCharts(LoginRequiredMixin, UserPassesTestMixin, View):
         chat = Chat.objects.get(id=chat_id)
         owner_chats = Chat.objects.filter(owner=request.user)\
             .order_by('-modified_date')
-        
-     
+
+
         scores_prompt = textwrap.dedent("""\
             Based on the interview so far, please rate the interviewee in the following categories from 0 to 100, 
             and return the result as a JSON object with integers only, in the following order that list only the integers:
@@ -734,7 +734,7 @@ class ResultCharts(LoginRequiredMixin, UserPassesTestMixin, View):
                 6
         """)
         input_messages = chat.messages
-        
+
         input_messages.append({"role": "user", "content": scores_prompt})
 
         response = client.chat.completions.create(
@@ -747,7 +747,7 @@ class ResultCharts(LoginRequiredMixin, UserPassesTestMixin, View):
         context = {}
         context['chat'] = chat
         context['owner_chats'] = owner_chats
-        
+
         ai_message = response.choices[0].message.content.strip()
         scores = [int(line.strip()) for line in ai_message.splitlines() if line.strip().isdigit()]
         if len(scores) == 4:
@@ -806,7 +806,7 @@ def profile(request):
     resumes = UploadedResume.objects.filter(user=request.user)
     job_listings = UploadedJobListing.objects.filter(user=request.user)
 
-    
+
     return render(request, 'profile.html', {'resumes': resumes, 'job_listings': job_listings})
 
 

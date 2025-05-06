@@ -30,7 +30,7 @@ class JobPostingEditForm(forms.ModelForm):
             'content': forms.Textarea(attrs={'class': 'form-control', 'rows': 15}),
         }
 
-        
+
 
 class CreateChatForm(ModelForm):
     difficulty = IntegerField(initial=5, min_value=1, max_value=10)

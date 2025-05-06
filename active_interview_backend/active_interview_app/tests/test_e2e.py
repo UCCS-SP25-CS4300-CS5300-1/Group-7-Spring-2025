@@ -93,7 +93,7 @@ def loginSim():
     submit.send_keys(Keys.RETURN)
     return driver
 
-  
+
 class TestDriver(StaticLiveServerTestCase):
     def testE2EDriver(self):
         # Init chrome driver
@@ -114,7 +114,7 @@ class TestDriver(StaticLiveServerTestCase):
 
         # Stop chrome driver
         driver.quit()
-    
+
     #From here on you may need to configure the user test to match with the password
     # #As well as match it with the chat number, because that can cause errors on local machine
     # def testLogin(self):
@@ -129,14 +129,14 @@ class TestDriver(StaticLiveServerTestCase):
     #         driver.get('http://127.0.0.1:8000/chat/1/')
     #     else:
     #         driver.get('https://app.activeinterviewservice.me/chat/26/')
-        
+
     #     ai_message = driver.find_element(By.ID, "ai_message").text
     #     text2speech_button = driver.find_element(By.ID, "text2speech_button")
     #     text2speech_button.click()
     #     #print(ai_message)
     #     #Can use anything like the entire message in assert, just did Craig because I know for my resume (test) it will say my name
     #     assert "Craig" in ai_message
-    
+
     # def testCreateChat(self):
     #     driver = loginSim()
     #     if settings.PROD == False:
@@ -155,19 +155,19 @@ class TestDriver(StaticLiveServerTestCase):
     #     submit.click()
     #     ai_message = driver.find_element(By.ID, "ai_message").text
     #     assert "Craig" in ai_message
-        
 
 
 
 
-        
 
 
 
-        
 
-        
 
-    
+
+
+
+
+
 
 

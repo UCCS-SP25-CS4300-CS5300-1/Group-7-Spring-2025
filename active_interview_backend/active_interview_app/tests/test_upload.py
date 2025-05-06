@@ -26,7 +26,7 @@ class ResumeUploadTestCase(TestCase):
         self.assertEqual(UploadedResume.objects.count(), 1)
         uploaded_file = UploadedResume.objects.first()
         self.assertEqual(uploaded_file.file.name, "uploads/testfile.txt")
-    
+
     @patch("filetype.guess")
     def test_invalid_file_type_upload(self, mock_guess):
         mock_guess.return_value = type("obj", (object,), {"extension": "exe"})  # Not allowed
@@ -154,7 +154,7 @@ class ResumeUploadTests(TestCase):
     def test_upload_invalid_filetype(self):
         self.client.login(username='testuser', password='testpass')
         txt_file = SimpleUploadedFile("test.txt", b"Just some text", content_type="text/plain")
-        
+
         response = self.client.post(
             reverse('upload_file'),
             {
@@ -267,7 +267,7 @@ class UploadedJobListingViewTest(TestCase):
             shutil.rmtree(user_dir)
 
     def test_valid_job_listing_paste_upload(self):
-        
+
         data = {
             "paste-text": "This is a job listing description.",
             "title": "Cool Job"
