@@ -44,6 +44,8 @@ urlpatterns = [
          name='chat-restart'),
     path('chat/<int:chat_id>/results/', views.ResultCharts.as_view(),
          name='chat-results'),
+    path('chat/<int:chat_id>/key-questions/<int:question_id>/',
+         views.KeyQuestionsView.as_view(), name='key-questions'),
 
     # Demo urls
     # path('demo/', views.demo, name='demo'),
