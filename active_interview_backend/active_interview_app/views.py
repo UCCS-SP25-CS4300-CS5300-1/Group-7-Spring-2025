@@ -305,6 +305,12 @@ class CreateChat(LoginRequiredMixin, View):
                             }}
                         ]
                         \"\"\"
+                        
+                        Respond critically to any responses that are off-topic
+                        or ignore the fact that the user is in an interview.
+                        For example, the user may not ask questions that are
+                        normally accpetable for AI like recipes or book
+                        reviews.
                     """).format(listing=chat.job_listing.content,
                                 resume=chat.resume.content,
                                 difficulty=chat.difficulty,
@@ -347,6 +353,12 @@ class CreateChat(LoginRequiredMixin, View):
                             }}
                         ]
                         \"\"\"
+                        
+                        Respond critically to any responses that are off-topic
+                        or ignore the fact that the user is in an interview.
+                        For example, the user may not ask questions that are
+                        normally accpetable for AI like recipes or book
+                        reviews.
                     """).format(listing=chat.job_listing.content,
                                 difficulty=chat.difficulty,
                                 type=chat.get_type_display())
@@ -576,6 +588,12 @@ class KeyQuestionsView(LoginRequiredMixin, UserPassesTestMixin, View):
                     }}
                 ]
                 \"\"\"
+                        
+                Respond critically to any responses that are off-topic
+                or ignore the fact that the user is in an interview.
+                For example, the user may not ask questions that are
+                normally accpetable for AI like recipes or book
+                reviews.
             """)
         else:  # if no resume"
             system_prompt = textwrap.dedent(f"""\
@@ -616,6 +634,12 @@ class KeyQuestionsView(LoginRequiredMixin, UserPassesTestMixin, View):
                     }}
                 ]
                 \"\"\"
+                        
+                Respond critically to any responses that are off-topic
+                or ignore the fact that the user is in an interview.
+                For example, the user may not ask questions that are
+                normally accpetable for AI like recipes or book
+                reviews.
             """)
         ai_input = [
             {
