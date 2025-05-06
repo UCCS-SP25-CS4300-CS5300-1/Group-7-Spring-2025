@@ -1,8 +1,8 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 
 {% block title %}
   AIS - Profile
-{% endblock %}
+{% endblock title %}
 
 {% block content %}
   <style>
@@ -34,6 +34,9 @@
       background-color: var(--shallows) !important;
       border-radius: 2rem;
     }
+    li{
+      font-size: 23px;
+    }
   </style>
 
   <div class="centered-container">
@@ -58,7 +61,7 @@
             <ul>
               {% for document in resumes %}
                 {% if document.title and document.title != "1" %}
-                <li style="font-size: 23px;">
+                <li>
                   {% if document.title and document.title != "1" %}
                     {{ document.title }} -
                     <a class="link-light" href="{% url 'resume_detail' resume_id=document.id %}">View</a> |
@@ -86,7 +89,7 @@
                       Are you sure you want to delete <strong>{{ document.title|default:document.original_filename }}</strong>?
                     </div>
                     <div class="modal-footer">
-                      <form method="POST" action="{% url 'delete_resume' resume_id=document.id %}">
+                      <form method="post" action="{% url 'delete_resume' resume_id=document.id %}">
                         {% csrf_token %}
                         <button type="submit" class="btn btn-danger">Yes, Delete</button>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -108,7 +111,7 @@
           {% else %}
             <ul>
               {% for job in job_listings %}
-                <li style="font-size: 23px;">
+                <li>
                   {% if job.title %}
                     {{ job.title }} -
                     <a class="link-light" href="{% url 'job_posting_detail' job_id=job.id %}">View</a> |
@@ -126,7 +129,7 @@
                           Are you sure you want to delete <strong>{{ job.title }}</strong>?
                         </div>
                         <div class="modal-footer">
-                          <form method="POST" action="{% url 'delete_job' job_id=job.id %}">
+                          <form method="post" action="{% url 'delete_job' job_id=job.id %}">
                             {% csrf_token %}
                             <button type="submit" class="btn btn-danger">Yes, Delete</button>
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -143,4 +146,4 @@
       </div>
     </div>
   </div>
-{% endblock %}
+{% endblock content %}

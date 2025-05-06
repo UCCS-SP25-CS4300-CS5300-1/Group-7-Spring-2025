@@ -1,8 +1,8 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 
 {% block title %}
   {{ resume.title }} - Resume Details
-{% endblock %}
+{% endblock title %}
 
 {% block content %}
   <style>
@@ -61,6 +61,9 @@
     }
   </style>
 
+  <div class="resume-detail">
+    <h1>{{ resume.title }}</h1>
+    <div>{{ resume.content|linebreaksbr }}</div>
   <div class="resume-detail-wrapper">
     <div class="resume-detail">
       <div class="resume-title">
@@ -77,4 +80,4 @@
       </div>
     </div>
   </div>
-{% endblock %}
+{% endblock content %}

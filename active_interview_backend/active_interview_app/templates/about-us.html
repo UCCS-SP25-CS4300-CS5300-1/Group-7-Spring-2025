@@ -2,6 +2,7 @@
 {% block title %}
   <h2>AIS - About Us</h2>
 {% endblock title %}
+
 {% block content %}
 {% load static %}
 <link type="text/css" href="{% static 'css/styles.css' %}"/>
@@ -36,7 +37,6 @@
         font-size: x-large;
         font-weight: 500;
     }
-
     .profileimg{
         height: 175px;
         width: 175px;
@@ -45,7 +45,6 @@
         margin: 10px;
         font-size: large !important;
     }
-
     #about-box{
         border: solid; 
         border-width: 2px; 
@@ -61,7 +60,6 @@
         max-width: 70%; 
         max-height: fit-content;
     }
-
     #about-para{
         margin: 15px; 
         font-family: Verdana, Geneva, Tahoma, sans-serif;
@@ -76,6 +74,7 @@
 
 <div class="container">
     <div class="team" id="member1">
+
         <img class="profileimg" width="175" height="175" alt="Profile picture of Jacob" src="{% static 'images/jacobprofile.jpg' %}">
         <p>Jacob</p>
     </div>    

@@ -1,11 +1,12 @@
-{% extends 'base.html' %}
-
-{% block title %}Edit {{ document.title }}{% endblock %}
-
+{% extends "base.html" %}
+{% block title %}Edit {{ document.title }}{% endblock title %}
 {% block content %}
-
-
-  <div class="container mt-5" style="color: white;">
+<style>
+  .container{
+    color:white;
+  }
+</style>
+  <div class="container mt-5">
     <h2>Edit Document</h2>
     <form method="post">
       {% csrf_token %}
@@ -20,4 +21,4 @@
       <button type="submit" class="btn btn-success mt-3">Save Changes</button>
     </form>
   </div>
-{% endblock %}
+{% endblock content %}
