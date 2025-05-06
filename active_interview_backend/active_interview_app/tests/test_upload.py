@@ -17,7 +17,7 @@ import unittest
 import shutil
 
 
-#Run using python3 manage.py test active_interview_app.tests.test_upload
+# Run using python3 manage.py test active_interview_app.tests.test_upload
 
 class ResumeUploadTestCase(TestCase):
     def test_file_upload(self):

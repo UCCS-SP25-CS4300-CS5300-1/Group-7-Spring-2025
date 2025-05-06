@@ -61,11 +61,11 @@ urlpatterns = [
          name='save_pasted_text'),
     path('paste-text/<int:pk>/', views.UploadedJobListingView.as_view(),
          name='pasted_text_detail'),
-    #List files and uploads.
+    # List files and uploads.
     path('api/files/', views.UploadedResumeView.as_view(), name='file_list'),
 #     path('api/files/<int:pk>/', views.UploadedResumeDetail.as_view(),
 #          name='file_detail'), #Making changes to files.
-    #For the text box input.
+    # For the text box input.
     path('pasted-text/', views.UploadedJobListingView.as_view(),
          name='save_pasted_text'),
     path('resume/<int:resume_id>/', views.resume_detail, name='resume_detail'),

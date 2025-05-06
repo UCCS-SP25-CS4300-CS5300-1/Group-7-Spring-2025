@@ -115,8 +115,8 @@ class TestDriver(StaticLiveServerTestCase):
         # Stop chrome driver
         driver.quit()
 
-    #From here on you may need to configure the user test to match with the
-    #password
+    # From here on you may need to configure the user test to match with the
+    # password
     # #As well as match it with the chat number, because that can cause errors
     # #on local machine
     # def testLogin(self):
