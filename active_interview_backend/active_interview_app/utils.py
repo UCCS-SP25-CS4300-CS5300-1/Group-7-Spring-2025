@@ -2,6 +2,7 @@ import os
 from django.conf import settings
 import logging
 
+
 def handle_uploaded_file(f):
     #Ensure the directory exists.
     try:

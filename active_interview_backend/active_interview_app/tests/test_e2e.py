@@ -13,7 +13,6 @@ from selenium.webdriver.support.select import Select
 import time
 
 
-
 # === Helper Fucntions ===
 # Make a context-dependent driver for the environment
 def getEnvDriver():
@@ -72,6 +71,7 @@ def authenticate(test_case, driver):
     # Refresh the page after adding the cookie
     driver.get(test_case.live_server_url)
 
+
 def loginSim():
     user = None
     if not User.objects.filter(username = 'test').exists():
@@ -123,7 +123,6 @@ class TestDriver(StaticLiveServerTestCase):
     #     driver = loginSim()
     #     driver.get('http://127.0.0.1:8000/')
     #     assert len(driver.find_elements(By.ID, "login-button")) == 0
-
 
     # def testText2Speech(self):
     #     driver = loginSim()

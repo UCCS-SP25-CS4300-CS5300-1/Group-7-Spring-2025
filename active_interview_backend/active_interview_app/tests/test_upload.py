@@ -113,6 +113,7 @@ class UploadedJobListingUploadTestCase(TestCase):
             username="testuser", password="testpass")
         self.client.login(username="testuser", password="testpass")
 
+
 def test_pasted_text_upload(self):
     response = self.client.post(reverse('save_pasted_text'), {
         'paste-text': 'This is a test paste.',
@@ -195,6 +196,7 @@ class UploadedJobListingViewTests(TestCase):
         self.user = User.objects.create_user(
             username='testuser', password='testpass')
 
+
 def test_post_valid_text(self):
     self.client.login(username='testuser', password='testpass')
     response = self.client.post(
@@ -207,7 +209,6 @@ def test_post_valid_text(self):
     messages_list = list(messages.get_messages(response.wsgi_request))
     self.assertTrue(any("Text uploaded successfully!" in str(m)
                     for m in messages_list))
-
 
     def test_post_empty_text(self):
         self.client.login(username='testuser', password='testpass')
@@ -261,6 +262,7 @@ class ResumeUploadTestCase(TestCase):
         self.assertTrue(UploadedResume.objects.filter(
             id=self.other_resume.id).exists())
 
+
 class ResumeDetailViewTests(TestCase):
     def setUp(self):
         self.user = User.objects.create_user(
@@ -298,7 +300,6 @@ class UploadedJobListingViewTest(TestCase):
         self.client.login(username="testuser", password="password")
         self.url = "/pasted-text/"
 
-
     def tearDown(self):
         user_dir = os.path.join(settings.MEDIA_ROOT,
                                 'pasted_texts', str(self.user.id))
@@ -311,7 +312,6 @@ class UploadedJobListingViewTest(TestCase):
             "paste-text": "This is a job listing description.",
             "title": "Cool Job"
         }
-
 
         response = self.client.post(self.url, data, follow=True)
         self.assertEqual(response.status_code, 200)
@@ -349,6 +349,7 @@ class UploadedResumeViewTest(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertEqual(UploadedResume.objects.count(), 0)
 
+
 class FileUploadTests(TestCase):
     def setUp(self):
         self.client = Client()
@@ -373,6 +374,7 @@ class FileUploadTests(TestCase):
 
         self.assertEqual(response.status_code, 302)
         mock_guess.assert_called_once()
+
 
 class EditResumeViewTests(TestCase):
     def setUp(self):
@@ -420,6 +422,7 @@ class EditResumeViewTests(TestCase):
         self.assertFormError(response, 'form', 'title',
                              'This field is required.')
 
+
 class EditJobPostingViewTests(TestCase):
 
     def setUp(self):
@@ -432,7 +435,6 @@ class EditJobPostingViewTests(TestCase):
             title='Junior Developer',
             content='Looking for a passionate developer.',
         )
-
 
     def test_get_edit_job_posting_page(self):
         url = reverse('edit_job_posting', args=[self.job.id])

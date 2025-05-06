@@ -33,7 +33,6 @@ class JobPostingEditForm(forms.ModelForm):
         }
 
 
-
 class CreateChatForm(ModelForm):
     difficulty = IntegerField(initial=5, min_value=1, max_value=10)
 

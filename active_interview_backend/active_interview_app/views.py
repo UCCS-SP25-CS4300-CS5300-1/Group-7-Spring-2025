@@ -45,11 +45,6 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 
-
-
-
-
-
 # Init openai client
 client = OpenAI(api_key=settings.OPENAI_API_KEY)
 MAX_TOKENS = 15000
@@ -70,6 +65,7 @@ def aboutus(request):
 
 def features(request):
     return render(request, 'features.html')
+
 
 def results(request):
     return render(request, 'results.html')
@@ -391,7 +387,6 @@ class CreateChat(LoginRequiredMixin, View):
 
                 chat.save()
 
-
                 return redirect("chat-view", chat_id=chat.id)
             # else:
             #     print("chat form invalid")
@@ -685,7 +680,6 @@ class ResultsChat(LoginRequiredMixin, UserPassesTestMixin, View):
         owner_chats = Chat.objects.filter(owner=request.user)\
             .order_by('-modified_date')
 
-
         feedback_prompt = textwrap.dedent("""\
             Please provide constructive feedback to me about the
             interview so far.
@@ -720,7 +714,6 @@ class ResultCharts(LoginRequiredMixin, UserPassesTestMixin, View):
         chat = Chat.objects.get(id=chat_id)
         owner_chats = Chat.objects.filter(owner=request.user)\
             .order_by('-modified_date')
-
 
         scores_prompt = textwrap.dedent("""\
             Based on the interview so far, please rate the interviewee in the
@@ -788,8 +781,6 @@ class ResultCharts(LoginRequiredMixin, UserPassesTestMixin, View):
                       context)
 
 
-
-
 @login_required
 def loggedin(request):
     return render(request, 'loggedinindex.html')
@@ -815,7 +806,6 @@ def register(request):
 def profile(request):
     resumes = UploadedResume.objects.filter(user=request.user)
     job_listings = UploadedJobListing.objects.filter(user=request.user)
-
 
     return render(request, 'profile.html', {'resumes': resumes,
                                             'job_listings': job_listings})
