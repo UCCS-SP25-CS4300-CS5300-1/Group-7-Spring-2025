@@ -299,7 +299,8 @@ class CreateChat(LoginRequiredMixin, View):
                         Please provide a json formatted list of 10 key 
                         interview questions you wish to ask the user and the
                         duration of time they should have to answer each
-                        question in seconds.  For example:
+                        question in seconds.  Start counting IDs from 0. 
+                        For example:
                                                     
                         \"\"\"
                         [
@@ -347,7 +348,8 @@ class CreateChat(LoginRequiredMixin, View):
                         Please provide a json formatted list of 10 key 
                         interview questions you wish to ask the user and the
                         duration of time they should have to answer each
-                        question in seconds.  For example:
+                        question in seconds.  Start counting IDs from 0. 
+                        For example:
                                                     
                         \"\"\"
                         [
