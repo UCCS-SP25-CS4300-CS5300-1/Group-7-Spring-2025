@@ -2,7 +2,7 @@
 
 {% block title %}
   AIS - {{ chat.title }}
-{% endblock %}
+{% endblock title %}
 
 {% block content %}
   {% load static %}
@@ -27,9 +27,9 @@
               <div class="col bot-text-container">
                 <div class="card bot-text-bubble">
                   <div class="card-body">
-                      <div class = "ai_messages"> 
-                      <p class="card-text" id = "ai_message">{{ message.content|linebreaksbr }} </p>
-                      <button class ="button-chat-send btn btn-primary ms-2" id ="text2speech_button" onclick="textToSpeech(this)">Speak</button>
+                      <div class="ai_messages"> 
+                      <p class="card-text" id="ai_message">{{ message.content|linebreaksbr }} </p>
+                      <button class="button-chat-send btn btn-primary ms-2" i="text2speech_button" onclick="textToSpeech(this)">Speak</button>
                     </div>
                   </div>
                 </div>
@@ -43,21 +43,18 @@
       <div class="card-body">
         <div class="d-flex">
           <textarea id="user-input" class="chat-input flex-grow-1 border-0 p-2" placeholder="Enter text here..." style="resize: none;"></textarea>
-          <button class="button-chat-send btn btn-primary ms-2" id = "speech-text" onclick="speechToText()">Speak</button>
+          <button class="button-chat-send btn btn-primary ms-2" id="speech-text" onclick="speechToText()">Speak</button>
           <button class="button-chat-send btn btn-primary ms-2" type="button" onclick="sendMessage()">Send</button>
         </div>
       </div>
     </div>
   </div>
-{% endblock %}
+{% endblock content %}
 
 {% block scripts %}
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.2.4/purify.min.js" integrity="sha512-Y1p/STLW/B+l+MPJ5K5OdILMwJa2gMFXXmC/qsyDuGH9uc1MZMUo6/8YQUg9Ut4ns8KGCrCtt+58UwmNFFiVvA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script>
-
-
-
 
   //global variable because of everytime you click the button of speech to text it will alternate
   // and if store it in there it will not alternate
@@ -153,9 +150,8 @@
         this.style.height = '200px';
       }
     });
-    
 
-    {% comment %} Jquery script adpated from chatgpt {% endcomment %}
+  {% comment %} Jquery script adapted from chatgpt {% endcomment %}
     function sendMessage() {
       var userInput = $('#user-input').val();
       if (userInput.trim() !== '') {
@@ -236,4 +232,4 @@
       }
     });
   </script>
-{% endblock %}
+{% endblock scripts %}

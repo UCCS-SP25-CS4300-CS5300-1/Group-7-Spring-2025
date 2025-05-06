@@ -47,7 +47,7 @@ const chart1 = new Chart(BarChart, {
     } 
   });
 
-const dataSplits = [200,50,100];
+
 const DonutChart = document.getElementById("DonutChart").getContext('2d');
 const chart2 = new Chart(DonutChart, {
   type: 'doughnut',

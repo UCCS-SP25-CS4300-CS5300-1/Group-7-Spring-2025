@@ -1,3 +1,8 @@
+<style>
+ .list{
+  font-size: 23px;
+ }
+</style>
 <div class="row mb-3">
     <h3>Uploaded Resumes</h3>
     {% if resumes|length == 0 %}
@@ -6,7 +11,7 @@
       <ul>
         {% for document in resumes %}
           {% if document.title and document.title != "1" %}
-          <li style="font-size: 23px;">
+          <li class="list">
             {{ document.title }} -
             <a class="link-light" href="{% url 'resume_detail' resume_id=document.id %}">View</a> |
             <a class="link-light" href="{% url 'edit_resume' resume_id=document.id %}">Edit</a> |
@@ -27,7 +32,7 @@
                 Are you sure you want to delete <strong>{{ document.title|default:document.original_filename }}</strong>?
               </div>
               <div class="modal-footer">
-                <form method="POST" action="{% url 'delete_resume' resume_id=document.id %}">
+                <form method="post" action="{% url 'delete_resume' resume_id=document.id %}">
                   {% csrf_token %}
                   <button type="submit" class="btn btn-danger">Yes, Delete</button>
                   <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -49,7 +54,7 @@
     {% else %}
       <ul>
         {% for job in job_listings %}
-          <li style="font-size: 23px;">
+          <li class="list">
             {{ job.title }} -
             <a class="link-light" href="{% url 'job_posting_detail' job_id=job.id %}">View</a> |
             <a class="link-light" href="{% url 'edit_job_posting' job_id=job.id %}">Edit</a> |  <!-- Add Edit Link -->
@@ -68,7 +73,7 @@
                   Are you sure you want to delete <strong>{{ job.title }}</strong>?
                 </div>
                 <div class="modal-footer">
-                  <form method="POST" action="{% url 'delete_job' job_id=job.id %}">
+                  <form method="post" action="{% url 'delete_job' job_id=job.id %}">
                     {% csrf_token %}
                     <button type="submit" class="btn btn-danger">Yes, Delete</button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>

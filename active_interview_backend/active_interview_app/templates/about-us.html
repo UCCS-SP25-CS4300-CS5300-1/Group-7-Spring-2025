@@ -1,7 +1,9 @@
 {% extends "base.html" %}
+
 {% block title %}
-  <h2>AIS - About Us</h2>
+  AIS - About Us
 {% endblock title %}
+
 {% block content %}
 {% load static %}
 <link type="text/css" href="{% static 'css/styles.css' %}"/>
@@ -36,7 +38,6 @@
         font-size: x-large;
         font-weight: 500;
     }
-
     .profileimg{
         height: 175px;
         width: 175px;
@@ -45,7 +46,6 @@
         margin: 10px;
         font-size: large !important;
     }
-
     #about-box{
         border: solid; 
         border-width: 2px; 
@@ -61,7 +61,6 @@
         max-width: 70%; 
         max-height: fit-content;
     }
-
     #about-para{
         margin: 15px; 
         font-family: Verdana, Geneva, Tahoma, sans-serif;
@@ -76,19 +75,19 @@
 
 <div class="container">
     <div class="team" id="member1">
-        <img class="profileimg" width="175" height="175" alt="Profile picture of Jacob" src="{% static 'images/jacobprofile.jpg' %}">
-        <p>Jacob</p>
-    </div>    
+        <img class="profileimg" height="175px" width="175px" alt="profile" src="{% static 'images/jacobprofile.jpg' %}">
+        Jacob
+    </div>
     <div class="team" id="member2">
-        <img class="profileimg" width="175" height="175" alt="Profile Picture" src="{% static 'images/joelprofile.jpg' %}">
+        <img class="profileimg" height="175px" width="175px" alt="profile" src="{% static 'images/joelprofile.jpg' %}">
         Joel
     </div>
     <div class="team" id="member3">
-        <img class="profileimg" width="175" height="175" alt="Profile Picture" src="{% static 'images/craigprofile.jpg' %}">
+        <img class="profileimg" height="175px" width="175px" alt="profile" src="{% static 'images/craigprofile.jpg' %}">
         Craig
     </div>
     <div class="team" id="member4">
-        <img class="profileimg" width="175" height="175" alt="Profile Picture" src="{% static 'images/maddisonprofile.jpg' %}">
+        <img class="profileimg" height="175px" width="175px" alt="profile" src="{% static 'images/maddisonprofile.jpg' %}">
         Maddison
     </div>
 </div>

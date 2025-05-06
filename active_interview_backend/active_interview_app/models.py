@@ -15,6 +15,7 @@ class UploadedResume(models.Model):  # Renamed from UploadedFile
     filesize = models.IntegerField(null=True, blank=True)
     original_filename = models.CharField(max_length=255, null=True, blank=True)
     title = models.CharField(max_length=255)
+    
 
     def __str__(self):
         # return f'{self.file.name} uploaded by {self.user}'
