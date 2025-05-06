@@ -307,7 +307,8 @@ class CreateChat(LoginRequiredMixin, View):
                                 "id": 0,
                                 "title": "Merge Conflicts",
                                 "duration": 60,
-                                "content": "How would you handle a merge conflict?"
+                                "content": "How would you handle a merge \
+                                            conflict?"
                             }}
                         ]
                         \"\"\"
@@ -355,7 +356,8 @@ class CreateChat(LoginRequiredMixin, View):
                                 "id": 0,
                                 "title": "Merge Conflicts",
                                 "duration": 60,
-                                "content": "How would you handle a merge conflict?"
+                                "content": "How would you handle a merge \
+                                            conflict?"
                             }}
                         ]
                         \"\"\"
@@ -561,7 +563,8 @@ class KeyQuestionsView(LoginRequiredMixin, UserPassesTestMixin, View):
                 interview details below:
 
                 # Type of Interview
-                This interview will be of the following type: {chat.get_type_display()}
+                This interview will be of the following type:
+                {chat.get_type_display()}
 
                 # Difficulty
                 - **Scale:** 1 to 10
@@ -613,7 +616,8 @@ class KeyQuestionsView(LoginRequiredMixin, UserPassesTestMixin, View):
                 details below:
 
                 # Type of Interview
-                This interview will be of the following type: {chat.get_type_display()}
+                This interview will be of the following type:
+                {chat.get_type_display()}
 
                 # Difficulty
                 - **Scale:** 1 to 10
@@ -719,8 +723,10 @@ class ResultCharts(LoginRequiredMixin, UserPassesTestMixin, View):
 
 
         scores_prompt = textwrap.dedent("""\
-            Based on the interview so far, please rate the interviewee in the following categories from 0 to 100, 
-            and return the result as a JSON object with integers only, in the following order that list only the integers:
+            Based on the interview so far, please rate the interviewee in the
+            following categories from 0 to 100, and return the result as a JSON
+            object with integers only, in the following order that list only
+            the integers:
 
             - Professionalism
             - Subject Knowledge
@@ -749,7 +755,9 @@ class ResultCharts(LoginRequiredMixin, UserPassesTestMixin, View):
         context['owner_chats'] = owner_chats
 
         ai_message = response.choices[0].message.content.strip()
-        scores = [int(line.strip()) for line in ai_message.splitlines() if line.strip().isdigit()]
+        scores = [int(line.strip())
+                      for line in ai_message.splitlines() if line.strip()\
+                        .isdigit()]
         if len(scores) == 4:
             professionalism, subject_knowledge, clarity, overall = scores
         else:
@@ -762,8 +770,10 @@ class ResultCharts(LoginRequiredMixin, UserPassesTestMixin, View):
             'Overall': overall
         }
         explain = textwrap.dedent("""\
-            Explain the reason for the following scores so that the user can understand, do not include json object for scores
-            IF NO response was given since start of interview please tell them to start interview
+            Explain the reason for the following scores so that the user can
+            understand, do not include json object for scores IF NO response
+            was given since start of interview please tell them to start
+            interview
         """)
         input_messages.append({"role": "user", "content": explain})
         response = client.chat.completions.create(
@@ -807,7 +817,8 @@ def profile(request):
     job_listings = UploadedJobListing.objects.filter(user=request.user)
 
 
-    return render(request, 'profile.html', {'resumes': resumes, 'job_listings': job_listings})
+    return render(request, 'profile.html', {'resumes': resumes,
+                                            'job_listings': job_listings})
 
 
 # === Joel's file upload views ===
@@ -860,22 +871,26 @@ def upload_file(request):
 
                     if file_type.extension == 'pdf':
                         with tempfile.NamedTemporaryFile(delete=False,
-                                                         suffix=".pdf") as temp_file:
+                                                         suffix=".pdf")\
+                                                            as temp_file:
                             for chunk in uploaded_file.chunks():
                                 temp_file.write(chunk)
                             temp_file_path = temp_file.name
-                        instance.content = pymupdf4llm.to_markdown(temp_file_path)
+                        instance.content = pymupdf4llm.to_markdown(
+                            temp_file_path)
 
                     elif file_type.extension == 'docx':
                         # Save temporarily and load using python-docx
                         with tempfile.NamedTemporaryFile(delete=False,
-                                                         suffix=".docx") as temp_file:
+                                                         suffix=".docx")\
+                                                            as temp_file:
                             for chunk in uploaded_file.chunks():
                                 temp_file.write(chunk)
                             temp_file_path = temp_file.name
 
                         doc = Document(temp_file_path)
-                        full_text = '\n'.join([para.text for para in doc.paragraphs])
+                        full_text = '\n'.join(
+                            [para.text for para in doc.paragraphs])
                         instance.content = md(full_text)  # Convert to markdown
 
                     instance.save()

@@ -57,17 +57,27 @@ urlpatterns = [
     # Joel's file upload urls
     path('document/', views.DocumentList.as_view(), name='document-list'),
     path('upload-file/', views.upload_file, name='upload_file'),
-    path('api/paste-text/', views.UploadedJobListingView.as_view(), name='save_pasted_text'),
-    path('paste-text/<int:pk>/', views.UploadedJobListingView.as_view(), name='pasted_text_detail'),
-    path('api/files/', views.UploadedResumeView.as_view(), name='file_list'),  #List files and uploads.
-    #path('api/files/<int:pk>/', views.UploadedResumeDetail.as_view(), name='file_detail'), #Making changes to files.
-    path('pasted-text/', views.UploadedJobListingView.as_view(), name='save_pasted_text'), #For the text box input.
+    path('api/paste-text/', views.UploadedJobListingView.as_view(),
+         name='save_pasted_text'),
+    path('paste-text/<int:pk>/', views.UploadedJobListingView.as_view(),
+         name='pasted_text_detail'),
+    #List files and uploads.
+    path('api/files/', views.UploadedResumeView.as_view(), name='file_list'),
+#     path('api/files/<int:pk>/', views.UploadedResumeDetail.as_view(),
+#          name='file_detail'), #Making changes to files.
+    #For the text box input.
+    path('pasted-text/', views.UploadedJobListingView.as_view(),
+         name='save_pasted_text'),
     path('resume/<int:resume_id>/', views.resume_detail, name='resume_detail'),
-    path('job-posting/<int:job_id>/', views.job_posting_detail, name='job_posting_detail'),
-    path('resume/delete/<int:resume_id>/', views.delete_resume, name='delete_resume'),
+    path('job-posting/<int:job_id>/',
+         views.job_posting_detail, name='job_posting_detail'),
+    path('resume/delete/<int:resume_id>/',
+         views.delete_resume, name='delete_resume'),
     path('delete_job/<int:job_id>/', views.delete_job, name='delete_job'),
-    path('resume/edit/<int:resume_id>/', views.edit_resume, name='edit_resume'),
-    path('job-posting/edit/<int:job_id>/', views.edit_job_posting, name='edit_job_posting'),
+    path('resume/edit/<int:resume_id>/', views.edit_resume,
+         name='edit_resume'),
+    path('job-posting/edit/<int:job_id>/',
+         views.edit_job_posting, name='edit_job_posting'),
 
 
 

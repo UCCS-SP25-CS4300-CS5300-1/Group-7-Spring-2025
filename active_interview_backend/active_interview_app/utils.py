@@ -18,10 +18,12 @@ def handle_uploaded_file(f):
         return file_path
     except PermissionError as e:
         logger.error(f"Permission error while saving file: {e}")
-        raise ValueError("There was an error saving the file. Please try again later.")
+        raise ValueError(
+            "There was an error saving the file. Please try again later.")
 
     except Exception as e:
         logger.error(f"Unexpected error while saving file: {e}")
-        raise ValueError("An unexpected error occurred. Please try again later.")
+        raise ValueError(
+            "An unexpected error occurred. Please try again later.")
 
 handle_uploaded_file()
