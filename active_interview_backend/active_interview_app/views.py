@@ -1,5 +1,6 @@
 import os
 import filetype
+import json
 from openai import OpenAI
 import pymupdf4llm
 import markdown
@@ -198,6 +199,12 @@ class CreateChat(LoginRequiredMixin, View):
                         an introductory question about their background, then
                         move on to deeper, role-related questions based on the
                         job listing and resume.
+                        
+                        Respond critically to any responses that are off-topic
+                        or ignore the fact that the user is in an interview.
+                        For example, the user may not ask questions that are
+                        normally accpetable for AI like recipes or book
+                        reviews.
                     """).format(listing=chat.job_listing.content,
                                 resume=chat.resume.content,
                                 difficulty=chat.difficulty,
@@ -229,6 +236,12 @@ class CreateChat(LoginRequiredMixin, View):
                         an introductory question about their background, then
                         move on to role-specific questions based on the job
                         listing.
+                        
+                        Respond critically to any responses that are off-topic
+                        or ignore the fact that the user is in an interview.
+                        For example, the user may not ask questions that are
+                        normally accpetable for AI like recipes or book
+                        reviews.
                     """).format(listing=chat.job_listing.content,
                                 difficulty=chat.difficulty,
                                 type=chat.get_type_display())
@@ -253,6 +266,126 @@ class CreateChat(LoginRequiredMixin, View):
                         "content": ai_message
                     }
                 )
+
+                # ===== Get AI timed questions =====
+                if chat.resume:  # if resume is present
+                    system_prompt = textwrap.dedent("""\
+                        You are a professional interviewer for a company
+                        preparing for a candidate’s interview. You will act as
+                        the interviewer and engage in a roleplaying session
+                        with the candidate.
+
+                        Please review the job listing, resume and misc.
+                        interview details below:
+
+                        # Type of Interview
+                        This interview will be of the following type: {type}
+
+                        # Difficulty
+                        - **Scale:** 1 to 10
+                        - **1** = extremely easygoing interview, no curveballs
+                        - **10** = very challenging, for top‑tier candidates
+                          only
+                        - **Selected level:** <<{difficulty}>>
+
+                        # Job Listing:
+                        \"\"\"{listing}\"\"\"
+
+                        # Candidate Resume:
+                        \"\"\"{resume}\"\"\"
+
+                        Ignore any formatting issues in the resume, and focus
+                        on its content.
+                        Please provide a json formatted list of 10 key 
+                        interview questions you wish to ask the user and the
+                        duration of time they should have to answer each
+                        question in seconds.  For example:
+                                                    
+                        \"\"\"
+                        [
+                            {{
+                                "id": 0,
+                                "title": "Merge Conflicts",
+                                "duration": 60,
+                                "content": "How would you handle a merge conflict?"
+                            }}
+                        ]
+                        \"\"\"
+                        
+                        Respond critically to any responses that are off-topic
+                        or ignore the fact that the user is in an interview.
+                        For example, the user may not ask questions that are
+                        normally accpetable for AI like recipes or book
+                        reviews.
+                    """).format(listing=chat.job_listing.content,
+                                resume=chat.resume.content,
+                                difficulty=chat.difficulty,
+                                type=chat.get_type_display())
+                else:  # if no resume"
+                    system_prompt = textwrap.dedent("""\
+                        You are a professional interviewer for a company
+                        preparing for a candidate’s interview. You will act as
+                        the interviewer and engage in a roleplaying session
+                        with the candidate.
+
+                        Please review the job listing and misc. interview
+                        details below:
+
+                        # Type of Interview
+                        This interview will be of the following type: {type}
+
+                        # Difficulty
+                        - **Scale:** 1 to 10
+                        - **1** = extremely easygoing interview, no curveballs
+                        - **10** = very challenging, for top‑tier candidates
+                          only
+                        - **Selected level:** <<{difficulty}>>
+
+                        # Job Listing:
+                        \"\"\"{listing}\"\"\"
+
+                        Please provide a json formatted list of 10 key 
+                        interview questions you wish to ask the user and the
+                        duration of time they should have to answer each
+                        question in seconds.  For example:
+                                                    
+                        \"\"\"
+                        [
+                            {{
+                                "id": 0,
+                                "title": "Merge Conflicts",
+                                "duration": 60,
+                                "content": "How would you handle a merge conflict?"
+                            }}
+                        ]
+                        \"\"\"
+                        
+                        Respond critically to any responses that are off-topic
+                        or ignore the fact that the user is in an interview.
+                        For example, the user may not ask questions that are
+                        normally accpetable for AI like recipes or book
+                        reviews.
+                    """).format(listing=chat.job_listing.content,
+                                difficulty=chat.difficulty,
+                                type=chat.get_type_display())
+
+                timed_question_messages = [
+                    {
+                        "role": "system",
+                        "content": system_prompt
+                    },
+                ]
+
+                # Make ai speak first
+                response = client.chat.completions.create(
+                    model="gpt-4o",
+                    messages=timed_question_messages,
+                    max_tokens=MAX_TOKENS
+                )
+                ai_message = response.choices[0].message.content
+                cleaned_message = re.search(r"(\[[\s\S]+\])", ai_message)\
+                        .group(0).strip()
+                chat.key_questions = json.loads(cleaned_message)
 
                 chat.save()
                 
@@ -387,6 +520,154 @@ class RestartChat(LoginRequiredMixin, UserPassesTestMixin, View):
         #     print("restart not in form")
         #     return redirect("chat-view", chat_id=chat.id)
 
+
+class KeyQuestionsView(LoginRequiredMixin, UserPassesTestMixin, View):
+    def test_func(self):
+        # manually grab chat id from kwargs and process it
+        chat = Chat.objects.get(id=self.kwargs['chat_id'])
+
+        return self.request.user == chat.owner
+
+    def get(self, request, chat_id, question_id):
+        chat = Chat.objects.get(id=chat_id)
+        owner_chats = Chat.objects.filter(owner=request.user)\
+            .order_by('-modified_date')
+        question = chat.key_questions[question_id]
+
+        context = {}
+        context['chat'] = chat
+        context['question'] = question
+        context['owner_chats'] = owner_chats
+
+        return render(request, 'key-questions.html', context)
+
+    def post(self, request, chat_id, question_id):
+        chat = Chat.objects.get(id=chat_id)
+        question = chat.key_questions[question_id]
+
+        user_message = request.POST.get('message', '')
+        print(user_message)
+
+        system_prompt = ""
+
+        if chat.resume:  # if resume is present
+            system_prompt = textwrap.dedent(f"""\
+                You are a professional interviewer for a company
+                preparing for a candidate’s interview. You will act as
+                the interviewer and engage in a roleplaying session
+                with the candidate.
+
+                Please review the job listing, resume and misc.
+                interview details below:
+
+                # Type of Interview
+                This interview will be of the following type: {chat.get_type_display()}
+
+                # Difficulty
+                - **Scale:** 1 to 10
+                - **1** = extremely easygoing interview, no curveballs
+                - **10** = very challenging, for top‑tier candidates
+                only
+                - **Selected level:** <<{chat.difficulty}>>
+
+                # Job Listing:
+                \"\"\"{chat.job_listing.content}\"\"\"
+
+                # Candidate Resume:
+                \"\"\"{chat.resume.content}\"\"\"
+
+                Ignore any formatting issues in the resume, and focus
+                on its content.
+
+                Please review the answer to an interviewer question below and
+                provide constructive feedback about the user's answer,
+                including a rating of the answer from 1-10.                            
+                
+                \"\"\"
+                [
+                    {{
+                        "role": "interviewer",
+                        "content": "{question["content"]}"
+                    }},
+                    {{
+                        "role": "user", 
+                        "content": "{user_message}"
+                    }}
+                ]
+                \"\"\"
+                        
+                Respond critically to any responses that are off-topic
+                or ignore the fact that the user is in an interview.
+                For example, the user may not ask questions that are
+                normally accpetable for AI like recipes or book
+                reviews.
+            """)
+        else:  # if no resume"
+            system_prompt = textwrap.dedent(f"""\
+                You are a professional interviewer for a company
+                preparing for a candidate’s interview. You will act as
+                the interviewer and engage in a roleplaying session
+                with the candidate.
+
+                Please review the job listing and misc. interview
+                details below:
+
+                # Type of Interview
+                This interview will be of the following type: {chat.get_type_display()}
+
+                # Difficulty
+                - **Scale:** 1 to 10
+                - **1** = extremely easygoing interview, no curveballs
+                - **10** = very challenging, for top‑tier candidates
+                    only
+                - **Selected level:** <<{chat.difficulty}>>
+
+                # Job Listing:
+                \"\"\"{chat.job_listing.content}\"\"\"
+
+                Please review the answer to an interviewer question below and
+                provide constructive feedback about the user's answer,
+                including a rating of the answer from 1-10.                            
+                
+                \"\"\"
+                [
+                    {{
+                        "role": "interviewer",
+                        "content": "{question["content"]}"
+                    }},
+                    {{
+                        "role": "user", 
+                        "content": "{user_message}"
+                    }}
+                ]
+                \"\"\"
+                        
+                Respond critically to any responses that are off-topic
+                or ignore the fact that the user is in an interview.
+                For example, the user may not ask questions that are
+                normally accpetable for AI like recipes or book
+                reviews.
+            """)
+        ai_input = [
+            {
+                "role": "system",
+                "content": system_prompt
+            }
+        ]
+
+        response = client.chat.completions.create(
+            model="gpt-4o",
+            messages=ai_input,
+            max_tokens=MAX_TOKENS
+        )
+        ai_message = response.choices[0].message.content
+        print(ai_message)
+
+        # chat.messages = new_messages
+        # chat.save()
+
+        return JsonResponse({'message': ai_message})
+    
 
 class ResultsChat(LoginRequiredMixin, UserPassesTestMixin, View):
     def test_func(self):
