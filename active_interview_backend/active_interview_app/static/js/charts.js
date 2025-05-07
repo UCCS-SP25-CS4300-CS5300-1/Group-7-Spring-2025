@@ -36,18 +36,24 @@ const chart1 = new Chart(BarChart, {
           text: "Category scores (out of 100)",
         },
         scales: {
-          y: [{
+          yAxes: [{
             ticks: {
-                beginAtZero: true,
-                max: 100,
-                min: 0
+              beginAtZero: true,
+              min: 0,
+              max: 100,
+              stepSize: 20
             }
-        }],
+          }],
       }  
     } 
   });
 
 
+
+
+
+
+  
 const DonutChart = document.getElementById("DonutChart").getContext('2d');
 const chart2 = new Chart(DonutChart, {
   type: 'doughnut',
