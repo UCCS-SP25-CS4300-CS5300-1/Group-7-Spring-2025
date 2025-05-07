@@ -55,6 +55,8 @@ const chart1 = new Chart(BarChart, {
 
   
 const DonutChart = document.getElementById("DonutChart").getContext('2d');
+DonutChart.width =2000;
+DonutChart.height = 2000;
 const chart2 = new Chart(DonutChart, {
   type: 'doughnut',
 
